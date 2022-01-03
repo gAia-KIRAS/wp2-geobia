@@ -33,3 +33,4 @@ __pycache__/
 *.nc
 # Misc
 *.zip
+cfg/vrt_list_dtm_noe.txt
