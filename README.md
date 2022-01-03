@@ -6,6 +6,7 @@ tbd
 ## Overview 
 
 The general structure is as follows:
+- `cfg`: configuration files
 - `dat`: data sets
 - `dev`: development (scripts)
 - `doc`: documentation (e.g. reports, dissemination)
