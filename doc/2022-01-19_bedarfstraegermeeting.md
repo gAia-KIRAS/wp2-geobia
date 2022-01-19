@@ -19,8 +19,8 @@ TeilnehmerInnen:
 - Basis: ALS-DGM von 2006-2011
 - Höhengrenze: Isohypse 1800 m
 - Ergebnis: 519 Rutschungspolygone, 444 Abrisskanten (Abrisskanten teilweise Subset der Rutschungen)
-- Klassifikation nach der Robustheit der Detektierbarkeit (3 Klassen: eindeutig &rarr; wahrscheinlich &rarr; rutschungsähnliche Struktur)
-- Klassifikation nach Fläche (seicht, mittelgründig, tiefgründig)
+- Klassifikation nach der Robustheit der Detektierbarkeit durch Sichtbarkeit der Abrisskante und des Ablagerungsbereichs (3 Klassen: eindeutig &rarr; wahrscheinlich &rarr; rutschungsähnliche Struktur)
+- Klassifikation nach Fläche (seicht, mittelgründig, tiefgründig) und auch Größe der Rutschung
 - Morphologische Evidenzen in der Kulturlandschaft (muldenförmige Vertiefungen im Ackerland)
 - Information zur Landbedeckung (über Höhendifferenz DOM-DGM)
 - Detektion von Sekundärprozessen
@@ -42,10 +42,11 @@ TeilnehmerInnen:
     - räumliche Auflösung (speziell S-2)
     - Zeitliche Abdeckung: ALS < 2012; S-2 > 2015
     - Kompatibilität der Inventare: dürfte sehr, Komplementär sein, (spatial) joins aus jetziger Sicht wohl herausfordernd. 
-- Im KAGIS-Inventar befinden sich fast ausschließlich schadenverursachende Rutschungen
+- Im KAGIS-Inventar befinden sich fast ausschließlich schadenverursachende Rutschungen, somit treten teilweise große Lücken auf in Gebieten, die weniger dicht besiedelt sind
 - Prozesstypen: Fokus auf Rutschungen. Erdstrom zwar von der Frequenz her relevant, jedoch nicht Gegenstand des Projektes.
 - Bereitstellung relevanter Layer seitens des Landes Kärnten
     - Geologische Karten: 1:50000; 1:25000
     - Hangwassersysteme
 - *Unmittelbar nach dem Ereignis* aufgenommene Orthophotos / VHR Satellitendaten sind als gute Quellen
 - Im Gelände sind große Rutschungen oft nicht unmittelbar erkennbar
+- Zeitpunkt der Rutschung oft nicht klar genug definiert -  im KAGIS nicht ersichtlich ob das Datum der Rutschung das Ereignisdatum oder das Aufnahmedatum ist
