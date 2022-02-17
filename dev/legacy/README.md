@@ -1,5 +1,11 @@
 # Geographic Object-Based Image Analysis for Automatic Landslide Detection using Open-Source GIS Software #
 
+---
+> **Note**: This is a slightly modified version (increased readability of README, exclusion of data sets) of the [supplementary material](https://www.mdpi.com/2220-9964/8/12/551#supplementary) as provided in at Knevels et al. (2019). 
+> 
+> Knevels R, Petschko H, Leopold P, Brenning A. Geographic Object-Based Image Analysis for Automated Landslide Detection Using Open Source GIS Software. ISPRS International Journal of Geo-Information. 2019; 8(12):551. https://doi.org/10.3390/ijgi8120551.
+---
+
 This is an example R-project for automatic landslide detection using open-source GIS software.
 With the scripts it is possible to reconstruct the landslide detection approach with two arbitrary chosen
 training and validation areas. It is possible to execute the analysis step by step. In the case of
