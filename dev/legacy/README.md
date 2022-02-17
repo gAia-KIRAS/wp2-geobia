@@ -1,6 +1,4 @@
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # Geographic Object-Based Image Analysis for Automatic Landslide Detection using Open-Source GIS Software #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 This is an example R-project for automatic landslide detection using open-source GIS software.
 With the scripts it is possible to reconstruct the landslide detection approach with two arbitrary chosen
@@ -9,38 +7,62 @@ any issues, the results of the examples are also provided.
 
 In addition, the main findings of the study are included and can be visualized.
 
-The example R-project is structured as follow:
-/data   
-/../input     basic data for the analysis
-/../output    (empty) output folder
-/../result    results of example and of study(!)
+### Structure
+The example R-project is structured as follows:
 
-/packrat      required R-libraries
+**data**
+```
+├── data
+│   ├── input
+│   │   └── Validation
+│   ├── output
+│   └── result
+````
+- `input`: basic data for the analysis
+- `output`: output folder
+- `result`: results of example and of study(!)
 
-/R
-/../source.R                              control center (pathes, libraries, etc.), must be initialized in each script
-/../helper.R                              helper functions for algorithm
-/../00_results_study.R                    main results of study are presented
-/../01_intro_example.R                    data-sets of example are intoduced
-/../0__DATA_DERIVATION.R                example script to derive data from LiDAR DTM (not executable, only example)
-/../1__MASKING_SEGMENTATION.R             generation of candidate landslide scarp and body area
-/../2_1__CLASSIFY_FeatureExtraction.R     feature extraction of the segmentation results, including object statistics
-/../2_2__CLASSIFY_TrainSVM.R              creation of tuned trainings model with support vector machine (SVM) as classifier
-/../2_3__CLASSIFY_VarImp.R                assessment of variable importance using permutation-based importance
-/../2_4__CLASSIFY_Classification.R        application of tuned trainings model on completely unseen validation data; post-processing of classification
-/../3__ACCURACY.R                         accuracy assessment on pixel- and object-level
+**R**
+```
+├── R
+│   ├── 00_results_study.R
+│   ├── 01_intro_example.R
+│   ├── 0__DATA_DERIVATION.R
+│   ├── 1__MASKING_SEGMENTATION.R
+│   ├── 2_1__CLASSIFY_FeatureExtraction.R
+│   ├── 2_2__CLASSIFY_TrainSVM.R
+│   ├── 2_3__CLASSIFY_VarImp.R
+│   ├── 2_4__CLASSIFY_Classification.R
+│   ├── 3__ACCURACY.R
+│   ├── helper.R
+│   ├── Optimization
+│   │   ├── optim__1__MASKING_HPFT.R
+│   │   ├── optim__2a__SEGMENT_OF_scarp.R
+│   │   └── optim__2b__SEGMENT_OF_body.R
+│   └── source.R
+```
 
-/R/Optimization
-/../optim__1__MASKING_HPFT.R              optimization procedure for generation of candidate landslide scarp and body area
-/../optim__2a__SEGMENT_OF_scarp.R         optimization procedure for segmentation of candidate landslide scarp area using i.segment of GRASS GIS.
-/../optim__2b__SEGMENT_OF_body.R          optimization procedure for segmentation of candidate landslide body area using Seeded Region Growing of SAGA GIS.
+- `source.R`: control center (pathes, libraries, etc.), must be initialized in each script
+- `helper.R`: helper functions for algorithm
+- `00_results_study.R`: main results of study are presented
+- `01_intro_example.R`: data-sets of example are intoduced
+- `0__DATA_DERIVATION.R`: example script to derive data from LiDAR DTM (not executable, only example)
+- `1__MASKING_SEGMENTATION.R`: generation of candidate landslide scarp and body area
+- `2_1__CLASSIFY_FeatureExtraction.R`: feature extraction of the segmentation results, including object statistics
+- `2_2__CLASSIFY_TrainSVM.R`: creation of tuned trainings model with support vector machine (SVM) as classifier
+- `2_3__CLASSIFY_VarImp.R`: assessment of variable importance using permutation-based importance
+- `2_4__CLASSIFY_Classification.R`: application of tuned trainings model on completely unseen validation data; post-processing of classification
+- `3__ACCURACY.R`: accuracy assessment on pixel- and object-level
+- `./Optimization/optim__1__MASKING_HPFT.R`: optimization procedure for generation of candidate landslide scarp and body area
+- `./Optimizationoptim__2a__SEGMENT_OF_scarp.R`: optimization procedure for segmentation of candidate landslide scarp area using i.segment of GRASS GIS.
+- `./Optimizationoptim__2b__SEGMENT_OF_body.R`: optimization procedure for segmentation of candidate landslide body area using Seeded Region Growing of SAGA GIS.
 
+### NOTE: FIRST TIME USE
 
-
-NOTE: FIRST TIME USE
-If one init the R-Project for the first time, one must install all packages (see "source.R"). For the correct packages the "renv.lock" may help.
+If one init the R-Project for the first time, one must install all packages (see `source.R`). For the correct packages the "renv.lock" may help.
 The R package manager "renv" is recommended (remotes::install_github("rstudio/renv")).
 
+```
 The following package(s) are used in the project:
   BBmisc         [1.11]
   BH             [1.69.0-1]
@@ -201,3 +223,4 @@ The following package(s) are used in the project:
   yaml           [2.2.0]
   zeallot        [0.1.0]
   zoo            [1.8-6]
+  ```
