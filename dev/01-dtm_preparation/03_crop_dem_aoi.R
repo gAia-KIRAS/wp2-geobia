@@ -9,9 +9,14 @@ library("glue")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 # create polygon somewhere in Oberkärnten
+xmin <- 436350
+xmax <- 439730
+ymin <- 200200
+ymax <- 202420
+
 test_aoi <- c(
-  435800, 443000, 443000, 435800, 435800,
-  200500, 200500, 210000, 210000, 200500
+  xmin, xmax, xmax, xmin, xmin,
+  ymin, ymin, ymax, ymax, ymin
 ) %>%
   matrix(ncol = 2) %>%
   list() %>%
@@ -33,9 +38,9 @@ dtm <- read_stars("dat/raw/dtm/dtm_ktn/ALS_DGM_1m.img")
 st_crs(dtm) <- 31258
 
 # crop to small aoi for testing purposes
-dtm_aoi <- dtm %>%
-  st_crop(test_aoi)
-write_stars(dtm_aoi, "dat/interim/dtm/test_aoi_ktn.tif")
+dtm %>%
+  st_crop(test_aoi) %>%
+  write_stars("dat/interim/dtm/test_aoi_ktn.tif")
 
 # crop to regions
 for (region in carinthia$name) {
