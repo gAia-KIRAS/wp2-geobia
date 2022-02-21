@@ -2,6 +2,7 @@
 library("dplyr")
 library("sf")
 library("stars")
+library("glue")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # AOI for testing purposes
@@ -38,11 +39,13 @@ write_stars(dtm_aoi, "dat/interim/dtm/test_aoi_ktn.tif")
 
 # crop to regions
 for (region in carinthia$name) {
+  print(glue("{Sys.time()} -- Working on region '{region}'"))
   tmp_aoi <- carinthia %>%
     filter(name == region)
+  print("Cropping...")
   dtm %>%
     st_crop(tmp_aoi) %>%
-    write_stars(glue::glue("dat/interim/dtm/dtm_carinthia_{region}.tif"))
+    write_stars(glue("dat/interim/dtm/dtm_carinthia_{region}.tif"))
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
