@@ -40,7 +40,7 @@ write_stars(dtm_aoi, "dat/interim/dtm/test_aoi_ktn.tif")
 for (region in carinthia$name) {
   tmp_aoi <- carinthia %>%
     filter(name == region)
-  dtm_aoi <- dtm %>%
+  dtm %>%
     st_crop(tmp_aoi) %>%
     write_stars(glue::glue("dat/interim/dtm/dtm_carinthia_{region}.tif"))
 }
