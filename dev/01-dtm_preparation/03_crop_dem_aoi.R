@@ -45,12 +45,17 @@ dtm %>%
 # crop to regions
 for (region in carinthia$name) {
   print(glue("{Sys.time()} -- Working on region '{region}'"))
+  outfile <- glue("dat/interim/dtm/dtm_carinthia_{region}.tif")
   tmp_aoi <- carinthia %>%
     filter(name == region)
-  print("Cropping...")
-  dtm %>%
-    st_crop(tmp_aoi) %>%
-    write_stars(glue("dat/interim/dtm/dtm_carinthia_{region}.tif"))
+  if (file.exists(outfile)) {
+    cat("  » Area cropped already\n")
+  } else {
+    cat("  » Cropping\n")
+    dtm %>%
+      st_crop(tmp_aoi) %>%
+      write_stars(outfile)
+  }
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
