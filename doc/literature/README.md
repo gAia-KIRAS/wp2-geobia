@@ -10,6 +10,9 @@
 
 ## Susceptibility Models
 
+### DTM Quality
+- Brock et al. (2020): [The performance of landslide susceptibility models critically depends on the quality of digital elevation models](https://doi.org/10.1080/19475705.2020.1776403)
+
 ### Error Propagation
 - Steger et al. (2016): [The propagation of inventory-based positional errors into statistical landslide susceptibility models](https://doi.org/10.5194/nhess-16-2729-2016).
 
