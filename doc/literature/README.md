@@ -21,3 +21,6 @@
 - Ploton et al. (2020): [Spatial validation reveals poor predictive performance of large-scale ecological mapping models](https://doi.org/10.1038/s41467-020-18321-y).
 - Schratz et al. (2021): [Mlr3spatiotempcv: Spatiotemporal resampling methods for machine learning in R](https://arxiv.org/abs/2110.12674).
 - Wadoux et al. (2021): [Spatial cross-validation is not the right way to evaluate map accuracy](https://doi.org/10.1016/j.ecolmodel.2021.109692).
+
+### Susceptibility Models for Austria
+- Moharrami et al. (2020): [National-Scale Landslide Susceptibility Mapping in Austria Using Fuzzy Best-Worst Multi-Criteria Decision-Making](https://doi.org/10.3390/ijgi9060393).
