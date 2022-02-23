@@ -19,3 +19,5 @@
 ### Spatial Resampling Methods
 - Schratz et al. (2019): [Hyperparameter tuning and performance assessment of statistical and machine-learning algorithms using spatial data](https://doi.org/10.1016/j.ecolmodel.2019.06.002).
 - Schratz et al. (2021): [Mlr3spatiotempcv: Spatiotemporal resampling methods for machine learning in R](https://arxiv.org/abs/2110.12674).
+- Wadoux et al. (2021): [Spatial cross-validation is not the right way to evaluate map accuracy](https://doi.org/10.1016/j.ecolmodel.2021.109692
+Get)
