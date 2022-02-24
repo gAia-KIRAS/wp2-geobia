@@ -34,4 +34,9 @@ __pycache__/
 # Misc
 *.zip
 cfg/vrt_list_dtm_noe.txt
+# dat dirs
+dat/raw/*
+dat/interim/*
+dat/processed/*
+dat/reporting/*
 dat/grassdata/*
