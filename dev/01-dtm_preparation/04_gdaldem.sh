@@ -1,6 +1,7 @@
 #!/usr/bin/zsh
 
-target_file="test_aoi_ktn"
+# source definition of target file / aoi region
+source cfg/aoi_config.sh
 
 # slope
 echo "\n`date "+%Y-%m-%d %H:%M:%S"`: working on '${target_file}'"
