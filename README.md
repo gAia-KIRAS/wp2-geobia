@@ -3,6 +3,20 @@
 ## Project description
 tbd
 
+## Remote repositories
+
+```sh
+$ git remote -v
+```
+```sh
+egitlab https://egitlab.zamg.ac.at/zamg-eo/gaia.git (fetch)
+egitlab https://egitlab.zamg.ac.at/zamg-eo/gaia.git (push)
+github  git@github.com:gAia-KIRAS/wp2-geobia.git (fetch)
+github  git@github.com:gAia-KIRAS/wp2-geobia.git (push)
+origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (fetch)
+origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (push)
+```
+
 ## Overview 
 
 The general structure is as follows:
