@@ -1,7 +1,8 @@
 # gAIa
 
 ## Project description
-tbd
+
+![](https://www.mdpi.com/ijgi/ijgi-08-00551/article_deploy/html/images/ijgi-08-00551-g002.png)
 
 ## Remote repositories
 
