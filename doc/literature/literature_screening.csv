@@ -1,0 +1,37 @@
+Year,Paper,Method,Tools,yY/N,Comments
+2019,"Pawłuszek,K.;etal.(2019)-Multi-Aspect Analysis of Object-Oriented Landslide Detection Based on an Extended Set of LiDAR-Derived Terrain Features",OBI; segmentation; SVM Classification,,Y,Relief Visualization Toolbox; eCognitionSoftware
+2015,"Leshchinsky,B.A.;etal.(2015)-Contour Connection Method for automated identification and classification of landslide deposits
+",CCM Contour Connection Metho,,Y,
+214,"Chen W,etal.(2014)-Forested landslide detection using LiDAR data and the random forest algorithm.A case study of the Three Gorges China",,,Y,Random Forest
+217,"Pawluszek,K.;etal.(2017)-Towards the optimal pixel size f.DEM f.automateic mapping of landslide areas","ANN,FFNN",,Y,
+2020,"Pawluszek-Filipiak,K.;Borkowski,A.(2020)-On the Importance of Train–Test Split Ratio of Datasets i.Automatic Landslide Detection...Supervised Classification","PBA, OBIA, RF SVC",,y,Train Test Split; Sentinel data used too
+2017,"Gaidzik,T.(2017-Landslide manual &automated inventories &susceptibility mapping using LIDAR i.the forested mountains of Guerrero Mexico",Contour connection method CCM algorithm,,Y,automated & manually; see Leshchinsky (2015)
+2021,"Alimohammadlou,Y.;etal.(2021)-Automated landslide detection model to delineate the extent of existing landslides",ALDM Automated landslide detection model,"Matlab, GIS,",y,
+2019,"Bragagnolo I,etal.(2019)-Landslide susceptibility mapping with rlandslide.",,,y ,"Parts maybe used, e.g. TWI"
+2012,"Kamp,N.(MSc,2012)-Using high-resolution airborne LiDAR-Data f.Landslide Mapping i.the Eastern Alps",,,y,
+2020,"Syzdykbayev M, etal.(2020)-Persistent homology on LiDAR data to detect landslides",,,y,
+2021,"Wang,H.;etal.(2021)-Landslide identification using machine learning",,,y,
+2020,"Wang,K.;etal.(2020)-Identification and Extraction of Geomorphological Features of Landslides Using Slope Units for Landslide Analysis",,,y,focusing ion features
+2019,"Sîrbu,F.;etal.(2019)-Scaling land-surface variables for landslide detection",,,y,land-surface variables (LSVs)
+2017,"Çelik,C.T.(2017)-A model for estimating parameters of rotational landslide using a first-order differential equation",,,n,
+2019,"Çelik,C.T.(2019)- A New Segmentation Method for Rotational Landslide Detection Using Outlier Detection",,,n,
+2013,Chen Q; et al (2013)-Impact_analysis_of_different_spatial_resolution_DEM_on_object-oriented_landslide_extraction_from_high_resolution_remote_sensing_images,,,n,
+2016,"Gorsevski,P.V.;etal.(2016)-Landslide detection and susceptibility mapping using LiDAR and an artificial neural network approach…",,,n,
+2021,"Gorsevski,P.V.(2021)-An evolutionary approach f.spatial prediction of landslide susceptibility using LiDAR &ymbolic classification w.genetic programming",,,n,
+2019,"Görüm,T.(2019)-Landslide recognition &mapping i.a mixed forest environment fr.airborne LiDAR data",,,n,
+2012,"Kalbermatten,M.;etal.(2012)-Multiscale analysis of geomorphological and geological features in high resolution digital elevation models using the wavelet transform",,,n,
+2017,"Mezaal,M.R.;etal.(2017)-Automatic landslide detection using Dempster–Shafer theory fr.LiDAR-derived data &orthophotos",,,n,uses Orthophotos too
+2020,"Miandad,J.;etal.(2020)- Landslide Mapping Using Multiscale LiDAR Digital",,,n,
+2019,"Piralilou,S.T.;etal.(2019)-Landslide Detection Using Multi-Scale Image Segmentation and Di erent Machine Learning Models in the Higher Himalayas","OBIA, ML, OMI, OFI,DST",,n,multispectral images
+2020,"Pradhan,B.;etal.(2020)-Landslide Detection Using a Saliency Feature Enhancement Technique From LiDAR-Derived DEM and Orthophotos",,,n,uses Orthophotos too
+2016,SchiliroL.;etal.(2016)-Prediction of shallow landslide occurrence.Validation of a physically-based approach through a real case study.-Sci.Tot.Env.569,,,n,backcasting an event for forcasting
+2021,"Smith,H.G.;etal.(2021)-Comparing methods of landslide data acquisition &susceptibility modelling.Examples from New Zealand",OBIA,,n,eCogniitionSoftware
+2021,"Amatya,P.etal.(2021)-Landslide mapping using object-based image analysis and open source tools",,SALaD,n,using RapidEye; manually mapping
+2021,"Torizin,J.;etal.(2021)-Landslide Susceptibility Assessment Tools v1.0.0b - Project Manager Suite.A new modular toolkit for landslide susceptibility assessment.","AAN,WoE,",,n,Susceptibility
+2006,"Barlow,J.;etal.(2006)-High Spatial Resolution Satellite Imagery, DEM Derivatives, and Image Segmentation for the Detection of Mass Wasting Processes",,,N,
+2017,"Bibi,T.;etal.(2017)-Spatio temporal detection &virtual mapping of landslid using high-resolution airborne laser altimetry(LiDAR)…",,,N,
+2015,"Dou,J.;etal.(2015)-Automatic Case-Based Reasoning Approach for Landslide Detection.Integration of Object-Oriented Image Analysis &a Genetic Algorithm","object-oriented image analysis (OOIA), a genetic algorithm (GA), and a case-based reasoning (CBR) technique",,N,
+2021,"Du, etal.(2021)-Landslide susceptibility prediction based on image semantic segmentation",,,N,
+2021,"Efiong J,etal.(2021)-Geospatial modelling of landslide susceptibility in Cross River State of Nigeria",,,N,
+2020,"Zeybek,M.; Sanlıoglu ,I.(2020)-Investigation of landslide detection using radial basis functions.A case study of the Taskent landslide,Turkey",,,N,
+
