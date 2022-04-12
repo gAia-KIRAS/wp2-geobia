@@ -16,3 +16,7 @@
 
 ## Config file lists
 - `vrt_list_dtm_noe.txt`: Paths of files used to construct the virtual raster for the DTM of Lower Austria
+
+
+## Config files
+- `aoi_config.sh`: shell configuration settings
