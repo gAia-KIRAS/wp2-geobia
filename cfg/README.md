@@ -5,6 +5,7 @@
 
 1. `grass_script`:
     - DTM preprocessing using GRASS GIS wrappers
+    - Used for `dev/01-dtm_preparation`
     - `conda env create -f grass_script.yml`
     - Core setup:
     ```sh
@@ -12,6 +13,10 @@
     conda install -c conda-forge python pip ipython numpy pandas gdal black
     pip install grass-session
     ```
+
+## Config file lists
+- `vrt_list_dtm_noe.txt`: Paths of files used to construct the virtual raster for the DTM of Lower Austria
+
 
 ## Config files
 - `aoi_config.sh`: shell configuration settings
