@@ -206,7 +206,25 @@ saga_cmd ta_lighting 5 -DEM $dtm_elev \
 # land-surface variables - slope stability
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# TODO
+# ANGMAP
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_5.html
+# saga_cmd ta_slope_stability 5 -DEM $dtm_elev \
+#     -E "${outpath_base}_acute_angle.sdat" \
+
+# SAFETYFACTOR
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_0.html
+
+# SHALSTAB
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_2.html
+
+# TOBIA
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_1.html
+
+# WEDGEFAIL
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_4.html
+
+# WETNESS
+# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_3.html
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # prepare final output
