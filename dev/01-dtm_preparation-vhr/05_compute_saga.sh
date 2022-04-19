@@ -9,7 +9,6 @@
 # Terrain Analysis Libraries
 # https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_hydrology.html
 # https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_morphometry.html
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability.html
 # https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_lighting.html
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
@@ -201,30 +200,6 @@ echo "\n`date "+%Y-%m-%d %H:%M:%S"`: Compute Topographic Openness"
 saga_cmd ta_lighting 5 -DEM $dtm_elev \
     -POS "${outpath_base}_PTO.sdat" \
     -NEG "${outpath_base}_NTO.sdat"
-
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-# land-surface variables - slope stability
-# ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
-
-# ANGMAP
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_5.html
-# saga_cmd ta_slope_stability 5 -DEM $dtm_elev \
-#     -E "${outpath_base}_acute_angle.sdat" \
-
-# SAFETYFACTOR
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_0.html
-
-# SHALSTAB
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_2.html
-
-# TOBIA
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_1.html
-
-# WEDGEFAIL
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_4.html
-
-# WETNESS
-# https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_slope_stability_3.html
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # prepare final output
