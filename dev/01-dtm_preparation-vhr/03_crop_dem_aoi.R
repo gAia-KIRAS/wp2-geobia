@@ -91,7 +91,7 @@ for (name in unique(fls$Name)) {
   print(glue("{Sys.time()} -- Build VRT"))
   cmd1 <- glue("gdalbuildvrt -input_file_list {ifl} -overwrite {ofl}.vrt")
   system(cmd1, intern = TRUE, ignore.stderr = TRUE)
-  print(glue("{Sys.time()} -- Granslate to GeoTIFF"))
+  print(glue("{Sys.time()} -- Translate to GeoTIFF"))
   cmd2 <- glue("gdal_translate {ofl}.vrt {ofl}.tif")
   system(cmd2, intern = TRUE, ignore.stderr = TRUE)
   print(glue("{Sys.time()} -- {name} done"))
