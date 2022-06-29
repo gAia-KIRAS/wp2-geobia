@@ -80,14 +80,21 @@ fls <- noe %>%
   group_by(Name)
 
 for (name in unique(fls$Name)) {
+  print(glue("{Sys.time()} -- Working on {name}"))
   ifl <- glue("dat/interim/dtm/noe_{name}_list.txt")
+  ofl <- glue("dat/interim/dtm/dtm_noe_{name}")
   try(unlink(ifl))
   fls %>%
     filter(Name == "West") %>%
     pull(f_pth) %>%
     writeLines(ifl)
-  cmd <- glue("gdalbuildvrt -input_file_list {ifl} -overwrite dat/interim/dtm/dtm_noe_{name}.vrt")
-  system(cmd, intern = TRUE, ignore.stderr = TRUE)
+  print(glue("{Sys.time()} -- Build VRT"))
+  cmd1 <- glue("gdalbuildvrt -input_file_list {ifl} -overwrite {ofl}.vrt")
+  system(cmd1, intern = TRUE, ignore.stderr = TRUE)
+  print(glue("{Sys.time()} -- Granslate to GeoTIFF"))
+  cmd2 <- glue("gdal_translate {ofl}.vrt {ofl}.tif")
+  system(cmd2, intern = TRUE, ignore.stderr = TRUE)
+  print(glue("{Sys.time()} -- {name} done"))
 }
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
