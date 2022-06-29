@@ -1,5 +1,6 @@
 # load packages
 library("dplyr")
+library("tibble")
 library("sf")
 library("stars")
 library("glue")
@@ -62,7 +63,32 @@ for (region in carinthia$name) {
 # AOI Lower Austria
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# TODO
+noe_tiles <- read_sf("dat/interim/dtm/extents_noe.gpkg")
+noe_aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_noe/NOE_gaiaArea.shp") %>%
+  st_transform(31256)
+
+noe <- st_join(noe_aoi, noe_tiles) %>%
+  remove_rownames() %>%
+  mutate(f_pth = glue("dat/raw/dtm/dtm_noe/dtm_grd/{tile}.grd")) %>%
+  mutate(f_pth = if_else(file.exists(f_pth), f_pth, glue("dat/raw/dtm/dtm_noe/dtm_grd/{tile}.GRD")))
+
+table(file.exists(noe$f_pth))
+
+fls <- noe %>%
+  st_drop_geometry() %>%
+  select(Name, f_pth) %>%
+  group_by(Name)
+
+for (name in unique(fls$Name)) {
+  ifl <- glue("dat/interim/dtm/noe_{name}_list.txt")
+  try(unlink(ifl))
+  fls %>%
+    filter(Name == "West") %>%
+    pull(f_pth) %>%
+    writeLines(ifl)
+  cmd <- glue("gdalbuildvrt -input_file_list {ifl} -overwrite dat/interim/dtm/dtm_noe_{name}.vrt")
+  system(cmd, intern = TRUE, ignore.stderr = TRUE)
+}
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
