@@ -85,7 +85,7 @@ for (name in unique(fls$Name)) {
   ofl <- glue("dat/interim/dtm/dtm_noe_{name}")
   try(unlink(ifl))
   fls %>%
-    filter(Name == "West") %>%
+    filter(Name == name) %>%
     pull(f_pth) %>%
     writeLines(ifl)
   print(glue("{Sys.time()} -- Build VRT"))
