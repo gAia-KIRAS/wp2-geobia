@@ -11,14 +11,15 @@ fl <- list.files(
 
 param <- gsub("(dat/interim/dtm_derivates/ktn_Nockberge_Ost/dtm_carinthia_Nockberge_Ost_)(.*)(.tif)", "\\2", fl)
 
+# Size is 47348, 40525
 dem_to_mat <- function(x) {
-  tif <- read_stars(x, RasterIO = list(nBufXSize = 50, nBufYSize = 50, bands = 1), proxy = FALSE)
+  tif <- read_stars(x, RasterIO = list(nBufXSize = 4700, nBufYSize = 4000, bands = 1), proxy = FALSE)
   res <- unclass(tif)[[1]]
   res <- as.vector(res)
   return(res)
 }
 
-tifs <- mclapply(fl, dem_to_mat, mc.cores = 12L)
+tifs <- mclapply(fl, dem_to_mat, mc.cores = 24L)
 names(tifs) <- param
 
 cor_dat <- tifs %>%
