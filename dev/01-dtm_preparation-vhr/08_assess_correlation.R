@@ -2,7 +2,7 @@ library(stars)
 library(parallel)
 library(dplyr)
 library(tidyr)
-library(corrr)
+library(ggplot2)
 
 fl <- list.files(
   "dat/interim/dtm_derivates/ktn_Nockberge_Ost",
@@ -28,7 +28,7 @@ cor_dat <- tifs %>%
   drop_na() %>%
   cor() %>%
   as.data.frame() %>%
-  rownames_to_column(var = "param_1") %>%
+  tibble::rownames_to_column(var = "param_1") %>%
   pivot_longer(-param_1, names_to = "param_2", values_to = "correlation") %>%
   mutate(cor = round(correlation, 2))
 
