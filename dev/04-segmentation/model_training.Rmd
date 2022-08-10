@@ -1,0 +1,160 @@
+---
+title: "Training gAia landslide detection"
+output: html_notebook
+---
+
+
+
+```{r setup, warning=FALSE, include=FALSE}
+library(caret)
+library(ranger)
+library(matrixStats)
+
+load("~/nfs_home/Git/gaia/dat/interim/segments/segments_ktn_subset1.RData")
+
+nthreads <- 8L
+```
+
+
+### Split data into training and testing
+
+```{r prep}
+dat <- dat[!rowAnys(is.na(as.matrix(dat))),]
+dat$class <- factor(dat$class)
+names(dat)[2:(ncol(dat)-1)] <- paste0("V", names(dat)[2:(ncol(dat)-1)])
+
+# split
+set.seed(100)
+inTraining <- createDataPartition(dat$class, p = .75, list = FALSE)
+training <- dat[inTraining,-1]
+testing  <- dat[-inTraining,-1]
+n_feat <- ncol(training) - 1L
+```
+
+
+### Model training
+
+#### a) Full training set
+
+Training with full training set and default parameters
+
+```{r full}
+# full training set
+set.seed(10)
+rngFull <- ranger(class ~ ., data=training, num.threads=8L)
+confusionMatrix(testing$class, predict(rngFull, data=testing)$pred, positive="1")
+```
+
+
+#### b) Hyper-parameter tuning
+
+10-fold crossvalidation for hyper-parameter tuning
+
+```{r cv}
+# 10-fold CV
+fitControl <- trainControl(method = "repeatedcv",
+                               number = 10,
+                               ## repeated ten times
+                               repeats = 5,
+                               verboseIter = FALSE)
+
+# search grid
+mtry_default <- floor(sqrt(n_feat))
+parGrid <- expand.grid(mtry = c(0.5,1,1.5,2:5)*mtry_default,
+                       splitrule = "extratrees",
+                       min.node.size = 1)
+
+set.seed(101)
+rngFullCv <- train(class ~ ., training, method="ranger", 
+                   trControl = fitControl,
+                   tuneGrid = parGrid,
+                   num.threads = nthreads)
+#confusionMatrix(table(pred = predict(rngFullCv$finalModel, data=testing)$pred, 
+#                      ref = testing$class))
+confusionMatrix(testing$class,
+                predict(rngFullCv$finalModel, data=testing)$pred, positive="1")
+```
+
+
+#### c) Balancing training set
+
+Subsampling of training dataset by splitting negative samples into equal folds
+
+```{r split neg}
+# split negative training samples into equal folds
+ntrain_pos <- nrow(training[training$class == 1,])
+nrep <- floor(nrow(training[training$class == 0,]) / ntrain_pos)
+set.seed(102)
+rep_splits <- createFolds(training[training$class == 0,]$class, k=nrep)
+```
+
+
+```{r cv splits}
+rngFit1 <- list()
+for (i in 1:nrep) {
+    cat("Training set", i, "...\n")
+    training2 <- rbind(training[training$class == 1,], #all positive samples
+                       training[training$class == 0,][rep_splits[[i]],])
+
+    set.seed(825)
+    rngFit1[[i]] <- train(class ~ ., training2,
+                          method = "ranger",
+                          trControl = fitControl,
+                          tuneGrid = parGrid,
+                          num.threads = nthreads)
+}
+
+# validation of final models
+rngFit1_val <- lapply(rngFit1, function(m, testdata) {
+    confusionMatrix(testing$class, predict(m$finalModel, data=testing)$pred)
+}, testdata=testing)
+knitr::kable(rngFit1_acc <- sapply(rngFit1_val, "[[", "overall"))
+bestFold <- which.max(rngFit1_acc[rownames(rngFit1_acc) == "Kappa",])
+bestHParSet <- rngFit1[[bestFold]]$bestTune
+```
+
+Feature importance of model in best fold:
+
+```{r feature importance}
+cat("Feature importance for training set", bestFold, "\n")
+training2 <- rbind(training[training$class == 1,], #all positive samples
+                   training[training$class == 0,][rep_splits[[bestFold]],])
+set.seed(825)
+rngFit1_imp <- train(class ~ ., training2,
+                     method = "ranger",
+                     trControl = fitControl,
+                     tuneGrid = parGrid,
+                     num.threads = nthreads,
+                     importance = "permutation")
+```
+
+```{r}
+library(lattice)
+barchart(~ rngFit1_imp$finalModel$variable.imp)
+```
+
+#### d) Retrain models with subsets and best hyperparameters
+
+```{r}
+# retrain models over each neg. sample set with best hyperpars
+rngFit2 <- list()
+fitControl2 <- trainControl(method = "none")
+for (i in 1:nrep) {
+    set.seed(42)
+    rngFit2[[i]] <- train(.outcome ~ ., rngFit1[[i]]$trainingData,
+                          method = "ranger", trControl=fitControl2,
+                          tuneGrid = bestHParSet, num.threads = nthreads)
+}
+```
+
+Majority vote:
+
+```{r}
+# majority vote
+rngPred2 <- sapply(rngFit2, function(m) predict(m$finalModel, data=testing)$pred)
+rngMajVote <- as.factor(apply(rngPred2, 1, raster::modal))
+#extractPrediction(rngFit2, testX=testing[-grep("class", names(testing))], testY=testing$class)
+
+confusionMatrix(testing$class, rngMajVote, positive = "1")
+```
+
