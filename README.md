@@ -81,10 +81,6 @@ GEOBIA approaches by Knevels et al. (2019)[^1] and Pawluszek (2019)[^2] were not
 
 </div>
 
-[^1]: Knevels, R.; Petschko, H.; Leopold, P.; Brenning, A. Geographic Object-Based Image Analysis for Automated Landslide Detection Using Open Source GIS Software. *ISPRS Int. J. Geo-Inf.* **8**, 551. (2019). https://doi.org/10.3390/ijgi8120551 .
-
-[^2]: Pawłuszek, K.; Marczak, S.; Borkowski, A.; Tarolli, P. Multi-Aspect Analysis of Object-Oriented Landslide Detection Based on an Extended Set of LiDAR-Derived Terrain Features. *ISPRS Int. J. Geo-Inf.* **8**, 321 (2019). https://doi.org/10.3390/ijgi8080321.
-
 
 
 ## WP4
@@ -108,3 +104,11 @@ GEOBIA approaches by Knevels et al. (2019)[^1] and Pawluszek (2019)[^2] were not
 - Task 5.1: Modell-Preprocessing: Erstellung von Klimaindizes, Ableitung geomorphologischer Grundeinheiten und Entwicklung der Netzwerk-Architektur
 - Task 5.2 Training der Vorhersage-Modelle und Validierung
 - Task 5.3 Visualisierung und Interpretation
+
+
+
+## References
+
+[^1]: Knevels, R.; Petschko, H.; Leopold, P.; Brenning, A. Geographic Object-Based Image Analysis for Automated Landslide Detection Using Open Source GIS Software. *ISPRS Int. J. Geo-Inf.* **8**, 551. (2019). https://doi.org/10.3390/ijgi8120551 .
+
+[^2]: Pawłuszek, K.; Marczak, S.; Borkowski, A.; Tarolli, P. Multi-Aspect Analysis of Object-Oriented Landslide Detection Based on an Extended Set of LiDAR-Derived Terrain Features. *ISPRS Int. J. Geo-Inf.* **8**, 321 (2019). https://doi.org/10.3390/ijgi8080321.
