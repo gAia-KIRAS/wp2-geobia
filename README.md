@@ -1,7 +1,5 @@
 # gAIa
 
-## At a glance
-
 > Predicting landslides - Entwicklung von Gefahrenhinweiskarten für Hangrutschungen aus konsolidierten Inventardaten
 
 - **Funding**: KIRAS | FFG
@@ -30,7 +28,7 @@ origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (fetch)
 origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (push)
 ```
 
-## Overview 
+## Repo structure 
 
 The general structure is as follows:
 - `cfg`: configuration files
