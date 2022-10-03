@@ -3,8 +3,8 @@ Naturkatastrophen - Prognose(Tools)
 
 ## Was war die Ausgangslage? Wie ist es zum Projekt gAia gekommen?
 
-In Österreich sind derzeit mehrere Hangrutschungsinventare vorhanden. Ein Hangrutschungsinventar umfasst verschiedene Typen von gravitativen Massenbewegungen und diese wurden und werden von unterschiedlichen Einrichtungen (GBA, WLV, Landesgeologien, etc.) mit unterschiedlichen Zielsetzungen geführt. Daraus ergibt sich, dass die bestehenden Inventare nicht einheitlich aufgebaut sind.
-Ausgehend von Bedarfsträgern (wie z.B. dem BMLV und den Landesgeologien) sollen die Inventare verbessert/harmonisiert werden um auch in weiterer Folge (aktuelle) Hangrutschungsgefährdungskarten zu entwickeln. 
+In Österreich sind derzeit mehrere Hangrutschungsinventare vorhanden. Ein Hangrutschungsinventar umfasst verschiedene Typen von gravitativen Massenbewegungen, wie z.B. ... **(MA: bitte ergänzen)** Da unterschiedliche Einrichtungen (GBA, WLV, Landesgeologien, etc.) unterschiedliche Zielsetzungen bei der Führung dieser Inventaren verfolgen, ergeben sich Unterschiede in Aufbau und zugrundeliegender Methodik.
+Ausgehend von Bedarfsträgern (wie z.B. dem BMLV und den Landesgeologien) sollen die Inventare verbessert/harmonisiert werden, um auch in weiterer Folge (aktuelle) Hangrutschungsgefährdungskarten zu entwickeln. 
 
 ## Was ist das Ziel des Projekts?
 
