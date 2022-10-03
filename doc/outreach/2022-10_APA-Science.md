@@ -3,7 +3,8 @@ Naturkatastrophen - Prognose(Tools)
 
 ## Was war die Ausgangslage? Wie ist es zum Projekt gAia gekommen?
 
-In Österreich sind derzeit mehrere Hangrutschungsinventare vorhanden. Ein Hangrutschungsinventar umfasst verschiedene Typen von gravitativen Massenbewegungen und diese wurden und werden von unterschiedlichen Einrichtungen (GBA, WLV, Landesgeologien, etc.) geführt, mit unterschiedlichen Zielsetzungen. Daraus ergibt sich, dass die bestehenden Inventare nicht einheitlich aufgebaut sind.  Ausgehend von Bedarfsträgern wie z.B.: dem BMLV und den Landesgeologien sollen die Inventare verbessert/harmonisiert werden um auch in weiterer Folge (aktuelle) Hangrutschungsgefährdungskarten zu entwickeln. 
+In Österreich sind derzeit mehrere Hangrutschungsinventare vorhanden. Ein Hangrutschungsinventar umfasst verschiedene Typen von gravitativen Massenbewegungen und diese wurden und werden von unterschiedlichen Einrichtungen (GBA, WLV, Landesgeologien, etc.) mit unterschiedlichen Zielsetzungen geführt. Daraus ergibt sich, dass die bestehenden Inventare nicht einheitlich aufgebaut sind.
+Ausgehend von Bedarfsträgern (wie z.B. dem BMLV und den Landesgeologien) sollen die Inventare verbessert/harmonisiert werden um auch in weiterer Folge (aktuelle) Hangrutschungsgefährdungskarten zu entwickeln. 
 
 ## Was ist das Ziel des Projekts?
 
@@ -11,13 +12,13 @@ Ziel des Projekts gAia ist die Entwicklung einer Methodik
 1. zur Vervollständigung historischer Ereignisdaten für Hangrutschungen aus Fernerkundungsdaten und 
 1. zur Erstellung darauf aufbauender robuster Gefahrenhinweiskarten. 
 
-## Durch intelligente Datenfusion von neu generierten Informationen aus 
+Durch intelligente Datenfusion von neu generierten Informationen aus 
 
 1. hochaufgelösten Airborne Laserscanning (ALS)-Höhenmodellen, 
 1. multispektralen, optischen Satellitendaten (Sentinel-2) 
 1. mit bestehenden Hangrutschungskatastern 
 
-wird ein umfangreicher Inventardatensatz für zwei ausgewählte Bundesländer (Kärnten, Niederösterreich)  erstellt. Weiters werden Aspekte des Geodatenmanagements, Datenqualität, Nachvollziehbar-keit und Langzeitarchivierung im Projekt behandelt.
+wird ein umfangreicher Inventardatensatz für zwei ausgewählte Bundesländer (Kärnten, Niederösterreich) erstellt. Weiters werden Aspekte des Geodatenmanagements, Datenqualität, Nachvollziehbarkeit und Langzeitarchivierung im Projekt behandelt.
 
 ## Welche Herausforderungen gibt es dabei?
 
