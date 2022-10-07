@@ -41,8 +41,10 @@ Training with full training set and default parameters
 ```{r full}
 # full training set
 set.seed(10)
-rngFull <- ranger(class ~ ., data=training, num.threads=8L)
-confusionMatrix(testing$class, predict(rngFull, data=testing)$pred, positive="1")
+rngFull <- ranger(class ~ ., data = training, num.threads = 8L)
+confusionMatrix(testing$class,
+                predict(rngFull, data = testing)$pred,
+                positive = "1")
 ```
 
 
@@ -60,19 +62,21 @@ fitControl <- trainControl(method = "repeatedcv",
 
 # search grid
 mtry_default <- floor(sqrt(n_feat))
-parGrid <- expand.grid(mtry = c(0.5,1,1.5,2:5)*mtry_default,
+parGrid <- expand.grid(mtry = c(0.5,1,1.5,2:5) * mtry_default,
                        splitrule = "extratrees",
                        min.node.size = 1)
 
 set.seed(101)
-rngFullCv <- train(class ~ ., training, method="ranger", 
+rngFullCv <- train(class ~ ., training, 
+                   method = "ranger",
                    trControl = fitControl,
                    tuneGrid = parGrid,
                    num.threads = nthreads)
 #confusionMatrix(table(pred = predict(rngFullCv$finalModel, data=testing)$pred, 
 #                      ref = testing$class))
 confusionMatrix(testing$class,
-                predict(rngFullCv$finalModel, data=testing)$pred, positive="1")
+                predict(rngFullCv$finalModel, data = testing)$pred,
+                positive = "1")
 ```
 
 
@@ -85,7 +89,7 @@ Subsampling of training dataset by splitting negative samples into equal folds
 ntrain_pos <- nrow(training[training$class == 1,])
 nrep <- floor(nrow(training[training$class == 0,]) / ntrain_pos)
 set.seed(102)
-rep_splits <- createFolds(training[training$class == 0,]$class, k=nrep)
+rep_splits <- createFolds(training[training$class == 0,]$class, k = nrep)
 ```
 
 
@@ -106,8 +110,8 @@ for (i in 1:nrep) {
 
 # validation of final models
 rngFit1_val <- lapply(rngFit1, function(m, testdata) {
-    confusionMatrix(testing$class, predict(m$finalModel, data=testing)$pred)
-}, testdata=testing)
+    confusionMatrix(testing$class, predict(m$finalModel, data = testing)$pred)
+}, testdata = testing)
 knitr::kable(rngFit1_acc <- sapply(rngFit1_val, "[[", "overall"))
 bestFold <- which.max(rngFit1_acc[rownames(rngFit1_acc) == "Kappa",])
 bestHParSet <- rngFit1[[bestFold]]$bestTune
@@ -128,7 +132,7 @@ rngFit1_imp <- train(class ~ ., training2,
                      importance = "permutation")
 ```
 
-```{r}
+```{r plot importance}
 library(lattice)
 barchart(~ rngFit1_imp$finalModel$variable.imp)
 ```
@@ -141,9 +145,12 @@ rngFit2 <- list()
 fitControl2 <- trainControl(method = "none")
 for (i in 1:nrep) {
     set.seed(42)
-    rngFit2[[i]] <- train(.outcome ~ ., rngFit1[[i]]$trainingData,
-                          method = "ranger", trControl=fitControl2,
-                          tuneGrid = bestHParSet, num.threads = nthreads)
+    rngFit2[[i]] <- train(.outcome ~ ., 
+                          rngFit1[[i]]$trainingData,
+                          method = "ranger", 
+                          trControl = fitControl2,
+                          tuneGrid = bestHParSet, 
+                          num.threads = nthreads)
 }
 ```
 
@@ -155,6 +162,34 @@ rngPred2 <- sapply(rngFit2, function(m) predict(m$finalModel, data=testing)$pred
 rngMajVote <- as.factor(apply(rngPred2, 1, raster::modal))
 #extractPrediction(rngFit2, testX=testing[-grep("class", names(testing))], testY=testing$class)
 
-confusionMatrix(testing$class, rngMajVote, positive = "1")
+confusionMatrix(testing$class, 
+                rngMajVote,
+                positive = "1")
 ```
 
+Predict all segments in `dat`:
+
+```{r}
+rngPredAll <- sapply(rngFit2, function(m) predict(m$finalModel, data=dat)$pred)
+rngMajVoteAll <- data.frame(seg=dat$seg,
+                            label=as.factor(apply(rngPredAll, 1, raster::modal)))
+rngMajVoteAll <- rngMajVoteAll[-which(duplicated(rngMajVoteAll$seg)),]
+#extractPrediction(rngFit2, testX=testing[-grep("class", names(testing))], testY=testing$class)
+```
+
+Display as map:
+
+```{r}
+library(raster)
+rasterOptions(tmpdir = "~/nfs_scratch/tmp")
+
+#segfiles <- Sys.glob("~/nfs_home/gAia/lsms_r50_s50_ms5000_subs1_*_FINAL.tif")
+#segs_r <- lapply(segfiles, raster)
+#segs_r$progress <- "text"
+#segs_r$filename <- rasterTmpFile()
+#segs_mosaic <- do.call(merge, segs_r)
+segs <- raster("~/nfs_home/gAia/lsms_r50_s50_ms5000_subs1.vrt")
+segs_class <- subs(segs, rngMajVoteAll, 
+                   subsWithNA=TRUE, filename=rasterTmpFile(), 
+                   progress="text", datatype="INT1U")
+```
