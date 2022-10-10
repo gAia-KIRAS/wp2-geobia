@@ -3,10 +3,10 @@ library(raster)
 library(foreach)
 library(doSNOW)
 
-setwd("~/nfs_home/gAia")
+setwd("~/nfs_home/gAia/03_merged")
 minsize <- 500L
 
-segfiles <- Sys.glob("lsms_r50_s50_ms5000_subs1_*_FINAL.tif")
+segfiles <- Sys.glob("lsms_r50_s50_ms5000_subs1_*_FINAL_mrg500.tif")
 b <- brick("scaled/dtm_carinthia_Oberkaernten_scaled_stack_subset1.tif")
 
 # setup SNOW
