@@ -10,7 +10,7 @@ library(caret)
 library(ranger)
 library(matrixStats)
 
-load("~/nfs_home/Git/gaia/dat/interim/segments/segments_ktn_subset1.RData")
+load("~/nfs_home/Git/gaia/dat/interim/segments/segments_ktn_subset1_mrg500.RData")
 
 nthreads <- 8L
 ```
@@ -55,10 +55,10 @@ confusionMatrix(testing$class,
 ```{r cv}
 # 10-fold CV
 fitControl <- trainControl(method = "repeatedcv",
-                               number = 10,
-                               ## repeated ten times
-                               repeats = 5,
-                               verboseIter = FALSE)
+                           number = 10,
+                           ## repeated ten times
+                           repeats = 5,
+                           verboseIter = FALSE)
 
 # search grid
 mtry_default <- floor(sqrt(n_feat))
@@ -145,11 +145,11 @@ rngFit2 <- list()
 fitControl2 <- trainControl(method = "none")
 for (i in 1:nrep) {
     set.seed(42)
-    rngFit2[[i]] <- train(.outcome ~ ., 
+    rngFit2[[i]] <- train(.outcome ~ .,
                           rngFit1[[i]]$trainingData,
-                          method = "ranger", 
+                          method = "ranger",
                           trControl = fitControl2,
-                          tuneGrid = bestHParSet, 
+                          tuneGrid = bestHParSet,
                           num.threads = nthreads)
 }
 ```
@@ -162,7 +162,7 @@ rngPred2 <- sapply(rngFit2, function(m) predict(m$finalModel, data=testing)$pred
 rngMajVote <- as.factor(apply(rngPred2, 1, raster::modal))
 #extractPrediction(rngFit2, testX=testing[-grep("class", names(testing))], testY=testing$class)
 
-confusionMatrix(testing$class, 
+confusionMatrix(testing$class,
                 rngMajVote,
                 positive = "1")
 ```

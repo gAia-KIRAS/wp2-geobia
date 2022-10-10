@@ -1,5 +1,6 @@
 library(sf)
 library(raster)
+rasterOptions(tmpdir = "~/nfs_home/tmp")
 
 inv <- read_sf("~/nfs_scratch/projekte/gAia/data/inventory/ktn/ereignisinventar_als_basiert/ALS_basiertes_Inventar_Ktn/Rutschungen_gesamt.shp")
 segfiles <- Sys.glob("~/nfs_home/gAia/lsms_r50_s50_ms5000_subs1_*_FINAL.tif")
@@ -52,4 +53,4 @@ names(res_neg) <- names(res)
 
 dat <- rbind(cbind(res, class=1L), cbind(res_neg, class=0L))
 dat$class <- factor(dat$class)
-save(dat, file="~/nfs_home/Git/gaia/dat/interim/segments/segments_ktn_subset1.RData")
+save(dat, file="~/nfs_home/Git/gaia/dat/interim/segments/segments_ktn_subset1_mrg500.RData")
