@@ -41,7 +41,7 @@
     - **storage**
         - **custom created dataset**
             - **data collection process**
-        - **already existing/reused dataset**
+        - **already existing/reused dataset**: ALS DTM, existing inventories
             - **creator/supplier**
             - **version**
             - **original use of dataset**
@@ -50,8 +50,12 @@
     - **annotation process (if applicable)**
     - **data cleaning process (if applicable)**
         - **steps**
+            - DTM: fill sinks
+            - inventory: filter relevant process categories
     - **sample size**
-    - **limitations/bias in the data**
+    - **limitations/bias in the data**:
+        - DTM: age (potentially out-of-date), inconsistent timestamps
+        - inventory: location and timestamp potentially uncertain; location might be only point instead of polygon, time might be inaccurate or missing completely 
     - **size, proportion or distribution of training data**
 
 
