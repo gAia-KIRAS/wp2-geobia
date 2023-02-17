@@ -18,9 +18,14 @@
 
 ## 1) General
 - **General current description of the task solved by the WP and connection to the other WPs (main components, data flows, processing steps, inputs and outputs, supporting services/libraries)?**
+    - TODO @mavian
 - **What would be the outputs(s) of the WP? (e.g.: ML model, datasets, application, results,....)**
+    - model: GEOBIA-model for automated delineation of landslide polygons from VHR ALS DTM data
+    - dataset: comprehensive inventory of landslides present at the time of DTM generation
 - **Who are the main stakeholders of the designed system from your point of view? (creators, users, involved/affected parties,...)**
+    - TODO @mavian
 - **What will be the main activities of the WP/system? (e.g processing steps, components)**
+    - TODO @mavian
 
 ## 2) Input
 
