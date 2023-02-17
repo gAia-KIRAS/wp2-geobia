@@ -9,6 +9,7 @@
 > - [SBA] Tomasz Miksa (TMi)
 > - [SBA] Laura Waltersdorfer (LW)
 
+
 ## General
 - LW: short intro on WP 6/auditability
     - T6.1: definition of data management plan
@@ -16,7 +17,9 @@
 - Geosphere: Overview of WP task and current process
     - going through questionnaire
 
+
 ## 1) General
+
 - **General current description of the task solved by the WP and connection to the other WPs (main components, data flows, processing steps, inputs and outputs, supporting services/libraries)?**
     - TODO @mavian
 - **What would be the outputs(s) of the WP? (e.g.: ML model, datasets, application, results,....)**
@@ -26,6 +29,7 @@
     - TODO @mavian
 - **What will be the main activities of the WP/system? (e.g processing steps, components)**
     - TODO @mavian
+
 
 ## 2) Input
 
@@ -50,6 +54,7 @@
     - **limitations/bias in the data**
     - **size, proportion or distribution of training data**
 
+
 ## 3) Output
 
 > explaining output
@@ -61,6 +66,7 @@
     - **how should it be best utilized?**
     - **necessary capabilities/skills to interpret output (specific skills needed?)**
     - **same questions as input (license,..)**
+
 
 ## 4) (ML) Model or also Software (if applicable)
 
