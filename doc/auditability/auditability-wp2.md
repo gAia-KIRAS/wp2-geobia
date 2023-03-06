@@ -1,4 +1,4 @@
-## Aia Auditability Overview WP 2 
+## gAia Auditability Overview WP 2 
 
 > Location: online  
 > Date, Time: tba  
