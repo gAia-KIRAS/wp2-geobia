@@ -6,7 +6,7 @@ The following table provides an overview of independent features to be used in t
 | --------------------------------------------------- | ------------------ | ------------ | ------------ |
 | Antecedent Precipitation Index                      | API                | SPARTACUS    | climate      |
 | Aspect                                              | aspect             | `gdaldem`    | morphometry  |
-| Cumulative Wet Days                                 | CWD                | SPARTACUS    | climate      |
+| Consecutive Wet Days                                | CWD                | SPARTACUS    | climate      |
 | Convergence Index                                   | convergence_index  | SAGAGIS      | morphometry  |
 | Terrain Surface Convexity                           | convexity          | SAGAGIS      | morphometry  |
 | Curvature (max)                                     | curv_max           | SAGAGIS      | morphometry  |
