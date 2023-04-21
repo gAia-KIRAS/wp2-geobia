@@ -39,8 +39,7 @@ The following table provides an overview of independent features to be used in t
 | Vector Ruggedness Measure                           | VRM                | SAGAGIS      | morphometry  |
 | Distance to water bodies                            | water_distance     | hydrography  | hydrology    |
 
-GIS-Tools:
-- `gdaldem`
-- SAGA GIS
-- GRASS GIS
-- WhiteBoxTools: [Geomorphometric Analysis](https://www.whiteboxgeo.com/manual/wbt_book/available_tools/geomorphometric_analysis.html)
+Notes:
+- GIS-Tools for computing geomorphometric indicators from DEMs include [`gdaldem`](https://gdal.org/programs/gdaldem.html), [SAGA GIS](https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_morphometry.html), [GRASS GIS](https://grass.osgeo.org/grass82/manuals/keywords.html#terrain%20patterns) and [WhiteBoxTools](https://www.whiteboxgeo.com/manual/wbt_book/available_tools/geomorphometric_analysis.html).
+- Spatial resolution needs to be determined
+- Climate indices need to be aggregated from annual data to a climatology using sensible aggregation functions (probably some high quantile)
