@@ -1,60 +1,46 @@
-## Geomorphometry & Hydrology
+# Feature
 
-| variable                    | abbreviation       | tool      | topic       |
-|-----------------------------|--------------------|-----------|-------------|
-| Aspect                      | aspect             | `gdaldem` |             |
-| CatchmentArea               | catchment-area     | SAGAGIS   | hydrology   |
-| ChannelNetwork              | channel-network    | SAGAGIS   | channels    |
-| ConvergenceIndex            | convergence-index  | SAGAGIS   | morphometry |
-| TerrainSurfaceConvexity     | convexity          | SAGAGIS   | morphometry |
-| Curvature(max)              | curv-max           | SAGAGIS   | morphometry |
-| Curvature(min)              | curv-min           | SAGAGIS   | morphometry |
-| Curvature(plan)             | curv-plan          | SAGAGIS   | morphometry |
-| Curvature(profile)          | curv-prof          | SAGAGIS   | morphometry |
-| DiurnalAnisotropicHeat      | DAH                | SAGAGIS   | morphometry |
-| FlowAccumulation            | flow-accumulation  | SAGAGIS   | hydrology   |
-| FlowPathLength              | flow-path-length   | SAGAGIS   | hydrology   |
-| FlowWidth                   | flow-width         | SAGAGIS   | hydrology   |
-| Geomorphons                 | geomorphons        | SAGAGIS   | lighting    |
-| MaximumHeight               | maximum-height     | SAGAGIS   | hydrology   |
-| ModifiedCatchmentArea       | mod-catchment-area | SAGAGIS   | hydrology   |
-| MeltonRoughnessNumber       | MRN                | SAGAGIS   | hydrology   |
-| NegativeTopographicOpenness | NTO                | SAGAGIS   | lighting    |
-| PositiveTopographicOpenness | PTO                | SAGAGIS   | lighting    |
-| Roughness                   | roughness          | `gdaldem` |             |
-| SpecificCatchmentArea       | SCA                | SAGAGIS   | hydrology   |
-| Slope(radian)               | slope-rad          | SAGAGIS   | morphometry |
-| Slope(degree)               | slope              | `gdaldem` |             |
-| StreamPowerIndex            | SPI                | SAGAGIS   | hydrology   |
-| SkyViewFactor               | SVF                | SAGAGIS   | lighting    |
-| TopographicPositionIndex    | TRI                | `gdaldem` |             |
-| TopographicRoughnessIndex   | TRI                | `gdaldem` |             |
-| TopographicWetnessIndex     | TWI                | SAGAGIS   | hydrology   |
-| VectorRuggednessMeasure     | VRM                | SAGAGIS   | morphometry |
+The following table provides an overview of independent features to be used in the landslide susceptibility model:
 
-Tools:
+| variable                                            | abbreviation       | tool /source | topic        |
+| --------------------------------------------------- | ------------------ | ------------ | ------------ |
+| Antecedent Precipitation Index                      | API                | SPARTACUS    | climate      |
+| Aspect                                              | aspect             | `gdaldem`    | morphometry  |
+| Cumulative Wet Days                                 | CWD                | SPARTACUS    | climate      |
+| Convergence Index                                   | convergence_index  | SAGAGIS      | morphometry  |
+| Terrain Surface Convexity                           | convexity          | SAGAGIS      | morphometry  |
+| Curvature (max)                                     | curv_max           | SAGAGIS      | morphometry  |
+| Curvature (min)                                     | curv_min           | SAGAGIS      | morphometry  |
+| Curvature (plan)                                    | curv_plan          | SAGAGIS      | morphometry  |
+| Curvature (profile)                                 | curv_prof          | SAGAGIS      | morphometry  |
+| Diurnal Anisotropic Heat                            | DAH                | SAGAGIS      | morphometry  |
+| Forest Cover                                        | forest             | BfW          | vegetation   |
+| Geomorphons                                         | geomorphons        | SAGAGIS      | lighting     |
+| Land Cover                                          | landcover          | Corine       | vegetation   |
+| Maximum Height                                      | maximum_height     | SAGAGIS      | hydrology    |
+| Melton Roughness Number                             | MRN                | SAGAGIS      | hydrology    |
+| Lithology                                           | lithology          | geology      | geology      |
+| Negative Topographic Openness                       | NTO                | SAGAGIS      | lighting     |
+| Precipitation Concentration index                   | PCI                | SPARTACUS    | climate      |
+| Positive Topographic Openness                       | PTO                | SAGAGIS      | lighting     |
+| Distance to roads                                   | road_distance      | GIP          | road         |
+| Roughness                                           | roughness          | `gdaldem`    | morphometry  |
+| Heavy Rainfall Days                                 | RR_90q             | SPARTACUS    | climate      |
+| Simple Precipitation Intensity Index                | SDII               | SPARTACUS    | climate      |
+| Slope                                               | slope              | `gdaldem`    | morphometry  |
+| Slope water                                         | slope_water        | hydrography  | hydrology    |
+| Standardized Precipitation Evapotranspiration Index | SPEI_30            | WINFORE      | climate      |
+| Stream Power Index                                  | SPI                | SAGAGIS      | hydrology    |
+| Sky View Factor                                     | SVF                | SAGAGIS      | lighting     |
+| Daily Precipitation Totals                          | precip_d           | SPARTACUS    | climate      |
+| Topographic Position Index                          | TRI                | `gdaldem`    | morphometry  |
+| Topographic Roughness Index                         | TRI                | `gdaldem`    | morphometry  |
+| Topographic Wetness Index                           | TWI                | SAGAGIS      | hydrology    |
+| Vector Ruggedness Measure                           | VRM                | SAGAGIS      | morphometry  |
+| Distance to water bodies                            | water_distance     | hydrography  | hydrology    |
+
+GIS-Tools:
 - `gdaldem`
 - SAGA GIS
 - GRASS GIS
-- WhiteBoxTools
-
-
-## Lithology and Soil
-- Lithology (geological maps)
-- Soil type
-
-
-## Land Cover
-- Vegetation index
-- Vegetation composition
-- Forest map. Source: [BFW](https://www.bfw.gv.at/hochgenaue-waldkarte-waldinventur/) 
-
-
-## Climate
-- Precipitation
-- Snowmelt
-
-## Other
-- Distance to roads
-- Distance to water bodies
-- Hangwasserkarte
+- WhiteBoxTools: [Geomorphometric Analysis](https://www.whiteboxgeo.com/manual/wbt_book/available_tools/geomorphometric_analysis.html)
