@@ -14,6 +14,7 @@ The following table provides an overview of independent features to be used in t
 | Curvature (plan)                                    | curv_plan          | SAGAGIS      | morphometry  |
 | Curvature (profile)                                 | curv_prof          | SAGAGIS      | morphometry  |
 | Diurnal Anisotropic Heat                            | DAH                | SAGAGIS      | morphometry  |
+| Distance to faults                                  | fault_distance     | GBA?         | geology      |
 | Forest Cover                                        | forest             | BfW          | vegetation   |
 | Geomorphons                                         | geomorphons        | SAGAGIS      | lighting     |
 | Land Cover                                          | landcover          | Corine       | vegetation   |
