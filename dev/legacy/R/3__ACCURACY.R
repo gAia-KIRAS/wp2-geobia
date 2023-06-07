@@ -29,7 +29,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-if("source.R" %in% list.files(file.path(here::here(), "R"))){
+if ("source.R" %in% list.files(file.path(here::here(), "R"))) {
   source(file.path(here::here(), "R", "source.R"))
   source(file.path(here::here(), "R", "helper.R"))
 } else {
@@ -43,10 +43,10 @@ valid_inv <- readRDS(file = file.path(path_validation, "inventory_valid.rds"))
 valid_Lslide <- readRDS(file = file.path(path_output, "valid_Lslide.rds"))
 
 # ... predictions
-valid_Lslide_pred <- valid_Lslide$pred %>% dplyr::filter(response != 0) 
+valid_Lslide_pred <- valid_Lslide$pred %>% dplyr::filter(response != 0)
 
 # ... post-processed
-valid_Lslide_postpros <-valid_Lslide$postpros
+valid_Lslide_postpros <- valid_Lslide$postpros
 
 
 
@@ -76,15 +76,15 @@ path_inventory <- file.path(path_save, "tmp_inv.tif")
 acc_OL_pred <- getIntersectSummary(inventory = valid_inv$sf_inv, Lslide = valid_Lslide_pred)
 
 # ... Correct classified landslides in inventory:  66.66667 % (predicted)
-acc_OL_pred_amnt <- length(which(acc_OL_pred$A_GTEQ_50 == 1))/length(unique(acc_OL_pred$Id))*100
-cat("Correct classified landslides in inventory: ", acc_OL_pred_amnt, "% (predicted)") 
+acc_OL_pred_amnt <- length(which(acc_OL_pred$A_GTEQ_50 == 1)) / length(unique(acc_OL_pred$Id)) * 100
+cat("Correct classified landslides in inventory: ", acc_OL_pred_amnt, "% (predicted)")
 
 # Post-Processed
 acc_OL_postpros <- getIntersectSummary(inventory = valid_inv$sf_inv, Lslide = valid_Lslide_postpros)
 
 # ... Correct classified landslides in inventory:  66.66667 % (post-processed)
-acc_OL_postpros_amnt <- length(which(acc_OL_postpros$A_GTEQ_50 == 1))/length(unique(acc_OL_postpros$Id))*100
-cat("Correct classified landslides in inventory: ", acc_OL_postpros_amnt , "% (post-processed)") 
+acc_OL_postpros_amnt <- length(which(acc_OL_postpros$A_GTEQ_50 == 1)) / length(unique(acc_OL_postpros$Id)) * 100
+cat("Correct classified landslides in inventory: ", acc_OL_postpros_amnt, "% (post-processed)")
 
 
 
@@ -102,26 +102,30 @@ raster::writeRaster(x = valid_inv$r_inv, filename = path_inventory, NAflag = -99
 
 # ... rasterize classifications
 # ... ... prediction
-r_valid_Lslide_pred <- rsaga.quickRasterization(x.sf = valid_Lslide_pred, 
-                                              r.path = path_inventory, 
-                                              field = "response", 
-                                              out.grid = file.path(path_save , "r_Lslide_postpros.tif"), 
-                                              env.rsaga = env.rsaga, 
-                                              show.output.on.console = T)
+r_valid_Lslide_pred <- rsaga.quickRasterization(
+  x.sf = valid_Lslide_pred,
+  r.path = path_inventory,
+  field = "response",
+  out.grid = file.path(path_save, "r_Lslide_postpros.tif"),
+  env.rsaga = env.rsaga,
+  show.output.on.console = T
+)
 
-r_valid_Lslide_pred <- r_valid_Lslide_pred %>% 
-                       raster::overlay(x = ., y = valid_inv$r_inv, fun = function(x, y) ifelse(is.na(x) & !is.na(y), 0, x))
+r_valid_Lslide_pred <- r_valid_Lslide_pred %>%
+  raster::overlay(x = ., y = valid_inv$r_inv, fun = function(x, y) ifelse(is.na(x) & !is.na(y), 0, x))
 
 # ... ... post-processed
-r_valid_Lslide_postpros <- rsaga.quickRasterization(x.sf = valid_Lslide_postpros, 
-                                         r.path = path_inventory, 
-                                         field = "Lslide", 
-                                         out.grid = file.path(path_save , "r_Lslide_postpros.tif"), 
-                                         env.rsaga = env.rsaga, 
-                                         show.output.on.console = T)
+r_valid_Lslide_postpros <- rsaga.quickRasterization(
+  x.sf = valid_Lslide_postpros,
+  r.path = path_inventory,
+  field = "Lslide",
+  out.grid = file.path(path_save, "r_Lslide_postpros.tif"),
+  env.rsaga = env.rsaga,
+  show.output.on.console = T
+)
 
-r_valid_Lslide_postpros <- r_valid_Lslide_postpros %>% 
-                           raster::overlay(x = ., y = valid_inv$r_inv, fun = function(x, y) ifelse(is.na(x) & !is.na(y), 0, x))
+r_valid_Lslide_postpros <- r_valid_Lslide_postpros %>%
+  raster::overlay(x = ., y = valid_inv$r_inv, fun = function(x, y) ifelse(is.na(x) & !is.na(y), 0, x))
 
 
 
@@ -139,12 +143,12 @@ acc_PL_postpros <- rsaga.calcAccPixelBased(r = r_valid_Lslide_postpros, inventor
 # In this step the accuracy results are joined together in one final table
 
 acc_df <- rbind(acc_PL_pred, acc_PL_postpros) %>%
-          cbind(data.frame(Type = c("Prediction", "Post-Processed")), .) %>%
-          dplyr::mutate(Obj_Lev = c(acc_OL_pred_amnt, acc_OL_postpros_amnt))
+  cbind(data.frame(Type = c("Prediction", "Post-Processed")), .) %>%
+  dplyr::mutate(Obj_Lev = c(acc_OL_pred_amnt, acc_OL_postpros_amnt))
 
 
 # take a look
-acc_df 
+acc_df
 
 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
@@ -152,4 +156,3 @@ acc_df
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 saveRDS(object = acc_df, file = file.path(path_output, "acc_df.rds"))
-

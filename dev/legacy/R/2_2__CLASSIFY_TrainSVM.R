@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # DESCRIPTION:
-# Creation of tuned trainings model with support vector machine (SVM) as 
+# Creation of tuned trainings model with support vector machine (SVM) as
 # classifier:
 # - 5:1:1 non-landslide to landslide ratio
 # - tuning cost and gamma
@@ -22,7 +22,7 @@
 # 2 CLASSIFICATION: TRAININGS MODEL - SUPPORT VECTOR MACHINE
 #   2.1 CREATE FINAL TRAINING DATA
 #   2.2 INIT MLR MODEL FRAMEWORK
-#   2.3 SPATIAL TUNING OF TRAININGS MODEL 
+#   2.3 SPATIAL TUNING OF TRAININGS MODEL
 # 3 STORE DATA
 
 
@@ -32,7 +32,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-if("source.R" %in% list.files(file.path(here::here(), "R"))){
+if ("source.R" %in% list.files(file.path(here::here(), "R"))) {
   source(file.path(here::here(), "R", "source.R"))
   source(file.path(here::here(), "R", "helper.R"))
 } else {
@@ -41,7 +41,7 @@ if("source.R" %in% list.files(file.path(here::here(), "R"))){
 
 # load trainings data
 df_train <- readRDS(file = file.path(path_output, "df_train.rds")) %>%
-              dplyr::mutate(Lslide = Lslide %>% as.factor(.))
+  dplyr::mutate(Lslide = Lslide %>% as.factor(.))
 
 
 
@@ -69,21 +69,25 @@ table(df_train$Lslide, df_train$LS_CANDI)
 # ... we can see that a ratio of landslide to non-landslide object is not possible.
 #     Therefore, we take the entire data.frame. However, the following code demon-
 #     strates how the data.frame was resample with 5:1:1 ratio in the study:
-df_train_fin <- df_train %>% 
-                finalDF(df = ., do.sample = TRUE, ratio = 1.5, # in the study ratio: 5
-                        col = "Lslide", v.T = c(1, 2), 
-                        col.fit = "LS_CANDI", v.fit = c("S", "B")) 
+df_train_fin <- df_train %>%
+  finalDF(
+    df = ., do.sample = TRUE, ratio = 1.5, # in the study ratio: 5
+    col = "Lslide", v.T = c(1, 2),
+    col.fit = "LS_CANDI", v.fit = c("S", "B")
+  )
 
 df_train_fin_xy <- df_train_fin %>% dplyr::select(c("X", "Y"))
 #
-# # # 
+# # #
 
 
 
 # ... data for training model
-df_train_mod <- df_train %>% dplyr::select(-c("Scarp", "Body", "X", "Y", "ID", "LS_CANDI", "MnDir",
-                                              "dtm", "flSin", "flCos", "P", "P_sqrt_A", "Flow", "FlowInv",
-                                              "D_A", "D_sqrt_A", "A_cHull", "P_cHull", "A"))
+df_train_mod <- df_train %>% dplyr::select(-c(
+  "Scarp", "Body", "X", "Y", "ID", "LS_CANDI", "MnDir",
+  "dtm", "flSin", "flCos", "P", "P_sqrt_A", "Flow", "FlowInv",
+  "D_A", "D_sqrt_A", "A_cHull", "P_cHull", "A"
+))
 
 df_train_mod_xy <- df_train %>% dplyr::select(c("X", "Y"))
 
@@ -116,8 +120,10 @@ mlr_inner <- mlr::makeResampleDesc("SpCV", iters = 5, predict = "both")
 
 ## create tasks
 # ... train
-mlr_task_train <- mlr::makeClassifTask(id = "TRAIN", data = df_train_mod, 
-                                   target = "Lslide", coordinates = df_train_mod_xy)
+mlr_task_train <- mlr::makeClassifTask(
+  id = "TRAIN", data = df_train_mod,
+  target = "Lslide", coordinates = df_train_mod_xy
+)
 
 
 # ... create learner or classifier - Support Vector Machine from the e1071-package
@@ -144,19 +150,21 @@ mlr::configureMlr(on.learner.error = "warn", on.error.dump = TRUE)
 # ... ... parallelize tuning
 parallelMap::parallelStart(mode = "multicore", level = mlr_level, cpus = mlr_n_cpus, mc.set.seed = TRUE)
 set.seed(888)
-  
-mlr_res_tuning <- mlr::tuneParams(learner = mlr_lrn_svm,
-                                  task = mlr_task_train, 
-                                  control =  mlr_ctrl_tune, 
-                                  show.info = TRUE,  
-                                  par.set = mlr_svm_ps, 
-                                  resampling = mlr_inner, 
-                                  measures = mlr_measures)
-  
+
+mlr_res_tuning <- mlr::tuneParams(
+  learner = mlr_lrn_svm,
+  task = mlr_task_train,
+  control = mlr_ctrl_tune,
+  show.info = TRUE,
+  par.set = mlr_svm_ps,
+  resampling = mlr_inner,
+  measures = mlr_measures
+)
+
 parallelMap::parallelStop()
 
 process.time.run <- proc.time() - process.time.start
-cat(paste0("------ Run of tuning: " , round(x = process.time.run["elapsed"][[1]]/60, digits = 4), " Minutes \n"))
+cat(paste0("------ Run of tuning: ", round(x = process.time.run["elapsed"][[1]] / 60, digits = 4), " Minutes \n"))
 
 # [Tune] Started tuning learner classif.svm for parameter set:
 # Type len Def    Constr Req Tunable Trafo
@@ -167,7 +175,7 @@ cat(paste0("------ Run of tuning: " , round(x = process.time.run["elapsed"][[1]]
 # Mapping in parallel: mode = multicore; level = mlr.tuneParams; cpus = 10; elements = 25.
 # [Tune] Result: cost=7.98; gamma=0.00244 : kappa.test.mean=0.4781377
 # Stopped parallelization. All cleaned up.
-# ------ Run of tuning: 0.8485 Minutes 
+# ------ Run of tuning: 0.8485 Minutes
 
 
 # ... create tuned learner
@@ -179,8 +187,10 @@ mlr_mod_SVM <- mlr::train(learner = mlr_lrn_svm_tuned, task = mlr_task_train)
 
 
 # ... create result
-mlr_resultTrain <- list(task = mlr_task_train, tune_result = mlr_res_tuning, 
-                        tuned_learner = mlr_lrn_svm_tuned, model = mlr_mod_SVM)
+mlr_resultTrain <- list(
+  task = mlr_task_train, tune_result = mlr_res_tuning,
+  tuned_learner = mlr_lrn_svm_tuned, model = mlr_mod_SVM
+)
 
 
 
@@ -188,5 +198,7 @@ mlr_resultTrain <- list(task = mlr_task_train, tune_result = mlr_res_tuning,
 # 3 STORE DATA ------------------------------------------------------------
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-saveRDS(object = mlr_resultTrain, 
-        file = file.path(path_output, "mlr_result_train.rds"))
+saveRDS(
+  object = mlr_resultTrain,
+  file = file.path(path_output, "mlr_result_train.rds")
+)

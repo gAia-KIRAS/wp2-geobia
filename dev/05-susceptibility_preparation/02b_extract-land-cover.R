@@ -30,7 +30,7 @@ nrow(grd) == nrow(res_clc)
 qsave(res_clc, "dat/interim/misc_aoi/clc.qs", nthreads = 16L)
 
 res <- res_clc |>
-  #mutate(forest_cover = as.integer(res_wk$forest_cover)) |>
+  # mutate(forest_cover = as.integer(res_wk$forest_cover)) |>
   mutate(clc = as.factor(CLC)) |>
   select(clc, forest_cover, geometry)
 qsave(res, "dat/interim/misc_aoi/land_cover_full.qs", nthreads = 16L)

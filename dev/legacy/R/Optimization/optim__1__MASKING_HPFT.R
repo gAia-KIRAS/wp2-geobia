@@ -5,7 +5,7 @@
 #
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 # DESCRIPTION:
-# Optimization procedure for generation of candidate landslide scarp 
+# Optimization procedure for generation of candidate landslide scarp
 # and body area.
 # - High-pass filtering of slope angle
 # - Scale Optimizer using F-score
@@ -27,7 +27,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-if("source.R" %in% list.files(file.path(here::here(), "R"))){
+if ("source.R" %in% list.files(file.path(here::here(), "R"))) {
   source(file.path(here::here(), "R", "source.R"))
 } else {
   stop("Please set your working directory to the project path!")
@@ -36,7 +36,7 @@ if("source.R" %in% list.files(file.path(here::here(), "R"))){
 # load raster brick
 data_brick <- readRDS(file = file.path(path_input, "brick.rds"))
 names(data_brick)
-# "dtm"     "open"    "slp"     "cv_max7" "cv_min7" "cv_prf7" "cv_pln7" "RI15"  
+# "dtm"     "open"    "slp"     "cv_max7" "cv_min7" "cv_prf7" "cv_pln7" "RI15"
 # "nH"      "SVF"     "flArLn"  "flSin"   "flCos" "t_Ent51" "t_SD51"
 
 # ... get slope from brick
@@ -45,9 +45,9 @@ data_slp <- raster::subset(x = data_brick, subset = 3)
 # load inventory
 data_inv <- readRDS(file = file.path(path_input, "inventory.rds"))
 names(data_inv)
-# "sf_inv"      "sf_inv_prts" "r_inv"       "r_inv_prts"  "r_inv_scrp" 
+# "sf_inv"      "sf_inv_prts" "r_inv"       "r_inv_prts"  "r_inv_scrp"
 
-# ... get inventoried scarps as raster 
+# ... get inventoried scarps as raster
 data_inv_scarp <- data_inv$r_inv_scrp
 
 
@@ -73,27 +73,29 @@ range_filterThreshold <- c(4:5) # in the study: seq(from = 1, to = 40, by = 0.5)
 
 # define settings
 sieveThreshold <- 50 # for minimum area of connected pixels
-timeStamp <-  gsub(pattern = ":|-", replacement = "", Sys.time()) %>% gsub(pattern = "[[:space:]]", replacement = "_", x = .)
+timeStamp <- gsub(pattern = ":|-", replacement = "", Sys.time()) %>% gsub(pattern = "[[:space:]]", replacement = "_", x = .)
 file_name <- paste0("run_", timeStamp, ".txt")
 path_save <- tempdir()
 path_runfile <- file.path(path_save, file_name)
 
 
 # Start optimizing values for high-pass filtering and threshsolding:
-optHPT <- Lslide::optHiPassThresh(x = data_slp, 
-                                  inventory = data_inv_scarp, 
-                                  range.scale.factor = range_scaleFactor, 
-                                  range.threshold = range_filterThreshold,
-                                  sieve.thresh = sieveThreshold, 
-                                  cores = number_cores, 
-                                  quiet = FALSE, 
-                                  env.rsaga = env.rsaga,
-                                  path.save = path_save, 
-                                  path.runfile = path_runfile)
+optHPT <- Lslide::optHiPassThresh(
+  x = data_slp,
+  inventory = data_inv_scarp,
+  range.scale.factor = range_scaleFactor,
+  range.threshold = range_filterThreshold,
+  sieve.thresh = sieveThreshold,
+  cores = number_cores,
+  quiet = FALSE,
+  env.rsaga = env.rsaga,
+  path.save = path_save,
+  path.runfile = path_runfile
+)
 
-# ... start finding optimal hyper-parameters (parallel) 
-# ... ... generation of high-pass filtered images 
-# ... ... generation of thesholding images 
+# ... start finding optimal hyper-parameters (parallel)
+# ... ... generation of high-pass filtered images
+# ... ... generation of thesholding images
 # ------ Run of optHiPassThresh:  0.785  Minutes
 
 optHPT

@@ -28,7 +28,7 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-if("source.R" %in% list.files(file.path(here::here(), "R"))){
+if ("source.R" %in% list.files(file.path(here::here(), "R"))) {
   source(file.path(here::here(), "R", "source.R"))
 } else {
   stop("Please set your working directory to the project path!")
@@ -37,7 +37,7 @@ if("source.R" %in% list.files(file.path(here::here(), "R"))){
 # load raster brick
 data_brick <- readRDS(file = file.path(path_input, "brick.rds"))
 names(data_brick)
-# "dtm"     "open"    "slp"     "cv_max7" "cv_min7" "cv_prf7" "cv_pln7" "RI15"  
+# "dtm"     "open"    "slp"     "cv_max7" "cv_min7" "cv_prf7" "cv_pln7" "RI15"
 # "nH"      "SVF"     "flArLn"  "flSin"   "flCos" "t_Ent51" "t_SD51"
 
 # ... get slope from brick
@@ -56,13 +56,13 @@ env.rsaga <- RSAGA::rsaga.env()
 # define global settings
 path_save <- tempdir()
 path_mask <- file.path(path_output, "mask_ScarpBody.tif")
-path_slp <- file.path(path_save , "slp.tif")
-path_slp_SAGA <- file.path(path_input , "slp.sgrd") # this file already exists
+path_slp <- file.path(path_save, "slp.tif")
+path_slp_SAGA <- file.path(path_input, "slp.sgrd") # this file already exists
 path_final_segmentation <- file.path(path_output, "segmentFinal.shp")
 
 # write slope as file
 # ... tif
-data_slp %>% raster::writeRaster(x = ., filename = path_slp, NAflag = -99999, overwrite = TRUE) 
+data_slp %>% raster::writeRaster(x = ., filename = path_slp, NAflag = -99999, overwrite = TRUE)
 
 
 
@@ -92,27 +92,29 @@ path_segmentScarpGrid <- file.path(path_save, "segmentScarp.tif")
 
 
 # START: Masking of candidate scarp area and segmenting it in one step
-Lslide::hiPassSegmentation(input.filter = data_slp, 
-                           input.segmentation = data_slp, 
-                           scale.factor = scaleFactor, 
-                           threshold = filterThreshold, 
-                           sieve.thresh = sieveThreshold, 
-                           Grass.Segmentation.Threshold = segmentThreshold, 
-                           Grass.Segmentation.Minsize = minSize, 
-                           Grass.Segmentation.Memory = 4096, 
-                           Segments.Poly = path_segmentScarpPoly, 
-                           Segments.Grid = path_segmentScarpGrid,
-                           env.rsaga = env.rsaga, 
-                           show.output.on.console = FALSE, 
-                           quiet = FALSE)
+Lslide::hiPassSegmentation(
+  input.filter = data_slp,
+  input.segmentation = data_slp,
+  scale.factor = scaleFactor,
+  threshold = filterThreshold,
+  sieve.thresh = sieveThreshold,
+  Grass.Segmentation.Threshold = segmentThreshold,
+  Grass.Segmentation.Minsize = minSize,
+  Grass.Segmentation.Memory = 4096,
+  Segments.Poly = path_segmentScarpPoly,
+  Segments.Grid = path_segmentScarpGrid,
+  env.rsaga = env.rsaga,
+  show.output.on.console = FALSE,
+  quiet = FALSE
+)
 
 # Start High-Pass-Segmentation ...
-# ... high-pass filter with scale:  16 
-# ... thresholding high-pass filter with threshold:  5.5 
-# ... removal of clumbs based on threshold:  50 
+# ... high-pass filter with scale:  16
+# ... thresholding high-pass filter with threshold:  5.5
+# ... removal of clumbs based on threshold:  50
 # ... ... sieving
 # ... shrink and expand
-# ------ Run of hiPassThresh:  0.3  Minutes 
+# ------ Run of hiPassThresh:  0.3  Minutes
 #   ... clip input for segmentation based on filter results
 # ... GRASS: Start segmentation
 # ... GRASS: Vectorising Grid Classes
@@ -134,7 +136,7 @@ r_segmentScarp <- raster::raster(path_segmentScarpGrid)
 r_segmentScarp %>% raster::plot(.)
 
 # check minimum value -> 1
-r_segmentScarp %>% raster::cellStats(., stat = 'min', na.rm=TRUE) 
+r_segmentScarp %>% raster::cellStats(., stat = "min", na.rm = TRUE)
 
 # set NA to 0 for the mask
 r_segmentScarp[is.na(r_segmentScarp)] <- 0
@@ -156,33 +158,38 @@ r_segmentScarp %>% raster::writeRaster(x = ., filename = path_mask, datatype = "
 LevelOfGeneralisation <- 3.25 # from study
 
 # ... variance in feature space for SAGA segmentation (type character): "74"
-var_featureSpace <- data_slp %>% raster::values(.) %>% 
-                    var(., na.rm = TRUE) %>% round(.) %>% as.character(.)
+var_featureSpace <- data_slp %>%
+  raster::values(.) %>%
+  var(., na.rm = TRUE) %>%
+  round(.) %>%
+  as.character(.)
 
 # results (is basically the final segmentation result!)
 path_segmentBodyPoly <- file.path(path_save, "segmentBody.shp")
 path_segmentBodyGrid <- file.path(path_save, "segmentBody.sgrd")
 
 
-Lslide::segmentation(Tool = "SAGA", 
-                     Seed.Method = "Fast Representativeness", 
-                     Fast.Representativeness.LevelOfGeneralisation = LevelOfGeneralisation,
-                     Segmentation.Boundary.Grid = path_mask, # <- here is the scarp-body mask!
-                     burn.Boundary.into.Segments = c(TRUE), 
-                     Saga.Segmentation.Method = "1", 
-                     Saga.Segmentation.Sig.1 = var_featureSpace, 
-                     Saga.Segmentation.Leafsize = 1024,
-                     Input.Grid = path_slp_SAGA,
-                     Sieving.Flac = TRUE, 
-                     Sieving.Expand = 5, 
-                     Sieving.Thresh = 50,
-                     NoData = TRUE, 
-                     Mask = path_slp_SAGA, 
-                     Segments.Grid = path_segmentBodyGrid, 
-                     Segments.Poly = path_segmentBodyPoly, 
-                     quiet = FALSE, 
-                     show.output.on.console = FALSE, 
-                     env = env.rsaga)
+Lslide::segmentation(
+  Tool = "SAGA",
+  Seed.Method = "Fast Representativeness",
+  Fast.Representativeness.LevelOfGeneralisation = LevelOfGeneralisation,
+  Segmentation.Boundary.Grid = path_mask, # <- here is the scarp-body mask!
+  burn.Boundary.into.Segments = c(TRUE),
+  Saga.Segmentation.Method = "1",
+  Saga.Segmentation.Sig.1 = var_featureSpace,
+  Saga.Segmentation.Leafsize = 1024,
+  Input.Grid = path_slp_SAGA,
+  Sieving.Flac = TRUE,
+  Sieving.Expand = 5,
+  Sieving.Thresh = 50,
+  NoData = TRUE,
+  Mask = path_slp_SAGA,
+  Segments.Grid = path_segmentBodyGrid,
+  Segments.Poly = path_segmentBodyPoly,
+  quiet = FALSE,
+  show.output.on.console = FALSE,
+  env = env.rsaga
+)
 
 
 
@@ -206,16 +213,18 @@ plot(sf_seg %>% sf::st_geometry(.), add = T, border = "blue")
 # must account for those candidate scarp objects inside the landslide body.
 
 # ... get points on surface for candidate scarp segmentation (see 2.1)
-ptsOS_seg_scarps <- sf::st_read(dsn = path_segmentScarpPoly) %>% 
-                  sf::st_point_on_surface(.) # betten than sf::st_centroid() due to semi-circular polygons!
+ptsOS_seg_scarps <- sf::st_read(dsn = path_segmentScarpPoly) %>%
+  sf::st_point_on_surface(.) # betten than sf::st_centroid() due to semi-circular polygons!
 
 # ... get index of candiate scarps in final segmentation
-seg_indexScarps <- sf::st_intersects(x = ptsOS_seg_scarps, y = sf_seg) %>% unlist(.) %>% unique(.)
- 
+seg_indexScarps <- sf::st_intersects(x = ptsOS_seg_scarps, y = sf_seg) %>%
+  unlist(.) %>%
+  unique(.)
+
 
 # ... assign candidate type to segmentation
 sf_seg$LS_CANDI <- "B" # for body
-sf_seg[seg_indexScarps,]$LS_CANDI <- "S" # for scarp
+sf_seg[seg_indexScarps, ]$LS_CANDI <- "S" # for scarp
 
 
 
@@ -230,8 +239,9 @@ plot(sf_seg %>% dplyr::filter(LS_CANDI == "S") %>% sf::st_geometry(.), add = T, 
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 # clean data
-sf_seg <- sf_seg %>% dplyr::mutate(ID = 1:nrow(.)) %>%
-                     dplyr::select(c("ID", "LS_CANDI", "geometry"))
+sf_seg <- sf_seg %>%
+  dplyr::mutate(ID = 1:nrow(.)) %>%
+  dplyr::select(c("ID", "LS_CANDI", "geometry"))
 
 
 # save the final segmentation result

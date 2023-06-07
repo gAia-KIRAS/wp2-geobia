@@ -21,13 +21,13 @@
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
 
-if(!require("pacman")) install.packages("pacman")
-if(!require("devtools")) install.packages("devtools")  
+if (!require("pacman")) install.packages("pacman")
+if (!require("devtools")) install.packages("devtools")
 
 pacman::p_load(here, renv, rgdal, raster, sf, mlr, rgrass7, RSAGA, link2GI, dplyr, data.table, e1071, ggplot2, lwgeom, rlist, directlabels)
 
-if(!require("Lslide")) devtools::install_github(repo = "raff-k/Lslide")
-if(!require("VLSM")) devtools::install_github(repo = "raff-k/VLSM")
+if (!require("Lslide")) devtools::install_github(repo = "raff-k/Lslide")
+if (!require("VLSM")) devtools::install_github(repo = "raff-k/VLSM")
 pacman::p_load(Lslide, VLSM)
 
 
@@ -36,12 +36,12 @@ pacman::p_load(Lslide, VLSM)
 # 2 PATHES ----------------------------------------------------------------
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #
 
-path_data <-file.path(here::here(), "data")
-path_input <-file.path(path_data, "input")
-path_validation <-file.path(path_input, "Validation")
-path_output <-file.path(path_data, "output")
-path_result <-file.path(path_data, "result")
-path_R <-file.path(here::here(), "R")
+path_data <- file.path(here::here(), "data")
+path_input <- file.path(path_data, "input")
+path_validation <- file.path(path_input, "Validation")
+path_output <- file.path(path_data, "output")
+path_result <- file.path(path_data, "result")
+path_R <- file.path(here::here(), "R")
 
 
 
