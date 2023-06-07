@@ -15,3 +15,9 @@ out <- dtm |>
   rename_with(.fn = \(x) gsub("-", "_", x), .cols = everything())
 
 st_write_parquet(obj = out, dsn = "dat/processed/carinthia_10m.parquet")
+
+res <- out |>
+  sfc_as_cols() |>
+  st_drop_geometry()
+
+write_ipc_file(res, sink = "dat/processed/carinthia_10m.arrow", compression = "lz4")
