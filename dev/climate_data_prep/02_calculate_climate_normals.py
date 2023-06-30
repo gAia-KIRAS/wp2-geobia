@@ -34,19 +34,10 @@ if __name__ == "__main__":
     for file in Path(tmp_dir, "01_concat_files").rglob("*concat*.nc"):
         print(f"..Processing {file.name = }..")
         with xr.load_dataarray(file) as da_load:
-            if file.name == "dtm_concat_indices.nc":
-                # dtm data is time invariant, hence is just the input data
-                clim_mean = da_load.copy()
-            else:
-                # else for all other data for which climate normals can be calculated
-                clim_mean = da_load.sel(time=clim_period).mean(dim="time")
-                clim_std = da_load.sel(time=clim_period).std(dim="time")
+            clim_agg = da_load.sel(time=clim_period).quantile(q=0.9, dim="time")
 
-            clim_mea1 = clim_mean.assign_coords(
-                {"climate_period": clim_str, "metric": "mean"}
-            )
-            clim_std = clim_std.assign_coords(
-                {"climate_period": clim_str, "metric": "std"}
+            clim_agg = clim_agg.assign_coords(
+                {"climate_period": clim_str, "metric": "q90"}
             )
 
             if not file.name == "misc_concat_snowgrid_indices.nc":
@@ -68,22 +59,18 @@ if __name__ == "__main__":
                 )
                 # pylance complains, but ds_grid_out will always exist
                 # because of the way the files are globbed
-                clim_mean = clim_mean.interp_like(ds_grid_out)
-                clim_std = clim_std.interp_like(ds_grid_out)
+                clim_agg = clim_agg.interp_like(ds_grid_out)
 
-            if not file.name == "dtm_concat_indices.nc":
-                # smooth field because of technical vs. physical resolution
-                # for all calculated indices (not dtm data)
-                # https://vgitlab.zamg.ac.at/zamg-cit/tools/subregion_derivation/-/issues/4
-                if filter_:
-                    clim_mean = filter_nanmean(clim_mean)
-                    clim_std = filter_nanmean(clim_std)
+            # smooth field because of technical vs. physical resolution
+            if filter_:
+                clim_agg = filter_nanmean(clim_agg)
 
-            data_iter_fin = xr.concat([clim_mean, clim_std], dim="metric")
-            data_list.append(data_iter_fin)
+            data_list.append(clim_agg)
 
     print("..Concatenating data..")
     da_merged = xr.concat(data_list, dim="variable")
+    # TODO: compute only indices ["API", "CWD", "PCI", "Rx1day", "Rx5day", "SDII", "PRCPTOT", "SPEI30"]
+    # TODO: clip to AOI
     new_par_dir = Path(tmp_dir, "02_preprocessed_climate_normals")
     new_par_dir.mkdir(exist_ok=True, parents=True)
     print("..Saving data..")
