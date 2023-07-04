@@ -53,13 +53,7 @@ def load_inca_and_compute_daily_agg(path: str, parameter: str, period: str):
             }
 
         ds_agg.to_netcdf(
-            path
-            + "/"
-            + parameter
-            + "/"
-            + "INCA_2017090100_20171231_23_"
-            + parameter
-            + ".nc",
+            f"{path}/{parameter}/INCA_2017090100_20171231_23_{parameter}.nc",
             engine="h5netcdf",
         )
 
@@ -102,36 +96,12 @@ def load_inca_and_compute_daily_agg(path: str, parameter: str, period: str):
 
             if period == "first_half":
                 ds_agg.to_netcdf(
-                    path
-                    + "/"
-                    + parameter
-                    + "/"
-                    + "INCA_"
-                    + year
-                    + "010100"
-                    + "_"
-                    + year
-                    + "063023"
-                    + "_"
-                    + parameter
-                    + ".nc",
+                    f"{path}/{parameter}/INCA_{year}010100_{year}063023_{parameter}.nc",
                     engine="h5netcdf",
                 )
             else:
                 ds_agg.to_netcdf(
-                    path
-                    + "/"
-                    + parameter
-                    + "/"
-                    + "INCA_"
-                    + year
-                    + "070100"
-                    + "_"
-                    + year
-                    + "123123"
-                    + "_"
-                    + parameter
-                    + ".nc",
+                    f"{path}/{parameter}/INCA_{year}070100_{year}123123_{parameter}.nc",
                     engine="h5netcdf",
                 )
 
@@ -153,7 +123,7 @@ def cut_aoi(path: str, param: str) -> xr.DataArray:
     da.rio.write_crs("EPSG:31287", inplace=True)
     gdf_aoi = gpd.read_file("/cmod3/projects/gaia/dat/AOI_Kaernten.gpkg")
     da_cut = da.rio.clip(gdf_aoi.geometry.values, gdf_aoi.crs, drop=True, invert=False)
-    da_cut.to_netcdf(path + "/dat/final/INCA_09-2017_12-2022_" + param + ".nc")
+    da_cut.to_netcdf(f"{path}/dat/final/INCA_09-2017_12-2022_{param}.nc")
     return da_cut
 
 
