@@ -148,12 +148,18 @@ def read_INCA_ascii(fname, dt, dom="L", twodim=False, verbose=True, single_point
         if len(x) > 2 * nx * ny:
             content = x.reshape(33, ny, nx)
         else:
-            content = x.reshape(ny, nx)
+            try:
+                content = x.reshape(ny, nx)
+            except ValueError:
+                content = np.ones((ny, nx)) * np.nan
     else:
         if len(x) > 2 * nx * ny:
             content = x.reshape(33, ny * nx)
         else:
-            content = x.reshape(ny * nx)
+            try:
+                content = x.reshape(ny * nx)
+            except ValueError:
+                content = np.ones((ny, nx)) * np.nan
 
     if single_point is None:
         return content
@@ -705,6 +711,20 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                     dom="L",
                     twodim=True,
                 )
+            elif parameter == 'mslp':
+                inca_parameter = read_INCA_ascii(
+                    "/mapp_arch/mgruppe/arc/inca_l/mslp/"
+                    + str(dt.year)
+                    + dt.strftime("%m")
+                    + dt.strftime("%d")
+                    + "/INCA_P0_"
+                    + dt.strftime("%H")
+                    + ".asc.gz",
+                    dt,
+                    dom="L",
+                    twodim=True,
+                )
+
             else:
                 inca_parameter = read_INCA_ascii(
                     "/mapp_arch/mgruppe/arc/inca_l/"
@@ -840,7 +860,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         + str(dt.year)
                         + dt.strftime("%m")
                         + dt.strftime("%d")
-                        + "/INCA_P0-"
+                        + "/INCA_P0_"
                         + dt.strftime("%H")
                         + ".asc.gz",
                         dt,
@@ -935,7 +955,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
 
         if "mslp" in DataSet:
             DataSet["mslp"].name = "surface_air_pressure"
-            DataSet["mslp"].attrs["units"] = "hPa"
+            DataSet["mslp"].attrs["units"] = "Pa"
             DataSet["mslp"].attrs["short_name"] = "P0"
             DataSet["mslp"].attrs["long_name"] = "Mean surface level pressure"
 
@@ -972,49 +992,5 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
         'complevel': 9
         }}
 
-    #encoding = {
-        #"wind": {
-        #    "dtype": "int16",
-        #    "scale_factor": 0.1,
-        #    "_FillValue": -9999,
-        #    "zlib": True,
-        #    "complevel": 9,
-        #},
-        #"gust": {
-        #    "dtype": "int16",
-        #    "scale_factor": 0.1,
-        #    "_FillValue": -9999,
-        #    "zlib": True,
-        #    "complevel": 9,
-        #},
-        #"prec": {
-        #    "dtype": "int16",
-        #    "scale_factor": 0.1,
-        #    "_FillValue": -9999,
-        #    "zlib": True,
-        #    "complevel": 9,
-        #},
-        #"temp": {
-        #    "dtype": "int16",
-        #    "scale_factor": 0.1,
-        #    "_FillValue": -9999,
-        #    "zlib": True,
-        #    "complevel": 9,
-        #},
-    #}
-    
-    DataSet.to_netcdf(
-        output_folder
-        +
-        "INCA_"
-        + str(YYYYMMDDHH_begin)
-        + "_"
-        + str(YYYYMMDDHH_end)
-        + "_" 
-        + parameter 
-        +".nc",
-        engine="h5netcdf",
-        encoding=encoding,
-    )
 
     return DataSet
