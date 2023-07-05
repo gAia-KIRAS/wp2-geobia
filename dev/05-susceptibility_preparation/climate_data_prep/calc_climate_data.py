@@ -28,7 +28,7 @@ for filename in [
             variable=vars_climdex, time=slice(climate_normal_begin, climate_normal_end)
         )
         ds_sel_q95 = ds_sel.quantile(0.95, dim="time")
-        ds_sel_q95.rio.write_crs("EPSG:31287", inplace=True)
+        ds_sel_q95.rio.write_crs("EPSG:3416", inplace=True)
         ds_sel_q95_cut = ds_sel_q95.rio.clip(
             gdf_aoi.geometry.values, gdf_aoi.crs, drop=True, invert=False
         )
@@ -41,7 +41,7 @@ for filename in [
             time=slice(climate_normal_begin, climate_normal_end),
         )
         ds_sel_mean = ds_sel.mean(dim="time")
-        ds_sel_mean.rio.write_crs("EPSG:31287", inplace=True)
+        ds_sel_mean.rio.write_crs("EPSG:3416", inplace=True)
         ds_sel_mean_cut = ds_sel_mean.rio.clip(
             gdf_aoi.geometry.values, gdf_aoi.crs, drop=True, invert=False
         )
