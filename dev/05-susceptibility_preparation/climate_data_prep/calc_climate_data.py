@@ -15,7 +15,7 @@ vars_sparta_winfore = [
 ]
 climate_normal_begin = "1991-01-01"
 climate_normal_end = "2020-12-31"
-gdf_aoi = gpd.read_file("/cmod3/projects/gaia/dat/AOI_Kaernten.gpkg")
+gdf_aoi = gpd.read_file("/cmod3/projects/gaia/dat/AOI_Kaernten.gpkg").to_crs(3416)
 
 
 for filename in [
