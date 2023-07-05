@@ -5,6 +5,7 @@ Created on Thu May 14 13:08:38 2020
 @author: kathi_eni
 """
 
+
 # von Martin Kulmer zur Verfuegung gestellt bekommen
 def read_INCA_ascii(fname, dt, dom="L", twodim=False, verbose=True, single_point=None):
     """
@@ -167,14 +168,20 @@ def read_INCA_ascii(fname, dt, dom="L", twodim=False, verbose=True, single_point
         return content[:, single_point]
 
 
-def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_folder:str='/cmod3/projects/climada/INCA_testcases/', *args):
-
+def INCA_to_netCDF(
+    YYYYMMDDHH_begin,
+    YYYYMMDDHH_end,
+    dom,
+    parameter,
+    output_folder: str = "/cmod3/projects/climada/INCA_testcases/",
+    *args
+):
     """
     dom = 'AT':
         Windanalysen (Mittelwind) ab 01.01.2003 bis 01.06.2015, Boeen ab 01.05.2008 bis 01.06.2015
         Niederschlag 15-minuetig ab 01.01.2003
         Temperatur stuendlich ab 01.01.2003
-        
+
     dom = 'L':
         Windanalysen (Mittelwind) ab 15.03.2011 bis aktuell, Boeen ab 18.03.2011 bis aktuell
         Niederschlag 1-stuendig ab 01.03.2012, 15-minuetig ab 10.09.2011
@@ -197,7 +204,8 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
 
     import numpy as np
     import xarray as xr
-    #import plotting as pl #not used
+
+    # import plotting as pl #not used
     import pandas as pd
     import matplotlib.pyplot as plt
     from datetime import timedelta
@@ -331,37 +339,36 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                 except ValueError:
                     inca_parameter = np.ones((len(ny), len(x))) * np.nan
 
-            elif parameter == 'wind':
-                    try:
-                        inca_uu = read_INCA_ascii(
-                            "/laefinca/inca/arc/wind/"
-                            + str(dt.year)
-                            + dt.strftime("%m")
-                            + dt.strftime("%d")
-                            + "/INCA_UU-"
-                            + dt.strftime("%H")
-                            + ".asc.gz",
-                            dt,
-                            dom="AT",
-                            twodim=True,
-                        )
-                        inca_vv = read_INCA_ascii(
-                            "/laefinca/inca/arc/wind/"
-                            + str(dt.year)
-                            + dt.strftime("%m")
-                            + dt.strftime("%d")
-                            + "/INCA_VV-"
-                            + dt.strftime("%H")
-                            + ".asc.gz",
-                            dt,
-                            dom="AT",
-                            twodim=True,
-                        )
-                        inca_parameter = np.sqrt(inca_uu ** 2 + inca_vv ** 2)
+            elif parameter == "wind":
+                try:
+                    inca_uu = read_INCA_ascii(
+                        "/laefinca/inca/arc/wind/"
+                        + str(dt.year)
+                        + dt.strftime("%m")
+                        + dt.strftime("%d")
+                        + "/INCA_UU-"
+                        + dt.strftime("%H")
+                        + ".asc.gz",
+                        dt,
+                        dom="AT",
+                        twodim=True,
+                    )
+                    inca_vv = read_INCA_ascii(
+                        "/laefinca/inca/arc/wind/"
+                        + str(dt.year)
+                        + dt.strftime("%m")
+                        + dt.strftime("%d")
+                        + "/INCA_VV-"
+                        + dt.strftime("%H")
+                        + ".asc.gz",
+                        dt,
+                        dom="AT",
+                        twodim=True,
+                    )
+                    inca_parameter = np.sqrt(inca_uu**2 + inca_vv**2)
 
-
-                    except (TypeError, ValueError):
-                        inca_parameter = np.ones((len(ny), len(x))) * np.nan
+                except (TypeError, ValueError):
+                    inca_parameter = np.ones((len(ny), len(x))) * np.nan
 
             else:
                 inca_parameter = read_INCA_ascii(
@@ -463,10 +470,8 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         inca_temp, dims=["y", "x"], coords={"x": nx, "y": ny}
                     )
                     DataSet_dt["temp"] = random_temp
-                
 
                 if arg == "gust":
-
                     inca_gust = read_INCA_ascii(
                         "/laefinca/inca/arc/gust/"
                         + str(dt.year)
@@ -511,7 +516,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                             dom="AT",
                             twodim=True,
                         )
-                        inca_wind = np.sqrt(inca_uu ** 2 + inca_vv ** 2)
+                        inca_wind = np.sqrt(inca_uu**2 + inca_vv**2)
                         random_wind = xr.DataArray(
                             inca_wind, dims=["y", "x"], coords={"x": nx, "y": ny}
                         )
@@ -694,11 +699,11 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         dom="L",
                         twodim=True,
                     )
-                    inca_parameter = np.sqrt(inca_uu ** 2 + inca_vv ** 2)
+                    inca_parameter = np.sqrt(inca_uu**2 + inca_vv**2)
                 except ValueError:
                     inca_parameter = np.ones((len(ny), len(nx))) * np.nan
 
-            elif parameter == 'relative_humidity':
+            elif parameter == "relative_humidity":
                 inca_parameter = read_INCA_ascii(
                     "/mapp_arch/mgruppe/arc/inca_l/temp/"
                     + str(dt.year)
@@ -711,7 +716,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                     dom="L",
                     twodim=True,
                 )
-            elif parameter == 'mslp':
+            elif parameter == "mslp":
                 inca_parameter = read_INCA_ascii(
                     "/mapp_arch/mgruppe/arc/inca_l/mslp/"
                     + str(dt.year)
@@ -835,7 +840,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         inca_temp, dims=["y", "x"], coords={"x": nx, "y": ny}
                     )
                     DataSet_dt["temp"] = random_temp
-                
+
                 if arg == "relative_humidity":
                     inca_relhum = read_INCA_ascii(
                         "/mapp_arch/mgruppe/arc/inca_l/temp/"
@@ -853,7 +858,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         inca_relhum, dims=["y", "x"], coords={"x": nx, "y": ny}
                     )
                     DataSet_dt["RH"] = random_temp
-                
+
                 if arg == "mslp":
                     inca_mslp = read_INCA_ascii(
                         "/mapp_arch/mgruppe/arc/inca_l/mlsp/"
@@ -915,7 +920,7 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
                         dom="L",
                         twodim=True,
                     )
-                    inca_wind = np.sqrt(inca_uu ** 2 + inca_vv ** 2)
+                    inca_wind = np.sqrt(inca_uu**2 + inca_vv**2)
                     random_wind = xr.DataArray(
                         inca_wind, dims=["y", "x"], coords={"x": nx, "y": ny}
                     )
@@ -951,7 +956,9 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
             DataSet["relative_humidity"].name = "relative_humidity"
             DataSet["relative_humidity"].attrs["units"] = "%"
             DataSet["relative_humidity"].attrs["short_name"] = "RH2M"
-            DataSet["relative_humidity"].attrs["long_name"] = "Relative humidity in 2 m height"
+            DataSet["relative_humidity"].attrs[
+                "long_name"
+            ] = "Relative humidity in 2 m height"
 
         if "mslp" in DataSet:
             DataSet["mslp"].name = "surface_air_pressure"
@@ -983,14 +990,14 @@ def INCA_to_netCDF(YYYYMMDDHH_begin, YYYYMMDDHH_end, dom, parameter, output_fold
 
     # pl.plot_INCA(DataSet, YYYYMMDDHH_begin, YYYYMMDDHH_end, subplots = True)
 
-
-    encoding = {parameter: {
-        'dtype': 'int16',
-        'scale_factor': 0.1,
-        '_FillValue': -9999,
-        'zlib': True,
-        'complevel': 9
-        }}
-
+    encoding = {
+        parameter: {
+            "dtype": "int16",
+            "scale_factor": 0.1,
+            "_FillValue": -9999,
+            "zlib": True,
+            "complevel": 9,
+        }
+    }
 
     return DataSet
