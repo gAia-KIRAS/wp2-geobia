@@ -30,7 +30,11 @@ for filename in [
         ds_sel_q95 = ds_sel.quantile(0.95, dim="time")
         ds_sel_q95.rio.write_crs("EPSG:3416", inplace=True)
         ds_sel_q95_cut = ds_sel_q95.rio.clip(
-            gdf_aoi.geometry.values, gdf_aoi.crs, drop=True, invert=False
+            gdf_aoi.geometry.values,
+            gdf_aoi.crs,
+            drop=True,
+            invert=False,
+            all_touched=True,
         )
         ds_sel_q95_cut.to_netcdf(path_out / "climdex_indices_mean_q95.nc")
 
@@ -43,6 +47,10 @@ for filename in [
         ds_sel_mean = ds_sel.mean(dim="time")
         ds_sel_mean.rio.write_crs("EPSG:3416", inplace=True)
         ds_sel_mean_cut = ds_sel_mean.rio.clip(
-            gdf_aoi.geometry.values, gdf_aoi.crs, drop=True, invert=False
+            gdf_aoi.geometry.values,
+            gdf_aoi.crs,
+            drop=True,
+            invert=False,
+            all_touched=True,
         )
         ds_sel_mean_cut.to_netcdf(path_out / "api_spei_pci_indices_q95_mean.nc")
