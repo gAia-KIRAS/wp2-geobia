@@ -29,5 +29,10 @@ i2e <- i2d |>
   st_as_sf(as_points = TRUE) |>
   setNames(c(i2n, "geometry"))
 
-res <- st_join(i1e, i2e)
+nrow(i1e) == nrow(i2e)
+identical(st_coordinates(i1e), st_coordinates(i2e))
+res <- i1e |>
+  bind_cols(i2e |> st_drop_geometry())
+# res <- st_join(i1e, i2e)
+
 qsave(res, "dat/interim/misc_aoi/climate_indices.qs", nthreads = 64L)
