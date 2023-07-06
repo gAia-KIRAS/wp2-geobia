@@ -28,6 +28,3 @@ tif_to_qs <- function(raster, crop = aoi) {
 }
 
 lapply(fl, tif_to_qs)
-
-# unclipped: 107085888
-# target: 57842689
