@@ -17,10 +17,12 @@ tif_to_qs <- function(raster, crop = aoi) {
   } else {
     print(glue("{Sys.time()} -- Working on {basename(raster)}"))
     varname <- gsub("^(KTN_)(.*)(.tif)", "\\2", basename(raster))
+    print(glue("{Sys.time()} --   Crop"))
     res <- read_stars(raster) |>
       st_crop(crop) |>
       st_as_sf(as_points = TRUE)
     colnames(res)[1] <- varname
+    print(glue("{Sys.time()} --   Save"))
     qsave(res, outfile, nthreads = 64L)
   }
 }
