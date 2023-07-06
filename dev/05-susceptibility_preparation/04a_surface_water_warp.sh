@@ -10,7 +10,7 @@ for intiff in ./interim/oberflaechenabfluss/orig/*tif;
 do
   echo "Working on $intiff:t"
   outtiff="./interim/oberflaechenabfluss/prep/$intiff:t"
-  gdalwarp -tr 10 -10 -r med -tap -t_srs EPSG:3416 \
+  gdalwarp -tr 10 -10 -r max -tap -t_srs EPSG:3416 \
     -te 348660 300970 532530 359210 \
     -cutline raw/aoi/gaia_projektgebiet_ktn.gpkg -cl gaia_projektgebiet -crop_to_cutline -of GTiff \
     $intiff $outtiff
