@@ -29,4 +29,9 @@ for (f in fl[2:length(fl)]) {
 
 rm(f, tmp)
 gc()
+
+# set NA for hazard map
+res <- res |>
+  mutate(Gefahrenkategorien = if_else(Gefahrenkategorien == 255, NA, Gefahrenkategorien))
+
 qsave(res, "dat/interim/misc_aoi/surface_water.qs", nthreads = 64L)
