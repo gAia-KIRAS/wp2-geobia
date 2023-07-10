@@ -21,11 +21,11 @@
 curl "https://www.data.gv.at/katalog/api/3/action/package_show?id=b5de6975-417b-4320-afdb-eb2a9e2a1dbf" > doc/dtm_metadata.json
 
 # Downlaod and unzip GeoTIFF
-wget https://gis.ktn.gv.at/OGD/Geographie_Planung/ogd-10m-at.zip -P dat/raw/dtm/
-unzip dat/raw/dtm/ogd-10m-at.zip -d dat/raw/dtm
+wget https://gis.ktn.gv.at/OGD/Geographie_Planung/ogd-10m-at.zip -P dat/raw/dtm/dtm_at_10m/
+unzip dat/raw/dtm/dtm_at_10m/ogd-10m-at.zip -d dat/raw/dtm/dtm_at_10m/
 
 # Reproject to common coordinate reference system
 # t_srs=$(cat cfg/wkt_3416.prj | egrep -v "(^#.*|^$)")
 gdalwarp -s_srs EPSG:31287 -t_srs EPSG:3416 -dstnodata "-9999" \
     -tr 10 10 -te 108815 268555 689435 586505 \
-    dat/raw/dtm/dhm_at_lamb_10m_2018.tif dat/interim/dtm/dtm_austria.tif
+    dat/raw/dtm/dtm_at_10m/dhm_at_lamb_10m_2018.tif dat/interim/dtm/dtm_austria.tif
