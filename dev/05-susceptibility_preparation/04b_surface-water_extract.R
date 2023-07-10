@@ -22,6 +22,7 @@ tif_to_qs <- function(raster, crop = aoi) {
       st_crop(crop) |>
       st_as_sf(as_points = TRUE)
     colnames(res)[1] <- varname
+    print(glue("    nrow of {basename(raster)}:\n        {nrow(res)}"))
     print(glue("{Sys.time()} --   Save"))
     qsave(res, outfile, nthreads = 64L)
   }
