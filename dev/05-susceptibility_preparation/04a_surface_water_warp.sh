@@ -8,10 +8,10 @@ unzip raw/oberflaechenabfluss/KTN_Gefahrenkategorien.zip -d interim/oberflaechen
 
 for intiff in ./interim/oberflaechenabfluss/orig/*tif;
 do
-  echo "Working on $intiff:t"
+  echo "$(date +'%T') » Working on $intiff:t"
   outtiff="./interim/oberflaechenabfluss/prep/$intiff:t"
-  gdalwarp -tr 10 -10 -r max -tap -t_srs EPSG:3416 \
-    -te 348660 300970 532530 359210 \
-    -cutline raw/aoi/gaia_projektgebiet_ktn.gpkg -cl gaia_projektgebiet -crop_to_cutline -of GTiff \
+  gdalwarp -s_srs EPSG:31258 -t_srs EPSG:3416 \
+    -tr 10 -10 -r max \
+    -te 348655 300975 532535 359205 \
     $intiff $outtiff
 done

@@ -8,7 +8,7 @@ rm wk.zip
 unrar e wk_austria_10m_202302_TIF.rar
 
 gdalwarp -tr 10 -10 -tap -t_srs EPSG:3416 \
-  -cutline dat/raw/aoi/gaia_projektgebiet_ktn.gpkg -cl gaia_projektgebiet -crop_to_cutline -of GTiff \
+  -te 348655 300975 532535 359205 \
   dat/raw/waldkarte/wk_austria_10m_202302.tif dat/interim/misc_aoi/wk_aoi_ktn.tif
 
 # Corine Land Cover
