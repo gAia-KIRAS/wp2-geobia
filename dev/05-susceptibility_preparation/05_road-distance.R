@@ -33,6 +33,16 @@ print(glue("{Sys.time()} -- loading grid"))
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 stopifnot(st_crs(gip_point) == st_crs(grd))
 
+x <- sample_n(grd, 100)
+y <- sample(gip_point, 100)
+res <- st_nn(x, y, sparse = TRUE, k = 1, maxdist = 500, returnDist = TRUE, progress = TRUE)
+
+transpose(res) |>
+  purrr::map(bind_cols) |>
+  bind_rows(.id = "grd_id") |>
+  mutate(grd_id = as.integer(grd_id)) |>
+  tidyr::complete(grd_id = seq_along(res$nn))
+
 print(glue("{Sys.time()} -- searching for nearest neightbors"))
 # when using projected points, calculation is done using nabor::knn, a fast search method based on the libnabo C++ library
 # setting parallel = ncores is not applicable
