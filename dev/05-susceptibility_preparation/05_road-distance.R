@@ -55,6 +55,9 @@ out <- res |>
   complete(grd_id = seq_along(res$nn))
 toc()
 
+print(glue("    check if dataframe sizes match"))
+nrow(grd) == nrow(out)
+
 print(glue("{Sys.time()} -- saving tibble"))
 qsave(out, "dat/interim/misc_aoi/road_dist.qs", nthreads = ncores)
 
