@@ -23,7 +23,7 @@ tic()
 gip_point <- gip |>
   st_cast("LINESTRING") |>
   st_line_sample(density = 0.2) |>
-  st_cast("POINT")
+  st_cast("POINT", group_or_split = TRUE)
 gip_point <- gip_point[!st_is_empty(gip_point)]
 toc()
 print(glue("    sampled {length(gip_point)} points on {nrow(gip)} linestrings"))
