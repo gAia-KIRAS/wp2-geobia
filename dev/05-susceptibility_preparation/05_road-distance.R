@@ -1,5 +1,7 @@
 suppressPackageStartupMessages({
   library(dplyr)
+  library(purrr)
+  library(tidyr)
   library(sf)
   library(nngeo)
   library(qs)
@@ -47,11 +49,11 @@ qsave(res, "dat/interim/misc_aoi/road_dist_list.qs", nthreads = ncores)
 print(glue("{Sys.time()} -- creating clean tibble"))
 tic()
 out <- res |>
-  purrr::transpose() |>
-  purrr::map(bind_cols) |>
+  transpose() |>
+  map(bind_cols) |>
   bind_rows(.id = "grd_id") |>
   mutate(grd_id = as.integer(grd_id)) |>
-  tidyr::complete(grd_id = seq_along(res$nn))
+  complete(grd_id = seq_along(res$nn))
 toc()
 
 print(glue("{Sys.time()} -- saving tibble"))
