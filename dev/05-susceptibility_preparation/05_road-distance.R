@@ -49,8 +49,7 @@ qsave(res, "dat/interim/misc_aoi/road_dist_list.qs", nthreads = ncores)
 print(glue("{Sys.time()} -- creating clean tibble"))
 tic()
 out <- res |>
-  transpose() |>
-  map(bind_cols) |>
+  list_transpose() |>
   bind_rows(.id = "grd_id") |>
   mutate(grd_id = as.integer(grd_id)) |>
   complete(grd_id = seq_along(res$nn))
