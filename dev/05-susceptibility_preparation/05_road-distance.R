@@ -16,7 +16,8 @@ summary(gip$length)
 tic()
 gip_point <- gip |>
   st_cast("LINESTRING") |>
-  st_line_sample(density = 0.2)
+  st_line_sample(density = 0.2) |>
+  st_cast("POINT")
 toc()
 nrow(gip)
 length(gip_point)
