@@ -36,7 +36,7 @@ print(glue("{Sys.time()} -- searching for nearest neightbors"))
 # when using projected points, calculation is done using nabor::knn, a fast search method based on the libnabo C++ library
 # setting parallel = ncores is not applicable
 tic()
-res <- st_nn(grd, gip, sparse = TRUE, k = 1, maxdist = 500, returnDist = TRUE, progress = TRUE)
+res <- st_nn(grd, gip_point, sparse = TRUE, k = 1, maxdist = 500, returnDist = TRUE, progress = TRUE)
 toc()
 
 qsave(res, "dat/interim/misc_aoi/road_dist.qs", nthreads = ncores)
