@@ -7,9 +7,9 @@ suppressPackageStartupMessages({
   library(tictoc)
 })
 
-print(glue("{Sys.time()} -- loading GIP"))
 ncores <- 64L
 
+print(glue("{Sys.time()} -- loading GIP"))
 gip <- read_sf("dat/interim/gip/kaernten.gpkg") |>
   st_transform(3416) |>
   filter(FRC %in% c(0:11, 20, 21, 105, 106)) |>
@@ -24,24 +24,15 @@ gip_point <- gip |>
   st_cast("LINESTRING") |>
   st_line_sample(density = 0.2)
 gip_point <- gip_point[!st_is_empty(gip_point)]
-gip_point <- st_cast(gip_point[1:10], "POINT")
-
+gip_point <- st_cast(gip_point, "POINT")
 toc()
 print(glue("    sampled {length(gip_point)} points on {nrow(gip)} linestrings"))
 
 print(glue("{Sys.time()} -- loading grid"))
+tic()
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
+toc()
 stopifnot(st_crs(gip_point) == st_crs(grd))
-
-x <- sample_n(grd, 100)
-y <- sample(gip_point, 100)
-res <- st_nn(x, y, sparse = TRUE, k = 1, maxdist = 500, returnDist = TRUE, progress = TRUE)
-
-transpose(res) |>
-  purrr::map(bind_cols) |>
-  bind_rows(.id = "grd_id") |>
-  mutate(grd_id = as.integer(grd_id)) |>
-  tidyr::complete(grd_id = seq_along(res$nn))
 
 print(glue("{Sys.time()} -- searching for nearest neightbors"))
 # when using projected points, calculation is done using nabor::knn, a fast search method based on the libnabo C++ library
@@ -50,4 +41,20 @@ tic()
 res <- st_nn(grd, gip_point, sparse = TRUE, k = 1, maxdist = 500, returnDist = TRUE, progress = TRUE)
 toc()
 
-qsave(res, "dat/interim/misc_aoi/road_dist.qs", nthreads = ncores)
+print(glue("{Sys.time()} -- saving nested list"))
+qsave(res, "dat/interim/misc_aoi/road_dist_list.qs", nthreads = ncores)
+
+print(glue("{Sys.time()} -- creating clean tibble"))
+tic()
+out <- res |>
+  transpose() |>
+  purrr::map(bind_cols) |>
+  bind_rows(.id = "grd_id") |>
+  mutate(grd_id = as.integer(grd_id)) |>
+  tidyr::complete(grd_id = seq_along(res$nn))
+toc()
+
+print(glue("{Sys.time()} -- saving tibble"))
+qsave(out, "dat/interim/misc_aoi/road_dist.qs", nthreads = ncores)
+
+print(glue("{Sys.time()} -- DONE"))
