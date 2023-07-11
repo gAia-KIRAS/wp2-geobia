@@ -1,0 +1,36 @@
+frc,name
+-1,NA
+0,Straßen des transnationalen Netzes (Kategorie I)
+1,Straßen des transregionalen Netzes (Kategorie II)
+2,Straßen des zentralörtlichen Netzes (Kategorie III)
+3,Straßen des regionalen Netzes (Kategorie IV)
+4,Straßen, die als Gemeindeverbindungen dienen (Kategorie V)
+5,Straßen des innerörtlichen Netzes (Kategorie V)
+6,Sammelstraßen
+7,Straßen der internen Erschließung
+8,Sonstige Straße
+10,Rad-/Fußweg
+11,Wirtschaftsweg
+12,Sonstiger Weg
+20,Bahntrasse Hochrangig
+21,Bahntrasse Niederrangig
+22,Bahntrasse Anschlussbahn, Verbindungsgleis, sonstiges Gleis
+24,Straßenbahntrasse
+25,U-Bahn-Trasse
+31,Fähre
+45,Treppe
+46,Rolltreppe
+47,Aufzug
+48,Rampe für den nichtmotorisierten Verkehr
+98,Betriebsumkehr
+99,Betriebsweg
+101,Fußweg ohne Anzeige
+102,Fußwegpassage
+103,Seilbahn und Sonstige
+105,Almaufschließungsweg
+106,Forstaufschließungsweg
+107,Gebäudezufahrt
+115,Friedhofsweg
+200,Singletrail (MTB)
+201,Shared Trail
+300,Wanderweg
