@@ -7,7 +7,8 @@ library(tictoc)
 ncores <- 64L
 
 gip <- read_sf("dat/interim/gip/kaernten.gpkg") |>
-  st_transform(3416)
+  st_transform(3416) |>
+  filter(FRC %in% c(0:11, 20, 21, 105, 106))
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
 # when using projected points, calculation is done using nabor::knn, a fast search method based on the libnabo C++ library
