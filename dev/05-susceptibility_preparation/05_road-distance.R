@@ -1,7 +1,6 @@
 suppressPackageStartupMessages({
   library(dplyr)
   library(purrr)
-  library(tidyr)
   library(sf)
   library(nngeo)
   library(qs)
@@ -10,6 +9,15 @@ suppressPackageStartupMessages({
 })
 
 ncores <- 64L
+
+simplify_nn <- function(nn, dist) {
+  if (length(nn) == 0) {
+    out <- tibble(nn = as.integer(NA), dist = as.double(NA))
+  } else {
+    out <- tibble(nn = nn, dist = dist)
+  }
+  return(out)
+}
 
 print(glue("{Sys.time()} -- loading GIP"))
 gip <- read_sf("dat/interim/gip/kaernten.gpkg") |>
@@ -48,11 +56,9 @@ qsave(res, "dat/interim/misc_aoi/road_dist_list.qs", nthreads = ncores)
 
 print(glue("{Sys.time()} -- creating clean tibble"))
 tic()
-out <- res |>
-  list_transpose() |>
+out <- map2(.x = res$nn, .y = res$dist, .f = simplify_nn) |>
   bind_rows(.id = "grd_id") |>
-  mutate(grd_id = as.integer(grd_id)) |>
-  complete(grd_id = seq_along(res$nn))
+  mutate(grd_id = as.integer(grd_id))
 toc()
 
 print(glue("    check if dataframe sizes match"))
