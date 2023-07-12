@@ -10,13 +10,11 @@ suppressPackageStartupMessages({
 
 ncores <- 64L
 
-simplify_nn <- function(nn, dist) {
-  if (length(nn) == 0) {
-    out <- tibble(nn = as.integer(NA), dist = as.double(NA))
-  } else {
-    out <- tibble(nn = nn, dist = dist)
+fix_empty <- function(x) {
+  if (length(x) == 0) {
+    x <- NA
   }
-  return(out)
+  return(x)
 }
 
 print(glue("{Sys.time()} -- loading GIP"))
@@ -56,13 +54,19 @@ qsave(res, "dat/interim/misc_aoi/road_dist_list.qs", nthreads = ncores)
 
 print(glue("{Sys.time()} -- creating clean tibble"))
 tic()
-out <- map2(.x = res$nn, .y = res$dist, .f = simplify_nn) |>
-  bind_rows(.id = "grd_id") |>
-  mutate(grd_id = as.integer(grd_id))
+nn <- sapply(res$nn, fix_empty)
+dist <- sapply(res$dist, fix_empty)
+stopifnot(length(nn) == length(dist))
+out <- tibble(grd_id = 1:length(nn), nn, dist) |>
+  mutate(dist = if_else(is.na(dist), 500, dist))
 toc()
 
 print(glue("    check if dataframe sizes match"))
 nrow(grd) == nrow(out)
+
+nona <- nrow(out |> tidyr::drop_na())
+print(glue("    number of pixels (percent) with roads within 500 m"))
+print(glue("{nona} ({round((nona / nrow(out)*100), 2)} %)"))
 
 print(glue("{Sys.time()} -- saving tibble"))
 qsave(out, "dat/interim/misc_aoi/road_dist.qs", nthreads = ncores)
