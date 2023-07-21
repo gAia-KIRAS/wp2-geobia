@@ -12,7 +12,7 @@
     - Disaster Competence Network Austria (DCNA)
     - Geologische Bundesanstalt (GBA)
     - Bundesministerium für Landesverteidigung (BMLV)
-- **Duration**: 01.10.2021 - 30.09.2023
+- **Duration**: 01.10.2021 - ~~30.09.2023~~ 31.03.2024
 
 ## Remote repositories
 
