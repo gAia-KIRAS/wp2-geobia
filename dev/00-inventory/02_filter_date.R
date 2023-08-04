@@ -23,6 +23,8 @@ aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
 read_sf("dat/interim/inventory/GEORIOS_for_gAia.gpkg") |>
     filter(CODE %in% process_types$ID) |>
     left_join(process_types, join_by(CODE == ID)) |>
+    mutate(CODE = as.numeric(CODE)) |>
     st_transform(3416) |>
     st_filter(aoi) |>
+    select(GR_NR, URSPR_NR, CODE, PROCESS, everything()) |>
     write_sf("dat/processed/inventory_date_info.gpkg")

@@ -2,11 +2,12 @@
 
 Beschreibung des GEORIOS-Exports `GEORIOS_for_gAia.gdb.zip` vom 2023-08-01
 
-| Spaltenname | Beschreibung                                                                                                                                                         |
+| Spaltenname | Beschreibung                                                                                                                                                          |
 | ----------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | GR_NR       | GEORIOS_Nummer (eindeutig)                                                                                                                                            |
 | URSPR_NR    | Ursprünglich vom Kartierer/Digitalisierer vergebene Nummer der Massenbewegung                                                                                         |
-| Code        | Vereinheitlichte Prozessansprache auf höchster/2 höchster Hierarchieebene                                                                                             |
+| CODE        | Vereinheitlichte Prozessansprache auf höchster/2 höchster Hierarchieebene                                                                                             |
+| PROCESS     | Prozesstyp Text (CODE)                                                                                                                                                |
 | DATENQUELL  | primäre Datenquelle: Jene Quelle, die erstmals die Massenbewegung als solche identifiziert hat                                                                        |
 | DATQUEL_TX  | Nähere Präzisierung der Datenquelle                                                                                                                                   |
 | QUAL_LAGE   | Bewertungskriterium: Beurteilung der Lagegenauigkeit (zu erkennbaren Objekten wie Haus, Straßenseite, Flussufer, ...)                                                 |
@@ -20,3 +21,4 @@ Beschreibung des GEORIOS-Exports `GEORIOS_for_gAia.gdb.zip` vom 2023-08-01
 | EREIGNIS_T  | Tag des Prozesses in Ortszeit (MEZ). (bei eindeutigem Datum; auch bei Datumswechsel von 2 Tagen Zeitspanne (dann Eingabe 2. Datum))                                   |
 | EREIGNI_ST  | Stunde des Prozesses in Ortszeit (MEZ). (bei eindeutiger Stunde)                                                                                                      |
 | EREIGNI_MI  | Minute des Prozesses in Ortszeit (MEZ). (bei eindeutiger Minute)                                                                                                      |
+
