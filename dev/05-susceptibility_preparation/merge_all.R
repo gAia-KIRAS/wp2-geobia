@@ -57,6 +57,11 @@ stopifnot(nrow(rd) == nrow(dtm))
 print(glue("{Sys.time()} -- reading geology"))
 # TODO
 
+# inventory
+print(glue("{Sys.time()} -- reading inventory"))
+inv <- qread("dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
+stopifnot(nrow(inv) == nrow(dtm))
+
 # merge all data sets
 print(glue("{Sys.time()} -- combining data sets"))
 out <- dtm |>
