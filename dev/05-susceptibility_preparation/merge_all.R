@@ -53,6 +53,10 @@ rd <- qread("dat/interim/misc_aoi/road_dist.qs", nthreads = ncores) |>
   select(dist)
 stopifnot(nrow(rd) == nrow(dtm))
 
+# geology
+print(glue("{Sys.time()} -- reading geology"))
+# TODO
+
 # merge all data sets
 print(glue("{Sys.time()} -- combining data sets"))
 out <- dtm |>
