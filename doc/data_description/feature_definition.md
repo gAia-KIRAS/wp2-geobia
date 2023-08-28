@@ -34,7 +34,7 @@ The following table provides an overview of independent features to be used in t
 | Stream Power Index                                  | SPI                | SAGAGIS      | hydrology    |
 | Sky View Factor                                     | SVF                | SAGAGIS      | lighting     |
 | Daily Precipitation Totals                          | precip_d           | SPARTACUS    | climate      |
-| Topographic Position Index                          | TRI                | `gdaldem`    | morphometry  |
+| Topographic Position Index                          | TPI                | `gdaldem`    | morphometry  |
 | Topographic Roughness Index                         | TRI                | `gdaldem`    | morphometry  |
 | Topographic Wetness Index                           | TWI                | SAGAGIS      | hydrology    |
 | Vector Ruggedness Measure                           | VRM                | SAGAGIS      | morphometry  |
