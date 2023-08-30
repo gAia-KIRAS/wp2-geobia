@@ -50,12 +50,14 @@ sw <- sw |>
 # distance to roads
 print(glue("{Sys.time()} -- reading distance to roads"))
 rd <- qread("dat/interim/misc_aoi/road_dist.qs", nthreads = ncores) |>
-  select(dist)
+  select(road_dist = dist)
 stopifnot(nrow(rd) == nrow(dtm))
 
-# geology
-print(glue("{Sys.time()} -- reading geology"))
-# TODO
+# lithology
+print(glue("{Sys.time()} -- reading lithology"))
+li <- qread("dat/interim/misc_aoi/lithology_full.qs", nthreads = ncores) |>
+  select(lithology)
+stopifnot(nrow(li) == nrow(dtm))
 
 # inventory
 print(glue("{Sys.time()} -- reading inventory"))
@@ -69,6 +71,7 @@ out <- dtm |>
   bind_cols(ci) |>
   bind_cols(sw) |>
   bind_cols(rd) |>
+  bind_cols(li) |>
   rename_with(.fn = \(x) gsub("-", "_", x), .cols = everything()) |>
   rename_with(.fn = tolower, .cols = everything())
 

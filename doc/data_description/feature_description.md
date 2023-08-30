@@ -46,6 +46,7 @@ The following table provides an overview of features landslide susceptibility mo
 | `sw_max_speed`      | maximum water speed                                        |
 | `sw_max_depth`      | maximum water depth                                        |
 | `sw_spec_runoff`    | specific runoff                                            |
-| `dist`              | distance to roads                                          |      
+| `road_dist`         | distance to roads                                          |      
+| `lithology`         | lithological class                                         |      
 | `x`                 | x-coordinate                                               |
 | `y`                 | y-coordinate                                               |
