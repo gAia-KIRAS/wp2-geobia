@@ -20,18 +20,16 @@ process_types <- tribble(
 # after filting by process type, 1415/1962 events remain
 inv_georios <- read_sf("dat/interim/inventory/GEORIOS_for_gAia.gpkg") |>
   filter(CODE %in% process_types$ID) |>
-  mutate(source = "GEORIOS") |>
-  select(source, geom = SHAPE) |>
+  st_geometry() |>
   st_transform(3416)
 
 # 2704 events
 inv_valid <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
-  mutate(source = "validated") |>
-  select(source, geom) |>
+  st_geometry() |>
   st_transform(3416)
 
 # simply combine inventory locations
-inv <- bind_rows(inv_valid, inv_georios)
+inv <- c(inv_valid, inv_georios)
 
 rm(inv_georios, inv_valid, process_types)
 
