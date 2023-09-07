@@ -21,19 +21,25 @@ process_types <- tribble(
 inv_georios <- read_sf("dat/interim/inventory/GEORIOS_for_gAia.gpkg") |>
   filter(CODE %in% process_types$ID) |>
   st_geometry() |>
-  st_transform(3416)
+  st_transform(3416) |>
+  st_as_sf() |>
+  rename(geom = x) |>
+  mutate(validated = FALSE)
 
 # 2704 events
 inv_valid <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
   st_geometry() |>
-  st_transform(3416)
+  st_transform(3416) |>
+  st_as_sf() |>
+  rename(geom = x) |>
+  mutate(validated = TRUE)
 
-# simply combine inventory locations
-inv <- c(inv_valid, inv_georios)
-
-rm(inv_georios, inv_valid, process_types)
+# combine inventory locations
+inv <- bind_rows(inv_valid, inv_georios) |>
+  st_buffer(dist = units::as_units(5, "m"))
 
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
-inventory <- st_join(grd, inv)
+inventory_valid <- st_join(grd, inv)
+
 qsave(inventory, "dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
