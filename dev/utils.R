@@ -23,3 +23,5 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
   ret <- setNames(ret, names)
   dplyr::bind_cols(x, ret)
 }
+
+wall <- function(x) print(glue(x))
