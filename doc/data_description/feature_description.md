@@ -4,6 +4,7 @@ The following table provides an overview of features landslide susceptibility mo
 
 | column name         | description                                                |
 | ------------------- | ---------------------------------------------------------- |
+| `slide`             | landlide (target variable)                                 |
 | `aspect_arctan2`    | aspect (circular)                                          |
 | `convergence_index` | Convergence Index                                          |
 | `convexity`         | terrain surface convexity                                  |
@@ -27,7 +28,7 @@ The following table provides an overview of features landslide susceptibility mo
 | `spi`               | stream power index                                         |
 | `svf`               | sky view factor                                            |
 | `tpi`               | topographic position index                                 |
-| `tri`               | topographic roughness index                                | 
+| `tri`               | topographic roughness index                                |
 | `twi`               | topographic wetness index                                  |
 | `vrm`               | vector ruggedness measure                                  |
 | `wei`               | wind exposition index                                      |
@@ -36,17 +37,17 @@ The following table provides an overview of features landslide susceptibility mo
 | `cwd`               | cumulative wet days                                        |
 | `prcptot`           | toal annual precipitation                                  |
 | `sdii`              | simple precipitation intensity index                       |
-| `rx5day`            | maximum 5-day precipitation                                |          
+| `rx5day`            | maximum 5-day precipitation                                |
 | `rx1day`            | maximum daily precipitation                                |
 | `api_k7`            | 7-day antecedent precipitation index                       |
 | `api_k30`           | 30-day antecedent precipitation index                      |
-| `spei30`            | 30-day standardized precipitation evapotranspiration index |          
+| `spei30`            | 30-day standardized precipitation evapotranspiration index |
 | `pci`               | precipitation concentration index                          |
 | `sw_hazard_cat`     | surface water hazard category                              |
 | `sw_max_speed`      | maximum water speed                                        |
 | `sw_max_depth`      | maximum water depth                                        |
 | `sw_spec_runoff`    | specific runoff                                            |
-| `road_dist`         | distance to roads                                          |      
-| `lithology`         | lithological class                                         |      
+| `road_dist`         | distance to roads                                          |
+| `lithology`         | lithological class                                         |
 | `x`                 | x-coordinate                                               |
 | `y`                 | y-coordinate                                               |

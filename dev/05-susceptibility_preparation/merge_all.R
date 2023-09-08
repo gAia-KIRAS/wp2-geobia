@@ -56,12 +56,14 @@ stopifnot(nrow(rd) == nrow(dtm))
 # lithology
 print(glue("{Sys.time()} -- reading lithology"))
 li <- qread("dat/interim/misc_aoi/lithology_full.qs", nthreads = ncores) |>
+  st_drop_geometry() |>
   select(lithology)
 stopifnot(nrow(li) == nrow(dtm))
 
 # inventory
 print(glue("{Sys.time()} -- reading inventory"))
-inv <- qread("dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
+inv <- qread("dat/interim/misc_aoi/inventory.qs", nthreads = ncores) |>
+  select(slide)
 stopifnot(nrow(inv) == nrow(dtm))
 
 # merge all data sets
@@ -72,8 +74,10 @@ out <- dtm |>
   bind_cols(sw) |>
   bind_cols(rd) |>
   bind_cols(li) |>
+  bind_cols(inv) |>
   rename_with(.fn = \(x) gsub("-", "_", x), .cols = everything()) |>
-  rename_with(.fn = tolower, .cols = everything())
+  rename_with(.fn = tolower, .cols = everything()) |>
+  select(slide, everything())
 
 # save w/ simple feature geometry column (parquet)
 print(glue("{Sys.time()} -- writing parquet"))
