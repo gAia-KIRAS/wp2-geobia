@@ -3,7 +3,7 @@ library(dplyr)
 library(tibble)
 library(qs)
 
-ncores <- 64L
+ncores <- 32L
 
 process_types <- tribble(
   ~ID, ~PROCESS,
@@ -40,6 +40,6 @@ inv <- bind_rows(inv_valid, inv_georios) |>
 
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
-inventory_valid <- st_join(grd, inv)
+inventory <- st_join(grd, inv)
 
 qsave(inventory, "dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
