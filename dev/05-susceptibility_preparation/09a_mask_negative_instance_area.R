@@ -31,7 +31,7 @@ absence_area <- st_difference(aoi, inv) |>
   st_as_sf() |>
   rename(geom = x) |>
   mutate(neg_sample = TRUE)
-if(!file.exists("dat/interim/aoi/absence_area.gpkg")) {
+if (!file.exists("dat/interim/aoi/absence_area.gpkg")) {
   st_write(absence_area, "dat/interim/aoi/absence_area.gpkg")
 }
 
