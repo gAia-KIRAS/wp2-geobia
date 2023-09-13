@@ -25,21 +25,26 @@ aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
   st_transform(3416)
 
 wall("{Sys.time()} -- cutting holes")
-absence_area <- st_difference(aoi, inv)
-if (!file.exists("dat/interim/aoi/absence_area.gpkg")) {
+absence_area <- st_difference(aoi, inv) |>
+  select(-area) |>
+  st_union() |>
+  st_as_sf() |>
+  rename(geom = x) |>
+  mutate(neg_sample = TRUE)
+if(!file.exists("dat/interim/aoi/absence_area.gpkg")) {
   st_write(absence_area, "dat/interim/aoi/absence_area.gpkg")
 }
 
 wall("{Sys.time()} -- reading target grid")
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
-wall("{Sys.time()} -- performing spatial join") # 420 sec
+wall("{Sys.time()} -- performing spatial join") # 550 sec
 tic()
 absence_grid <- st_join(grd, absence_area, join = st_intersects, left = TRUE) |>
   select(-idx) |>
   sfc_as_cols() |>
   st_drop_geometry() |>
-  mutate(neg_sample = if_else(is.na(area), FALSE, TRUE)) |>
+  mutate(neg_sample = tidyr::replace_na(neg_sample, FALSE)) |>
   select(neg_sample, x, y)
 toc()
 
@@ -48,3 +53,13 @@ stopifnot(nrow(absence_grid) == nrow(grd))
 wall("{Sys.time()} -- saving result")
 qsave(absence_grid, "dat/interim/aoi/gaia_ktn_absence_grid.qs", nthreads = ncores)
 wall("{Sys.time()} -- DONE")
+
+# check
+# tmp <- absence_grid |>
+#   st_as_sf(coords = c("x", "y"), crs = 3416)
+# tmp |>
+#   filter(neg_sample == FALSE) |>
+#   st_write("nosample_grd.gpkg")
+# tmp |>
+#   filter(neg_sample == TRUE) |>
+#   st_write("sample_grd.gpkg")
