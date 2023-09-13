@@ -42,3 +42,4 @@ create_balanced_subset <- function(seed, df_neg, df_pos) {
 lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) |>
   bind_rows(.id = "iter") |>
   qsave("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
+wall("{Sys.time()} -- DONE")
