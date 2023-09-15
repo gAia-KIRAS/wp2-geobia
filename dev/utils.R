@@ -25,3 +25,89 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
 }
 
 wall <- function(x) print(glue(x))
+
+random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
+  # Setup classification task
+  task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
+
+  # Define learner and search space
+  learner <- lrn("classif.ranger",
+    num.trees = 1000,
+    mtry = to_tune(1, length(task$feature_names)),
+    min.node.size = to_tune(p_int(1, 10)),
+    sample.fraction = to_tune(0.2, 0.9),
+    respect.unordered.factors = "order",
+    importance = "permutation",
+    predict_type = "prob",
+    num.threads = 32L
+  )
+
+  # Setup tuning w/ mbo
+  instance <- tune(
+    tuner = tnr("mbo"),
+    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
+    task = task,
+    learner = learner,
+    resampling = resampling_strategy,
+    measure = msr("classif.bbrier"),
+    terminator = trm("evals", n_evals = 100)
+  )
+
+  # Set optimal hyperparameter configuration to learner
+  learner$param_set$values <- instance$result_learner_param_vals
+
+  # Train the learner on the full data set
+  learner$train(task)
+
+  return(learner)
+}
+
+nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
+  # Setup classification task
+  task <- as_task_classif(susc_data, target = "slides", id = id)
+
+  # Define learner and search space
+  learner <- lrn("classif.ranger",
+    num.trees = 1000,
+    mtry = to_tune(1, length(task$feature_names)),
+    min.node.size = to_tune(p_int(1, 10)),
+    sample.fraction = to_tune(0.2, 0.9),
+    respect.unordered.factors = "order",
+    importance = "permutation",
+    predict_type = "prob",
+    num.threads = 32L
+  )
+
+  # Setup tuning w/ mbo
+  at <- auto_tuner(
+    tuner = tnr("mbo"),
+    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
+    learner = learner,
+    resampling = inner_resampling,
+    measure = msr("classif.bbrier"),
+    terminator = trm("evals", n_evals = 50)
+  )
+
+  rr <- resample(task, at, outer_resampling, store_models = TRUE)
+
+  return(rr)
+}
+
+get_score <- function(x) {
+  x$score() |>
+    select(classif.bbrier)
+}
+
+get_inner_tuning <- function(x) {
+  x |>
+    extract_inner_tuning_results() |>
+    select(iteration:classif.bbrier)
+}
+
+get_importance <- function(ranger_model) {
+  ranger_model$importance() |>
+    tibble::enframe(.) |>
+    rename(index = name, importance = value) |>
+    arrange(-importance) |>
+    mutate(index_name = fct_reorder(index_name, -desc(importance)))
+}
