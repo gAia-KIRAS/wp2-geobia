@@ -64,7 +64,7 @@ random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsm
 
 nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
   # Setup classification task
-  task <- as_task_classif(susc_data, target = "slides", id = id)
+  task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
   # Define learner and search space
   learner <- lrn("classif.ranger",
