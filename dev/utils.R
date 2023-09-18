@@ -50,7 +50,7 @@ random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsm
     learner = learner,
     resampling = resampling_strategy,
     measure = msr("classif.bbrier"),
-    terminator = trm("evals", n_evals = 100)
+    terminator = trm("evals", n_evals = 500)
   )
 
   # Set optimal hyperparameter configuration to learner
@@ -85,7 +85,7 @@ nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rs
     learner = learner,
     resampling = inner_resampling,
     measure = msr("classif.bbrier"),
-    terminator = trm("evals", n_evals = 50)
+    terminator = trm("evals", n_evals = 100)
   )
 
   rr <- resample(task, at, outer_resampling, store_models = TRUE)
