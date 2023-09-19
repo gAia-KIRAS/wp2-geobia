@@ -106,8 +106,8 @@ get_inner_tuning <- function(x) {
 
 get_importance <- function(ranger_model) {
   ranger_model$importance() |>
-    tibble::enframe(.) |>
+    tibble::enframe() |>
     rename(index = name, importance = value) |>
     arrange(-importance) |>
-    mutate(index_name = fct_reorder(index_name, -desc(importance)))
+    mutate(index = fct_reorder(index, -desc(importance)))
 }

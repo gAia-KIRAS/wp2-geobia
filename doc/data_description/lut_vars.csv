@@ -1,0 +1,48 @@
+feature_shortname,feature_name,progenitor
+slide,"landlide (target variable)",target
+aspect_arctan2,"aspect (circular)",morphometry
+convergence_index,"convergence Index",morphometry
+convexity,"morphometry surface convexity",morphometry
+curv_max,"curvature (max)",morphometry
+curv_min,"curvature (min)",morphometry
+curv_plan,"curvature (plan)",morphometry
+curv_prof,"curvature (profile)",morphometry
+dah,"diurnal anisotropic heat",morphometry
+elevation,"elevation",morphometry
+flow_accumulation,"flow accumulation",hydrology
+flow_path_length,"flow path length",hydrology
+flow_width,"flow width",hydrology
+geomorphons,"geomorphon type",lighting
+maximum_height,"maximum height",hydrology
+mrn,"melton roughness number",hydrology
+nto,"negative topographic openness",lighting
+pto,"positive topographic openness",lighting
+roughness,"roughness",morphometry
+sca,"specific catchment area",morphometry
+slope,"slope",morphometry
+spi,"stream power index",hydrology
+svf,"sky view factor",lighting
+tpi,"topographic position index",morphometry
+tri,"topographic roughness index",morphometry
+twi,"topographic wetness index",hydrology
+vrm,"vector ruggedness measure",morphometry
+wei,"wind exposition index",morphometry
+clc,"land cover","vegetation"
+forest_cover,"forest cover","vegetation"
+cwd,"cumulative wet days",climate
+prcptot,"toal annual precipitation",climate
+sdii,"simple precipitation intensity index",climate
+rx5day,"maximum 5-day precipitation",climate
+rx1day,"maximum daily precipitation",climate
+api_k7,"7-day antecedent precipitation index",climate
+api_k30,"30-day antecedent precipitation index",climate
+spei30,"30-day standardized precipitation evapotranspiration index",climate
+pci,"precipitation concentration index",climate
+sw_hazard_cat,"surface water hazard category",hydrology
+sw_max_speed,"maximum water speed",hydrology
+sw_max_depth,"maximum water depth",hydrology
+sw_spec_runoff,"specific runoff",hydrology
+road_dist,"distance to roads",hydrology
+lithology,"lithological class","geology"
+x,"x-coordinate",coordinates
+y,"y-coordinate",coordinates
