@@ -95,7 +95,7 @@ nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rs
 
 get_score <- function(x) {
   x$score() |>
-    select(classif.bbrier)
+    select(iteration:classif.ce)
 }
 
 get_inner_tuning <- function(x) {

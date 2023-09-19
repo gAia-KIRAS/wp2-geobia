@@ -42,12 +42,26 @@ saveRDS(dat_rr, "dat/interim/random_forest/ranger_nested_resampling.rds")
 
 # get metrics
 wall("{Sys.time()} -- obtaining metrics")
-lapply(dat_rr, get_score) |>
-  bind_rows(.id = "key") |>
+met <- lapply(dat_rr, get_score) |>
+  bind_rows(.id = "key")
+
+# summarize across all single folds
+met |>
   summarize(
-    min_score = min(classif.bbrier),
-    mean_score = mean(classif.bbrier),
-    max_score = max(classif.bbrier)
+    min_score = min(classif.ce),
+    mean_score = mean(classif.ce),
+    max_score = max(classif.ce)
+  )
+
+# aggregate all folds per iteration and summarize across all iterations
+met |>
+  group_by(iteration) |>
+  summarize(classif.ce = mean(classif.ce)) |>
+  ungroup() |>
+  summarize(
+    min_score = min(classif.ce),
+    mean_score = mean(classif.ce),
+    max_score = max(classif.ce)
   )
 
 lapply(dat_rr, get_inner_tuning) |>
