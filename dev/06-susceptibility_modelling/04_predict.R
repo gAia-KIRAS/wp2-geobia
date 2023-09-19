@@ -31,7 +31,7 @@ predict_ensemble <- function(ensemble, data) {
   lapply(ensemble, predict_rf, newdata = data) |>
     bind_rows(.id = "iteration") |>
     group_by(x, y) |>
-    summarize(mean_susc = mean(prob), sd_susc = sd(prob)) |>
+    summarize(mean_susc = mean(prob), sd_susc = sd(prob), .groups = "drop") |>
     ungroup() |>
     st_as_sf(coords = c("x", "y"), crs = 3416)
 }
@@ -50,8 +50,11 @@ print(glue::glue("{Sys.time()} -- working on negative chunks"))
 neg_lst <- list.files("dat/processed/chunks/neg", recursive = TRUE, full.names = TRUE)
 for (f in neg_lst) {
   partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]"))
-  print(glue::glue(".... processing {partition}"))
-  neg_tmp <- read_dat(f)
-  neg_pred <- predict_ensemble(rf_mods, neg_tmp)
-  qsave(neg_pred, "dat/processed/prediction/neg_{partition}.qs", nthreads = 32L)
+  print(glue::glue("{Sys.time()} .... processing {partition}"))
+  outfile <- glue("dat/processed/prediction/neg_{partition}.qs")
+  if (!file.exists(outfile)) {
+    neg_tmp <- read_dat(f)
+    predict_ensemble(rf_mods, neg_tmp) |>
+      qsave(outfile, nthreads = 32L)
+  }
 }
