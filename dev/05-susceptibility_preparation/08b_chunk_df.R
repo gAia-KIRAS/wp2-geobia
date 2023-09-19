@@ -6,7 +6,7 @@ suppressPackageStartupMessages({
 dat <- read_ipc_file("dat/processed/carinthia_10m.arrow")
 
 dat |>
-  filter(slide = TRUE) |>
+  filter(slide == TRUE) |>
   write_ipc_file(sink = "dat/processed/chunks/pos/carinthia_slides.arrow", compression = "lz4")
 
 neg <- dat |>
