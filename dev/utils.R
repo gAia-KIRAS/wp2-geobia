@@ -111,3 +111,18 @@ get_importance <- function(ranger_model) {
     arrange(-importance) |>
     mutate(index = fct_reorder(index, -desc(importance)))
 }
+
+okabe_ito <- c(
+  "#E69F00", "#56B4E9", "#009E73", "#F0E442",
+  "#0072B2", "#D55E00", "#CC79A7", "#000000"
+)
+names(okabe_ito) <- c(
+  "orange",
+  "skyblue",
+  "green",
+  "yellow",
+  "darkblue",
+  "darkorange",
+  "pink",
+  "black"
+)
