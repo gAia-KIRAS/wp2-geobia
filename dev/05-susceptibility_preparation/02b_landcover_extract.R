@@ -13,13 +13,10 @@ aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
 # Forest cover
-wk <- read_stars("dat/interim/misc_aoi/wk_aoi_ktn.tif") |>
-  st_crop(aoi) |>
-  st_as_sf(as_points = TRUE) |>
+wk <- read_stars("dat/interim/misc_aoi/wk_aoi_ktn.tif")
+res_wk <- st_extract(x = wk, at = grd, bilinear = FALSE) |>
   rename(forest_cover = wk_aoi_ktn.tif)
-res_wk <- st_join(grd, wk) |>
-  select(-idx)
-nrow(grd) == nrow(res_wk)
+stopifnot(nrow(grd) == nrow(res_wk))
 qsave(res_wk, "dat/interim/misc_aoi/forest_cover.qs", nthreads = ncores)
 
 # Corine Land Cover
