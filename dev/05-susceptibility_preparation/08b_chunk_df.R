@@ -18,3 +18,5 @@ neg |>
   mutate(partition = rep(1:9, each = partition_size)) |>
   group_by(partition) %>%
   write_dataset("dat/processed/chunks/neg", format = "ipc")
+
+print(glue::glue("{Sys.time()} -- DONE"))
