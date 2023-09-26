@@ -16,3 +16,10 @@ wget https://docs.umweltbundesamt.at/s/beBw8fmwyCMA2ga/download/CLC_2018_AT_clip
 mv CLC_2018_AT_clip.zip dat/raw/clc/
 unzip CLC_2018_AT_clip.zip
 rm CLC_2018_AT_clip.zip
+
+# cadasterENV
+# https://landmonitoring.earth/portal/
+
+gdalwarp -tr 10 -10 -tap -t_srs EPSG:3416 \
+  -te 348655 300975 532535 359205 \
+  dat/raw/cadasterENV/FP_P1_HR_LandCoverMap2016_L2.tif dat/interim/misc_aoi/cadasterenv_ktn.tif

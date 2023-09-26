@@ -22,11 +22,9 @@ dtm <- qread("dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) |>
 
 # land cover, forest cover
 print(glue("{Sys.time()} -- reading land cover features"))
-lc <- qread("dat/interim/misc_aoi/land_cover_full.qs", nthreads = ncores)
+lc <- qread("dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores)
 stopifnot(identical(st_coordinates(dtm), st_coordinates(lc)))
-lc <- lc |>
-  st_drop_geometry() |>
-  mutate(forest_cover = if_else(is.na(forest_cover), 0, forest_cover))
+lc <- st_drop_geometry(lc)
 
 # climate indicators
 print(glue("{Sys.time()} -- reading climate indicators"))
