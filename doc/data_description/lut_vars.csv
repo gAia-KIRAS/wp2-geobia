@@ -27,7 +27,7 @@ tri,"topographic roughness index",morphometry
 twi,"topographic wetness index",hydrology
 vrm,"vector ruggedness measure",morphometry
 wei,"wind exposition index",morphometry
-clc,"land cover","vegetation"
+land_cover,"land cover","vegetation"
 forest_cover,"forest cover","vegetation"
 cwd,"cumulative wet days",climate
 prcptot,"toal annual precipitation",climate
