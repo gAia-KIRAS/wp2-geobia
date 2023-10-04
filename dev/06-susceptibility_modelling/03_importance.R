@@ -32,7 +32,7 @@ imp <- imp_lst |>
 p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
   geom_pointrange(aes(ymin = min_imp, ymax = max_imp)) +
   coord_flip() +
-  xlab("feature name") +
+  xlab("feature") +
   ylab("permutation feature importance") +
   guides(color = guide_legend(title = "type")) +
   scale_color_discrete_qualitative("Dark3") +
@@ -44,7 +44,7 @@ p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
       colour = "black",
       size = 20
     ),
-    legend.position = "bottom"
+    legend.position = "right"
   )
 
-ggsave("plt/importance.png", p, width = 180, height = 150, units = "mm")
+ggsave("plt/importance.png", p, width = 180, height = 120, units = "mm")
