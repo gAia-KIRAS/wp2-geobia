@@ -12,6 +12,7 @@
   | `source_id`         | id from source dataset                                     | character?       |
   | `collection_method` | type of event collection (orthophoto, field mapping, news) | integer (factor) |
   | `quality_loc`       | qualitative assessment of location accuracy                | integer (factor) |
+  | `last_update`       | last update of the event entry                             | integer (date)   |
   | `geom`              | simple feature geometry in defined CRS                     | geometry         |
 - `process_type` [table]: lookup-table for process type
 - `source` [table]: lookup-table for dataset source
