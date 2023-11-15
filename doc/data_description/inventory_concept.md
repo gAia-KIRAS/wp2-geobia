@@ -16,6 +16,6 @@
   | `geom`              | simple feature geometry in defined CRS                     | geometry         |
 - `process_type` [table]: lookup-table for process type
 - `source` [table]: lookup-table for dataset source
-- `source_id_col`: lookup-table for column name of source-id per source-dataset
-- `quality_loc`: lookup-table for location accuracy
+- `source_id_col` [table]: lookup-table for column name of source-id per source-dataset
+- `quality_loc` [table]: lookup-table for location accuracy
 
