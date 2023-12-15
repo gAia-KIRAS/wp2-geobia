@@ -28,8 +28,8 @@ $ git remote -v
 github-wp2  git@github.com:gAia-KIRAS/wp2-geobia.git (fetch)
 github-wp2  git@github.com:gAia-KIRAS/wp2-geobia.git (push)
 # internal (GeoSphere Austria)
-origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (fetch)
-origin  git@vgitlab.zamg.ac.at:zamg-eo/forschungsprojekte/gaia.git (push)
+origin  git@gitlab.geosphere.at:klifofo-kleo/forschungsprojekte/gaia.git (fetch)
+origin  git@gitlab.geosphere.at:klifofo-kleo/forschungsprojekte/gaia.git (push)
 ```
 
 ## Repo structure 
