@@ -24,3 +24,4 @@
 ## R Setup
 - `ubuntu_r_setup.sh`: install system dependencies
 - `install_packages.R`: install required R packages
+- [Installing rstudio-server](https://posit.co/download/rstudio-server/)
