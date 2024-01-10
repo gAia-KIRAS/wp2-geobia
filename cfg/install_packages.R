@@ -1,0 +1,21 @@
+#!/usr/bin/R
+install.packages(
+    "tidyverse",
+    "glue",
+    "colorspace",
+    "showtext",
+    "arrow",
+    "sf",
+    "ggspatial",
+    "sfarrow",
+    "nngeo",
+    "stars",
+    "tictoc",
+    "qs",
+    "ranger",
+    "mlr3",
+    "mlr3learners",
+    "mlr3tuning",
+    "mlr3mbo",
+    "mlr3spatiotempcv"
+)
