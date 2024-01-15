@@ -1,3 +1,5 @@
+# spatial join of KAGIS point and polygon data
+
 library(tidyverse)
 library(sf)
 

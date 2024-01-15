@@ -1,3 +1,5 @@
+# merge KAGIS inventory 2023 with dataset validated by RS
+
 library(sf)
 library(dplyr)
 

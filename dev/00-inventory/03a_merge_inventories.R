@@ -1,3 +1,5 @@
+# technical merge of GEORIOS and dataset validated by RS w/o content verification
+
 library(sf)
 library(dplyr)
 
