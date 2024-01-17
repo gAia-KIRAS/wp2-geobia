@@ -43,6 +43,7 @@
 #%end
 
 import sys
+from grass_session import Session
 import grass.script as grass
 from grass.script import core as grasscore
 
