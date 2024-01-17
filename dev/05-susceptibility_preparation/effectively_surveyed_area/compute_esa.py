@@ -38,7 +38,7 @@ with Session(
     create_opts="",
 ):
     # set region
-    grass.run_command("g.region", n=uly, s=lry, e=lrx, w=ulx)
+    grass.run_command("g.region", save="full_aoi_region", n=uly, s=lry, e=lrx, w=ulx)
     # compute aspect and slope
     grass.run_command(
         "r.slope.aspect",
@@ -132,7 +132,7 @@ with Session(
             quiet=True,
         )
         # coming back to the original working region
-        grass.run_command("g.region", region="saved_region")
+        grass.run_command("g.region", region="full_aoi_region")
         # Since r.viewshed set the cell of the output visibility layer to 180 under the point, this cell is set to 0.01
         grass.mapcalc("view = if(view==180,0.01,view)", overwrite=True, quiet=True)
         # estimating the layer of the horizontal angle between point and each visible cell (angle of the horizontal line of sight)
