@@ -5,7 +5,7 @@
 # gdalwarp -cutline dat/raw/aoi/gaia_projektgebiet_ktn_union_3416.gpkg -crop_to_cutline \
 #     dat/interim/dtm/dtm_austria.tif dat/interim/dtm_aoi/dtm_austria_carinthia.tif
 
-grass -c "dat/interim/dtm_aoi/dtm_austria_carinthia.tif" -e "dat/interim/grassdata/grass_db/esa"
+grass -c "dat/interim/dtm_aoi/dtm_austria_carinthia.tif" -e "dat/grassdata/grass_db/effectively_surveyed_area"
 
 # create grass raster from dtm
 
