@@ -6,6 +6,7 @@ from osgeo import gdal
 
 from grass_session import Session  # isort:skip
 import grass.script as grass  # isort:skip
+from grass.script import core as grasscore # isort:skip
 
 region = "carinthia"
 elev = f"dat/interim/dtm_aoi/dtm_austria_{region}.tif"
