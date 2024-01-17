@@ -18,6 +18,9 @@ Usage:
     setup_grass <grass_subdir> <base_dir> [<dem_raster>]
     setup_grass -h | --help
 
+Example:
+   setup_grass carinthia dat dat/interim/dtm_aoi/dtm_austria_carinthia.tif
+
 EOF
 
     exit 64
