@@ -12,14 +12,15 @@ if [[ "$@" == "" || "$@" == *-h* || "$@" == *--help* ]]; then
 	
 setup_grass.sh - Perform initial GRASS setup for computing effectively surveyed area:
     - creation of GRASS LOCATION and a PERMANENT mapset
-    - creation GRASS raster map
+    - creation GRASS raster map from DEM
+    - creation GRASS vector data set from inventory
 
 Usage:
-    setup_grass <grass_subdir> <base_dir> [<dem_raster>]
+    setup_grass <grass_subdir> [<dem_raster>] [<inventory_vector>]
     setup_grass -h | --help
 
 Example:
-   setup_grass carinthia dat dat/interim/dtm_aoi/dtm_austria_carinthia.tif
+   setup_grass carinthia interim/dtm_aoi/dtm_austria_carinthia.tif processed/Ereignisinventar_konsolidiert/inventory_carinthia.gpkg
 
 EOF
 
@@ -37,24 +38,27 @@ if [[ -z $gis_dir ]]; then
 fi
 
 # base directory for grass data
-base_dir=$2
-if [[ -z $geofile ]]; then
-	base_dir="dat"
-fi
+base_dir="dat"
 
 grass_dir_base="${base_dir}/grassdata/grass_db"
 grass_dir="${grass_dir_base}/${gis_dir}"
 mkdir -p $grass_dir_base
 
 # dem tif file
-geofile=$3
-if [[ -z $geofile ]]; then
-	geofile="${base_dir}/interim/dtm_aoi/dtm_austria_${gis_dir}.tif"
+dem_raster="${base_dir}/$2"
+if [[ -z $dem_raster ]]; then
+	dem_raster="${base_dir}/interim/dtm_aoi/dtm_austria_${gis_dir}.tif"
+fi
+
+# dem tif file
+inventory_vector="${base_dir}/$3"
+if [[ -z $inventory_vector ]]; then
+	inventory_vector="${base_dir}/processed/Ereignisinventar_konsolidiert/inventory_${gis_dir}.gpkg"
 fi
 
 # create new location from vrt of tif file
-echo "`date "+%Y-%m-%d %H:%M:%S"`: Create GRASS LOCATION from ${geofile} at ${grass_dir}"
-grass -e -c ${geofile} ${grass_dir}
+echo "`date "+%Y-%m-%d %H:%M:%S"`: Create GRASS LOCATION from ${dem_raster} at ${grass_dir}"
+grass -e -c ${dem_raster} ${grass_dir}
 
 # check if directory exists
 grassdir="${grass_dir}/PERMANENT/"
@@ -68,6 +72,8 @@ fi
 
 # link GDAL supported raster data as a pseudo GRASS raster map  
 echo "`date "+%Y-%m-%d %H:%M:%S"`: Link virtual raster as pseudo GRASS raster"
-grass ${grassdir} --exec r.external input=${geofile} output=dem
+grass ${grassdir} --exec r.external input=${dem_raster} output=dem
 
-# create grass inventory
+# import inventory gpkg
+echo "`date "+%Y-%m-%d %H:%M:%S"`: Link virtual raster as pseudo GRASS raster"
+grass ${grassdir} --exec v.import input=${inventory_vector} output=ls_inventory
