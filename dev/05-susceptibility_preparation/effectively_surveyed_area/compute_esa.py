@@ -82,9 +82,9 @@ with Session(
     for i in ctg:
         k = k + 1
         message = """
-        --------------------------------------
-        ----------- running point %s (cat = %s) of %s points --
-        --------------------------------------
+        -------------------------------------------------------
+        ----- working on point %s (cat = %s) of %s points -----
+        -------------------------------------------------------
         """
         grass.message(message % (k, i, npnt))
         # extracting a point
