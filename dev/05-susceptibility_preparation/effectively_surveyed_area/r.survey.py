@@ -43,9 +43,10 @@
 #%end
 
 import sys
-from grass_session import Session
-import grass.script as grass
-from grass.script import core as grasscore
+
+from grass_session import Session # isort:skip
+import grass.script as grass # isort:skip
+from grass.script import core as grasscore # isort:skip
 
 
 def main():
