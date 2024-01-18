@@ -1,12 +1,15 @@
-# merge inventory v1, Restpunkte_Polygon_matched and Rutschungsflaechen_Punkt
+# merge inventory v1, Restpunkte_Polygon_Hannah, Rutschungsflaechen_Punkt and Rutschungen_FeldApp.shp
 
 library(tidyverse)
 library(sf)
 
+# load input files
 v1 <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v1.shp")
-rp_pol_matched <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Restpunkte_Polygon_matched.shp")
-kagis_poly_unmatched_pol <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungsflaechen_unmatched.gpkg")
+rp_pol_hannah <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Restpunkte_Polygon_Hannah.shp")
 kagis_points <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungsflaechen_Punkt.gpkg")
+rp_pol_kagis <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungen_FeldApp.shp") |>
+  st_set_crs(31258)
+kagis_poly_unmatched_pol <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungsflaechen_unmatched.gpkg")
 
 all.equal(st_crs(v1), st_crs(rp_pol_matched), st_crs(kagis_points)) # 31258
 
@@ -28,12 +31,18 @@ pts <- kagis_points |>
 all(cn == colnames(pts))
 
 # match unmatched points to polygons
-pol <- rp_pol_matched |>
-  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = NA, last_update = NA, modified = as.character(NA), checked = TRUE) |>
+kagis_pol <- rp_pol_kagis |>
+  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "KAGIS", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
+  rename(fid = Id, geom = geometry) |>
+  select(all_of(cn))
+
+hannah_pol <- rp_pol_hannah |>
+  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "Masterarbeit", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
   rename(fid = Id, geom = geometry) |>
   select(all_of(cn))
 
 res <- inv |>
-  bind_rows(pts, pol)
+  bind_rows(pts, kagis_pol, hannah_pol) |>
+  mutate(fid = as.integer(fid))
 
 st_write(res, dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v2.shp")
