@@ -34,17 +34,23 @@ all(cn == colnames(pts))
 
 # match unmatched points to polygons
 kagis_pol <- rp_pol_kagis |>
-  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "KAGIS", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
+  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "KAGIS-Flaechen", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
   rename(fid = Id, geom = geometry) |>
   select(all_of(cn))
 
 hannah_pol <- rp_pol_hannah |>
-  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "Masterarbeit", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
+  mutate(WIS_ID = NA, OBJECTID = as.character(NA), process_type = NA, event_date = NA, source = "ALS-DGM", last_update = NA, modified = "Punkt ergaenzt", checked = TRUE) |>
   rename(fid = Id, geom = geometry) |>
   select(all_of(cn))
 
 res <- inv |>
   bind_rows(pts, kagis_pol, hannah_pol) |>
-  mutate(fid = as.integer(fid))
+  mutate(fid = as.integer(fid), process_type = as.factor(process_type), source = as.factor(source)) |>
+  mutate(source = fct_recode(source, KAGIS = "KAGIS Ereigniskataster"))
+  arrange(WIS_ID, OBJECT_ID, process_type, event_date)
+
+table(res$source)
+
+sum(duplicated(st_geometry(res))) # 1699
 
 st_write(res, dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v2.shp")
