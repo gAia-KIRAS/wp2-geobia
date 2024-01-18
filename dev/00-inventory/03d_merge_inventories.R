@@ -3,6 +3,35 @@
 library(tidyverse)
 library(sf)
 
+library(sf)
+library(dplyr)
+library(tibble)
+
+# lookup-table for selected processes
+process_types <- tribble(
+  ~ID, ~PROCESS,
+  "130.500", "Bereich mit Rutsch- / Gleitprozessen",
+  "130.000", "Gleiteh/Rutschen",
+  "144.000", "Hangmure",
+  "132.000", "Lockergesteinsrutschung",
+  "152.000", "LG-Rutschung bis Hangmure",
+  "192.000", "Massenbewegung im LG",
+  "194.000", "Rutschung oder Hangmure",
+  "195.000", "Uferanbruch bzw. Rutschung"
+)
+
+# AOI
+aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg")
+
+# GEORIOS export (2023-08-01)
+georios <- read_sf("dat/interim/inventory/GEORIOS_for_gAia.gpkg") |>
+  filter(CODE %in% process_types$ID) |>
+  left_join(process_types, join_by(CODE == ID)) |>
+  mutate(CODE = as.numeric(CODE), source = "GEORIOS", last_update = NA, modified = NA, checked = FALSE) |>
+  st_transform(31258) |>
+  st_filter(aoi) |>
+  select(GR_NR, URSPR_NR, process_type = PROCESS, event_date = EREIGNIS_d, loc_qual = QUAL_LAGE, source, last_update, modified, checked, geom = SHAPE)
+
 # load input files
 v1 <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v1.shp")
 rp_pol_hannah <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Restpunkte_Polygon_Hannah.shp")
@@ -45,12 +74,16 @@ hannah_pol <- rp_pol_hannah |>
 
 res <- inv |>
   bind_rows(pts, kagis_pol, hannah_pol) |>
-  mutate(fid = as.integer(fid), process_type = as.factor(process_type), source = as.factor(source)) |>
-  mutate(source = fct_recode(source, KAGIS = "KAGIS Ereigniskataster"))
-  arrange(WIS_ID, OBJECT_ID, process_type, event_date)
+  mutate(loc_qual = 0) |>
+  bind_rows(georios) |>
+  mutate(fid = as.integer(fid), process_type = as.factor(process_type), source = as.factor(source), loc_qual = as.integer(loc_qual)) |>
+  mutate(source = fct_recode(source, KAGIS = "KAGIS Ereigniskataster")) |>
+  select("fid", "WIS_ID", "OBJECTID", "GR_NR", "URSPR_NR", "process_type", "event_date", "source", "last_update", "modified", "checked", "loc_qual", "geom")
 
 table(res$source)
 
 sum(duplicated(st_geometry(res))) # 1699
 
-st_write(res, dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v2.shp")
+res |>
+  st_transform(3416) |>
+  st_write(dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v3.shp")
