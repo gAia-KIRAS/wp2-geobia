@@ -7,6 +7,24 @@ library(sf)
 library(dplyr)
 library(tibble)
 
+# extract sfc to x and y cols
+sfc_as_cols <- function(x, geometry, names = c("x", "y"), drop_sfg = FALSE) {
+  if (missing(geometry)) {
+    geometry <- sf::st_geometry(x)
+  } else {
+    geometry <- rlang::eval_tidy(enquo(geometry), x)
+  }
+  stopifnot(inherits(x, "sf") && inherits(geometry, "sfc_POINT"))
+  ret <- sf::st_coordinates(geometry)
+  ret <- tibble::as_tibble(ret)
+  stopifnot(length(names) == ncol(ret))
+  x <- x[, !names(x) %in% names]
+  ret <- setNames(ret, names)
+  ret <- dplyr::bind_cols(x, ret)
+  if (drop_sfg) ret <- st_drop_geometry(ret)
+  return(ret)
+}
+
 # lookup-table for selected processes
 process_types <- tribble(
   ~ID, ~PROCESS,
@@ -78,12 +96,28 @@ res <- inv |>
   bind_rows(georios) |>
   mutate(fid = as.integer(fid), process_type = as.factor(process_type), source = as.factor(source), loc_qual = as.integer(loc_qual)) |>
   mutate(source = fct_recode(source, KAGIS = "KAGIS Ereigniskataster")) |>
+  mutate(source = fct_relevel(source, "KAGIS", "GEORIOS", "ALS-DGM", "KAGIS-Flaechen")) |>
   select("fid", "WIS_ID", "OBJECTID", "GR_NR", "URSPR_NR", "process_type", "event_date", "source", "last_update", "modified", "checked", "loc_qual", "geom")
 
 table(res$source)
 
-sum(duplicated(st_geometry(res))) # 1699
+# remove duplicates
+sum(duplicated(st_geometry(res))) # 1727
 
-res |>
-  st_transform(3416) |>
-  st_write(dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v3.shp")
+final_inventory <- res |>
+  arrange(process_type, event_date, source) |>
+  sfc_as_cols() |>
+  group_by(x, y) |>
+  slice(1) |>
+  select(-x, -y) |>
+  st_transform(3416)
+
+table(final_inventory$source)
+sum(duplicated(st_geometry(final_inventory)))
+
+final_inventory |>
+  st_write(dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v3.gpkg")
+
+final_inventory |>
+  select(-fid) |>
+  st_write(dsn = "dat/processed/Ereignisinventar_konsolidiert/Ereignisinventar_konsolidiert_clipped_v3.gpkg")
