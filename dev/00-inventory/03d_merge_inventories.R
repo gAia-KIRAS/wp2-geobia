@@ -11,7 +11,9 @@ rp_pol_kagis <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungen
   st_set_crs(31258)
 kagis_poly_unmatched_pol <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Rutschungsflaechen_unmatched.gpkg")
 
-all.equal(st_crs(v1), st_crs(rp_pol_matched), st_crs(kagis_points)) # 31258
+# check if crs is equal
+objs <- list(st_crs(v1), st_crs(rp_pol_hannah), st_crs(kagis_points), st_crs(rp_pol_kagis))
+outer(objs, objs, Vectorize(all.equal))
 
 # fix column names in main inventory file
 inv <- v1 |>
