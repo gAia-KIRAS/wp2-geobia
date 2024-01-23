@@ -23,21 +23,21 @@ inventar_kaernten <- read_sf("dat/processed/Ereignisinventar_konsolidiert/Ereign
 
 identify_dups <- function(inv, cn) {
   inv |>
-    drop_na({{cn}}) |>
-    filter(duplicated({{cn}})) |>
-    pull({{cn}})
+    drop_na({{ cn }}) |>
+    filter(duplicated({{ cn }})) |>
+    pull({{ cn }})
 }
 
 list_dups <- function(inv, cn) {
-    dups <- identify_dups(inv, {{cn}})
-    inv |>
-      filter({{cn}} %in% dups)
+  dups <- identify_dups(inv, {{ cn }})
+  inv |>
+    filter({{ cn }} %in% dups)
 }
 
-length(identify_dups(inventar_kaernten, wis_id))    # 63
+length(identify_dups(inventar_kaernten, wis_id)) # 63
 length(identify_dups(inventar_kaernten, object_id)) #  3
-length(identify_dups(inventar_kaernten, gr_nr))     #  0
-length(identify_dups(inventar_kaernten, urspr_nr))  #  2
+length(identify_dups(inventar_kaernten, gr_nr)) #  0
+length(identify_dups(inventar_kaernten, urspr_nr)) #  2
 
 d_w <- list_dups(inventar_kaernten, wis_id)
 d_o <- list_dups(inventar_kaernten, object_id)
