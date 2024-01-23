@@ -16,7 +16,7 @@ kagis <- read_sf("dat/interim/MB_im_Detail_EI2023.shp") |>
 
 ls_scars_merge <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
   mutate(event_date = NA) |>
-  mutate(if_else(is.na(TYP_CODE), Subkat_MO, TYP_CODE)) |>
+  mutate(TYP_CODE = if_else(is.na(TYP_CODE), Subkat_MO, TYP_CODE)) |>
   select(
     WIS_ID, OBJECTID,
     process_type = TYP_CODE, event_date,

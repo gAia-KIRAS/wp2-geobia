@@ -6,7 +6,7 @@ source("dev/utils.R")
 
 ls_scars_merge <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
   mutate(event_date = NA) |>
-  mutate(if_else(is.na(TYP_CODE), Subkat_MO, TYP_CODE)) |>
+  mutate(TYP_CODE = if_else(is.na(TYP_CODE), Subkat_MO, TYP_CODE)) |>
   select(
     WIS_ID, OBJECTID,
     process_type = TYP_CODE, event_date,
@@ -53,4 +53,5 @@ lssm_wis <- ls_scars_merge |>
   arrange(WIS_ID)
 
 # 20 entries of these are duplicates in ls_scars_merge
-list_dups(lssm_wis, WIS_ID)
+list_dups(lssm_wis, WIS_ID) |>
+  st_write("dat/interim/wis_id_duplicates_ls_scars_merge.gpkg")
