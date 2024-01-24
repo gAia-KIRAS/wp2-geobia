@@ -126,3 +126,17 @@ names(okabe_ito) <- c(
   "pink",
   "black"
 )
+
+# handle duplicates
+identify_dups <- function(inv, cn) {
+  inv |>
+    drop_na({{ cn }}) |>
+    filter(duplicated({{ cn }})) |>
+    pull({{ cn }})
+}
+
+list_dups <- function(inv, cn) {
+  dups <- identify_dups(inv, {{ cn }})
+  inv |>
+    filter({{ cn }} %in% dups)
+}
