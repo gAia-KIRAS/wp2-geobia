@@ -54,4 +54,14 @@ lssm_wis_corr <- read_sf("dat/interim/wis_id_dupl.shp") |>
 # remove 124 entries with duplicated wis_id
 res <- inventar_kaernten |>
   filter(!(wis_id %in% d_w$wis_id)) |>
-  bind_rows(lssm_wis_corr)
+  bind_rows(lssm_wis_corr) |>
+  filter(process_type != "Bergsturz") |>
+  mutate(
+    event_date = as.Date(event_date),
+    process_type = gsub("Bereich mit Rutsch- / Gleitprozessen", "Gleiten/Rutschen", process_type),
+    process_type = gsub("Gleiteh/Rutschen", "Gleiten/Rutschen", process_type),
+    process_type = gsub("Massenbewegung im LG", "Lockergesteinsrutschung", process_type),
+    process_type = gsub("LG-Rutschung bis Hangmure", "Rutschung oder Hangmure", process_type),
+    process_type = gsub("KEIN DETAIL", "Gleiten/Rutschen", process_type),
+    process_type = gsub("keine Angabe", "Gleiten/Rutschen", process_type)
+  )
