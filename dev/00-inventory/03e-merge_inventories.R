@@ -30,15 +30,28 @@ d_w <- list_dups(inventar_kaernten, wis_id)
 d_o <- list_dups(inventar_kaernten, object_id)
 d_u <- list_dups(inventar_kaernten, urspr_nr)
 
-# remove 124 entries with duplicated wis_id
-inventar_kaernten |>
-  filter(!(wis_id %in% d_w$wis_id))
-
 # filter entries with duplicated wis_id from ls_scars_merge: 81 rows
 lssm_wis <- ls_scars_merge |>
   filter(WIS_ID %in% d_w$wis_id) |>
   arrange(WIS_ID)
 
 # 20 entries of these are duplicates in ls_scars_merge
-list_dups(lssm_wis, WIS_ID) |>
-  st_write("dat/interim/wis_id_duplicates_ls_scars_merge.gpkg")
+list_dups(lssm_wis, WIS_ID)
+
+# manually corrected wis duplicates
+lssm_wis_corr <- read_sf("dat/interim/wis_id_dupl.shp") |>
+  mutate(
+    last_update = as.Date("2021-12-06"),
+    event_date = NA, 
+    source = "KAGIS",
+    gr_nr = NA, urspr_nr = NA, checked = TRUE, loc_qual = 0) |>
+  select(
+    wis_id = WIS_ID, object_id = OBJECTID, gr_nr, urspr_nr, process_type = process_ty,
+  event_date, source, last_update, modified, checked, loc_qual, geom = geometry
+  ) |>
+  st_transform(3416)
+
+# remove 124 entries with duplicated wis_id
+res <- inventar_kaernten |>
+  filter(!(wis_id %in% d_w$wis_id)) |>
+  bind_rows(lssm_wis_corr)
