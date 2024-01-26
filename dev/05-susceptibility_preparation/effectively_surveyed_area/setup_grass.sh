@@ -20,7 +20,7 @@ Usage:
     setup_grass -h | --help
 
 Example:
-   setup_grass carinthia interim/dtm_aoi/dtm_austria_carinthia.tif processed/Ereignisinventar_konsolidiert/inventory_carinthia.gpkg
+   setup_grass carinthia interim/dtm_aoi/dtm_austria_carinthia.tif reporting/inventory_carinthia.gpkg
 
 EOF
 
@@ -53,7 +53,7 @@ fi
 # dem tif file
 inventory_vector="${base_dir}/$3"
 if [[ -z $inventory_vector ]]; then
-	inventory_vector="${base_dir}/processed/Ereignisinventar_konsolidiert/inventory_${gis_dir}.gpkg"
+	inventory_vector="${base_dir}/reporting/inventory_${gis_dir}.gpkg"
 fi
 
 # create new location from vrt of tif file
