@@ -12,9 +12,9 @@ aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
 grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
 
 # wget https://gis.geologie.ac.at/inspire/download/insp_ge_gu_500k_epsg4258.gpkg
-st_layers("dat/raw/geology/insp_ge_gu_500k_epsg4258.gpkg")
-lithology <- read_sf("dat/raw/geology/insp_ge_gu_500k_epsg4258.gpkg", layer = "geologicunitview") |>
-  select(lithology = representativeLithology) |>
+st_layers("dat/raw/geology/200k/Geologie_Kaernten_200.000.gpkg")
+lithology <- read_sf("dat/raw/geology/200k/Geologie_Kaernten_200.000.gpkg", layer = "Geologie 200.000") |>
+  select(lithology = lithologie) |>
   mutate(lithology = as.factor(lithology)) |>
   st_transform(3416)
 
