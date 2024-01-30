@@ -11,7 +11,8 @@ aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
 
 esa <- read_stars("dat/interim/effectively_surveyed_area/res_distance_rescaled_binary.tif") |>
   st_crop(aoi) |>
-  st_as_sf(as_points = TRUE)
+  st_as_sf(as_points = TRUE) |>
+  mutate(esa = as.integer(esa))
 st_crs(esa) # 3416
 colnames(esa)[1] <- "esa"
 
