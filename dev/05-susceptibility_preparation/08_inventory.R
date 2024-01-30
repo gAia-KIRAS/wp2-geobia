@@ -45,8 +45,8 @@ inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) |>
   mutate(slide = as.logical(slide))
 toc()
 
-# 0: 57840705
-# 1:     1984
+# 0: 57841130
+# 1:     1559
 
 stopifnot(nrow(inventory) == nrow(grd))
 
