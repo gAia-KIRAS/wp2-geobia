@@ -12,24 +12,30 @@ source("dev/utils.R")
 
 ncores <- 32L
 
+# x = read_sf("Rutschungen_gesamt.shp") # Masterarbeit
+# y = read_sf("Rutschungsflaechen.shp") # KAGIS
+# max(st_area(x))                           # 2794285 [m^2]
+# quantile(st_area(x), 0.99)                #  426832 [m^2]
+# quantile(st_area(y), 0.99)                #   35301 [m^2]
+# max(st_area(y))                           #  101170 [m^2]
+# quantile(c(st_area(x), st_area(y)), 0.99) #  288733 [m^2]
+# sqrt(288733 / pi) = 303
+
 wall("{Sys.time()} -- reading inventory")
-inv <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
+inv <- read_sf("dat/reporting/inventory_carinthia.gpkg") |>
   mutate(slide = TRUE) |>
   select(slide, geom) |>
   st_transform(3416) |>
-  st_buffer(units::as_units(1000, "m")) |>
+  st_buffer(units::as_units(300, "m")) |>
   st_union()
+st_write(inv, "dat/interim/inventory/inv_buffered.gpkg", append = FALSE)
 
 wall("{Sys.time()} -- reading AOI")
-aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
+aoi <- read_sf("dat/raw/aoi/gaia_aoi_ktn_3416.gpkg") |>
   st_transform(3416)
 
 wall("{Sys.time()} -- cutting holes")
 absence_area <- st_difference(aoi, inv) |>
-  select(-area) |>
-  st_union() |>
-  st_as_sf() |>
-  rename(geom = x) |>
   mutate(neg_sample = TRUE)
 if (!file.exists("dat/interim/aoi/absence_area.gpkg")) {
   st_write(absence_area, "dat/interim/aoi/absence_area.gpkg")
