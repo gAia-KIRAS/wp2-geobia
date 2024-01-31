@@ -11,9 +11,11 @@ suppressPackageStartupMessages({
 
 source("dev/utils.R")
 
-ncores <- 64L
+ncores <- 16L
 
 # expected number of pixels: 57,842,689
+# grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
+# nrow(grd)
 
 # terrain features
 print(glue("{Sys.time()} -- reading terrain features"))
