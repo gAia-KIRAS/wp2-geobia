@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
   library("glue")
 })
 
-ncores <- 32L
+ncores <- 16L
 
 source("dev/utils.R")
 
