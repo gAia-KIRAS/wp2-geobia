@@ -22,7 +22,7 @@ print(glue("{Sys.time()} -- reading terrain features"))
 dtm <- qread("dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) |>
   mutate(geomorphons = as.factor(geomorphons))
 
-# land cover, forest cover
+# land cover, forest cover, tree height
 print(glue("{Sys.time()} -- reading land cover features"))
 lc <- qread("dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores)
 stopifnot(identical(st_coordinates(dtm), st_coordinates(lc)))
