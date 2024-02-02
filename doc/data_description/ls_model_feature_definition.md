@@ -15,11 +15,11 @@ The following table provides an overview of independent features to be used in t
 | Curvature (profile)                                 | curv_prof          | SAGAGIS      | morphometry  |
 | Consecutive Wet Days                                | cwd                | SPARTACUS    | climate      |
 | Diurnal Anisotropic Heat                            | dah                | SAGAGIS      | morphometry  |
-| (Elevation)                                         | elevation          | DTM AT       | morphometry  |
+| ~~Elevation~~                                       | elevation          | DTM AT       | morphometry  |
 | Effectively Surveyed Area                           | esa                | GRASS GIS    | inventory    |
 | Flow Accumulation                                   | flow_accumulation  | SAGAGIS      | morphometry  |
-| (Flow Path Length)                                  | flow_path_length   | SAGAGIS      | morphometry  |
-| (Flow Width)                                        | flow_width         | SAGAGIS      | morphometry  |
+| ~~Flow Path Length~~                                | flow_path_length   | SAGAGIS      | morphometry  |
+| ~~Flow Width~~                                      | flow_width         | SAGAGIS      | morphometry  |
 | Forest Cover                                        | forest_cover       | BfW          | vegetation   |
 | Geomorphons                                         | geomorphons        | SAGAGIS      | lighting     |
 | Land Cover                                          | land_cover         | CadasterENV  | vegetation   |
@@ -34,7 +34,7 @@ The following table provides an overview of independent features to be used in t
 | Roughness                                           | roughness          | `gdaldem`    | morphometry  |
 | Maximum 1 Day Precipitation                         | rx1day             | SPARTACUS    | climate      |
 | Maximum 5 Day Precipitation                         | rx5day             | SPARTACUS    | climate      |
-| Specific Catchment Area                             | sca                | SAGAGIS      | morphometry  |
+| ~~Specific Catchment Area~~                         | sca                | SAGAGIS      | morphometry  |
 | Simple Precipitation Intensity Index                | sdii               | SPARTACUS    | climate      |
 | Slope                                               | slope              | `gdaldem`    | morphometry  |
 | Standardized Precipitation Evapotranspiration Index | spei_30            | WINFORE      | climate      |

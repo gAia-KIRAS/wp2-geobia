@@ -13,17 +13,17 @@ The following table provides an overview of features landslide susceptibility mo
 | `curv_plan`         | curvature (plan)                                           |
 | `curv_prof`         | curvature (profile)                                        |
 | `dah`               | diurnal anisotropic heat                                   |
-| `elevation`         | elevation                                                  |
+| `elevation`         | ~~elevation~~                                              |
 | `flow_accumulation` | flow accumulation                                          |
-| `flow_path_length`  | flow path length                                           |
-| `flow_width`        | flow width                                                 |
+| `flow_path_length`  | ~~flow path length~~                                       |
+| `flow_width`        | ~~flow width~~                                             |
 | `geomorphons`       | geomorphon type                                            |
 | `maximum_height`    | maximum height                                             |
 | `mrn`               | melton roughness number                                    |
 | `nto`               | negative topographic openness                              |
 | `pto`               | positive topographic openness                              |
 | `roughness`         | roughness                                                  |
-| `sca`               | specific catchment area                                    |
+| `sca`               | ~~specific catchment area~~                                |
 | `slope`             | slope                                                      |
 | `spi`               | stream power index                                         |
 | `svf`               | sky view factor                                            |
@@ -49,5 +49,6 @@ The following table provides an overview of features landslide susceptibility mo
 | `sw_spec_runoff`    | specific runoff                                            |
 | `road_dist`         | distance to roads                                          |
 | `lithology`         | lithological class                                         |
+| `esa`               | effectively surveyed area                                  |
 | `x`                 | x-coordinate                                               |
 | `y`                 | y-coordinate                                               |
