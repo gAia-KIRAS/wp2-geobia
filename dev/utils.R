@@ -26,32 +26,64 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
 
 wall <- function(x) print(glue(x))
 
-random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
+learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
-  # Define learner and search space
-  learner <- lrn("classif.ranger",
-    num.trees = 1000,
-    mtry = to_tune(1, length(task$feature_names)),
-    min.node.size = to_tune(p_int(1, 10)),
-    sample.fraction = to_tune(0.2, 0.9),
-    respect.unordered.factors = "order",
-    importance = "permutation",
-    predict_type = "prob",
-    num.threads = 32L
-  )
+  # check learner argument
+  learner <- match_arg(learner)
+  learner_list <- c("randomforest", "earth", "gam")
+  if (!(learner %in% learner_list)) {
+    stop(wall("learner must be one of {learner_list}"))
+  }
 
-  # Setup tuning w/ mbo
-  instance <- tune(
-    tuner = tnr("mbo"),
-    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
-    task = task,
-    learner = learner,
-    resampling = resampling_strategy,
-    measure = msr("classif.bbrier"),
-    terminator = trm("evals", n_evals = 500)
-  )
+  # Define learner and search space
+  if (learner == "randomforest") {
+    learner <- lrn("classif.ranger",
+      num.trees = 1000,
+      mtry = to_tune(1, length(task$feature_names)),
+      min.node.size = to_tune(p_int(1, 10)),
+      sample.fraction = to_tune(0.2, 0.9),
+      respect.unordered.factors = "order",
+      importance = "permutation",
+      predict_type = "prob",
+      num.threads = 32L
+    )
+  }
+
+  if (learner == "earth") {
+    # Define learner and search space
+    learner <- lrn("classif.earth",
+      nk = to_tune(p_int(2, 100)),
+      degree = to_tune(p_int(1, 3)),
+      nprune = to_tune(p_int(5, 100)),
+      pmethod = "backward",
+      predict_type = "prob"
+    )
+  }
+
+  if (learner == "gam") {
+    # Define learner and search space
+    fm <- paste("s(", names(susc_data[-1]), ")", sep = "", collapse = " + ")
+    learner <- lrn("classif.gam",
+      formula = as.formula(paste("slide ~", fm)),
+      select = TRUE,
+      predict_type = "prob"
+    )
+  }
+
+  if (learner %in% c()) {
+    # Setup tuning w/ mbo
+    instance <- tune(
+      tuner = tnr("mbo"),
+      # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
+      task = task,
+      learner = learner,
+      resampling = resampling_strategy,
+      measure = msr("classif.bbrier"),
+      terminator = trm("evals", n_evals = 500)
+    )
+  }
 
   # Set optimal hyperparameter configuration to learner
   learner$param_set$values <- instance$result_learner_param_vals
@@ -111,40 +143,6 @@ get_importance <- function(ranger_model) {
     arrange(-importance) |>
     mutate(index = fct_reorder(index, -desc(importance)))
 }
-
-mars <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
-  # Setup classification task
-  task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
-
-  # Define learner and search space
-  learner <- lrn("classif.earth",
-    nk = to_tune(p_int(2, 100)),
-    degree = to_tune(p_int(1, 3)),
-    nprune = to_tune(p_int(5, 100)),
-    pmethod = "backward",
-    predict_type = "prob"
-  )
-
-  # Setup tuning w/ mbo
-  instance <- tune(
-    tuner = tnr("mbo"),
-    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
-    task = task,
-    learner = learner,
-    resampling = resampling_strategy,
-    measure = msr("classif.bbrier"),
-    terminator = trm("evals", n_evals = 500)
-  )
-
-  # Set optimal hyperparameter configuration to learner
-  learner$param_set$values <- instance$result_learner_param_vals
-
-  # Train the learner on the full data set
-  learner$train(task)
-
-  return(learner)
-}
-
 
 okabe_ito <- c(
   "#E69F00", "#56B4E9", "#009E73", "#F0E442",

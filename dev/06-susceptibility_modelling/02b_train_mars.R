@@ -31,7 +31,7 @@ dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
 
 # tune mars w/ mlr3mbo
 wall("{Sys.time()} -- tuning mars")
-dat_earth <- lapply(dat, mars)
+dat_earth <- lapply(dat, learn, learner = "mars")
 names(dat_earth) <- ids
 saveRDS(dat_earth, "dat/interim/mars/earth_mbo.rds")
 

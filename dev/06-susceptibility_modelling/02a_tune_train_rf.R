@@ -31,7 +31,7 @@ dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
 
 # tune random forest w/ mlr3mbo
 wall("{Sys.time()} -- tuning rf")
-dat_rf <- lapply(dat, random_forest)
+dat_rf <- lapply(dat, learn, learner = "randomforest")
 names(dat_rf) <- ids
 saveRDS(dat_rf, "dat/interim/random_forest/ranger_mbo.rds")
 
