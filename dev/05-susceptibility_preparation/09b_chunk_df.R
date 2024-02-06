@@ -22,9 +22,11 @@ dat <- read_ipc_file("dat/processed/carinthia_10m.arrow")
 #
 # print(glue::glue("{Sys.time()} -- DONE"))
 
-partition_size <- nrow(dat) / 9
-mod <- nrow(dat) %% 9
-partition <- c(rep(1:8, each = partition_size), rep(9, partition_size + mod))
+n_part <- 20
+partition_size <- nrow(dat) / n_part
+mod <- nrow(dat) %% n_part
+partition <- c(rep(1:(n_part - 1), each = partition_size), rep(n_part, partition_size + mod))
+stopifnot(length(partition) == nrow(dat))
 
 dat |>
   mutate(partition = partition) |>
