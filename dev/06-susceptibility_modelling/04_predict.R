@@ -39,22 +39,26 @@ predict_ensemble <- function(ensemble, data) {
 print(glue::glue("{Sys.time()} -- reading models"))
 rf_mods <- readRDS("dat/interim/random_forest/ranger_mbo.rds")
 
-print(glue::glue("{Sys.time()} -- reading positive chunk"))
-pos_dat <- read_dat("dat/processed/chunks/pos/carinthia_slides.arrow")
+# print(glue::glue("{Sys.time()} -- reading positive chunk"))
+# pos_dat <- read_dat("dat/processed/chunks/pos/carinthia_slides.arrow")
 
-print(glue::glue("{Sys.time()} -- predicting positive chunk"))
-predict_ensemble(rf_mods, pos_dat) |>
-  qsave("dat/processed/prediction/pos.qs", nthreads = 32L)
+# print(glue::glue("{Sys.time()} -- predicting positive chunk"))
+# predict_ensemble(rf_mods, pos_dat) |>
+#   qsave("dat/processed/prediction/pos.qs", nthreads = 32L)
 
-print(glue::glue("{Sys.time()} -- working on negative chunks"))
-neg_lst <- list.files("dat/processed/chunks/neg", recursive = TRUE, full.names = TRUE)
-for (f in neg_lst) {
-  partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]"))
+# print(glue::glue("{Sys.time()} -- working on negative chunks"))
+# neg_lst <- list.files("dat/processed/chunks/neg", recursive = TRUE, full.names = TRUE)
+
+print(glue::glue("{Sys.time()} -- working on chunks"))
+chk_lst <- list.files("dat/processed/chunks/all", recursive = TRUE, full.names = TRUE)
+for (f in chk_lst) {
+  partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]+"))
   print(glue::glue("{Sys.time()} .... processing {partition}"))
-  outfile <- glue("dat/processed/prediction/neg_{partition}.qs")
+  outfile <- glue("dat/processed/prediction/chunk_{partition}.qs")
   if (!file.exists(outfile)) {
-    neg_tmp <- read_dat(f)
-    predict_ensemble(rf_mods, neg_tmp) |>
-      qsave(outfile, nthreads = 32L)
+    tmp <- read_dat(f) |>
+      mutate(esa = 0L)
+    predict_ensemble(rf_mods, tmp) |>
+      qsave(outfile, nthreads = 16L)
   }
 }
