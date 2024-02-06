@@ -112,6 +112,42 @@ get_importance <- function(ranger_model) {
     mutate(index = fct_reorder(index, -desc(importance)))
 }
 
+mars <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
+  # Setup classification task
+  task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
+
+  # Define learner and search space
+  learner <- lrn("classif.mars",
+    nk = to_tune(2, 100),
+    degree = to_tune(p_int(1, 3)),
+    nprune = to_tune(5, 100),
+    pmethod = "backward",
+    glm = list(family = binomial),
+    predict_type = "prob",
+    num.threads = 32L
+  )
+
+  # Setup tuning w/ mbo
+  instance <- tune(
+    tuner = tnr("mbo"),
+    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
+    task = task,
+    learner = learner,
+    resampling = resampling_strategy,
+    measure = msr("classif.bbrier"),
+    terminator = trm("evals", n_evals = 500)
+  )
+
+  # Set optimal hyperparameter configuration to learner
+  learner$param_set$values <- instance$result_learner_param_vals
+
+  # Train the learner on the full data set
+  learner$train(task)
+
+  return(learner)
+}
+
+
 okabe_ito <- c(
   "#E69F00", "#56B4E9", "#009E73", "#F0E442",
   "#0072B2", "#D55E00", "#CC79A7", "#000000"
