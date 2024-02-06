@@ -117,14 +117,12 @@ mars <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_c
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
   # Define learner and search space
-  learner <- lrn("classif.mars",
-    nk = to_tune(2, 100),
+  learner <- lrn("classif.earth",
+    nk = to_tune(p_int(2, 100)),
     degree = to_tune(p_int(1, 3)),
-    nprune = to_tune(5, 100),
+    nprune = to_tune(p_int(5, 100)),
     pmethod = "backward",
-    glm = list(family = binomial),
-    predict_type = "prob",
-    num.threads = 32L
+    predict_type = "prob"
   )
 
   # Setup tuning w/ mbo

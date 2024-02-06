@@ -6,7 +6,7 @@ print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
   library("mlr3")
-  library("mlr3learners")
+  library("mlr3extralearners")
   library("mlr3tuning")
   library("mlr3mbo")
   library("mlr3spatiotempcv")
@@ -29,7 +29,7 @@ dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
   group_by(iter) |>
   group_split(.keep = FALSE)
 
-# tune random forest w/ mlr3mbo
+# tune mars w/ mlr3mbo
 wall("{Sys.time()} -- tuning mars")
 dat_earth <- lapply(dat, mars)
 names(dat_earth) <- ids
