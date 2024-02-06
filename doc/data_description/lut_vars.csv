@@ -29,6 +29,7 @@ vrm,"vector ruggedness measure",morphometry
 wei,"wind exposition index",morphometry
 land_cover,"land cover","vegetation"
 forest_cover,"forest cover","vegetation"
+tree_height,"tree height","vegetation"
 cwd,"cumulative wet days",climate
 prcptot,"toal annual precipitation",climate
 sdii,"simple precipitation intensity index",climate
@@ -44,5 +45,6 @@ sw_max_depth,"maximum water depth",hydrology
 sw_spec_runoff,"specific runoff",hydrology
 road_dist,"distance to roads",hydrology
 lithology,"lithological class","geology"
+esa,"effectively surveyed area","inventory"
 x,"x-coordinate",coordinates
 y,"y-coordinate",coordinates
