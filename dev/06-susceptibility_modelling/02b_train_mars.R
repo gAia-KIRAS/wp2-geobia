@@ -24,7 +24,7 @@ ids <- glue("iteration-{sprintf('%02d', 1:10)}")
 
 wall("{Sys.time()} -- reading data")
 dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
-  select(-elevation, -flow_path_length, -flow_width, -sca) |>
+  select(-elevation, -flow_path_length, -flow_width, -sca, -esa) |>
   mutate(slide = as.factor(slide)) |>
   group_by(iter) |>
   group_split(.keep = FALSE)
@@ -43,7 +43,7 @@ saveRDS(dat_rr, "dat/interim/mars/earth_nested_resampling.rds")
 
 # get metrics
 wall("{Sys.time()} -- obtaining metrics")
-met <- lapply(dat_rr, get_evimp) |>
+met <- lapply(dat_rr, get_score) |>
   bind_rows(.id = "key")
 
 # summarize across all single folds
