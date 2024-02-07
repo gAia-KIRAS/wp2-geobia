@@ -26,16 +26,12 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
 
 wall <- function(x) print(glue(x))
 
-learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
+learn <- function(susc_data, learner = c("randomforest", "earth", "gam"), id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
   # Check learner argument
-  learner <- match_arg(learner)
-  learner_list <- c("randomforest", "earth", "gam")
-  if (!(learner %in% learner_list)) {
-    stop(wall("learner must be one of {learner_list}"))
-  }
+  learner <- match.arg(learner)
 
   # Define learner and search space
   if (learner == "randomforest") {
@@ -49,9 +45,7 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
       predict_type = "prob",
       num.threads = 32L
     )
-  }
-
-  if (learner == "earth") {
+  } else if (learner == "earth") {
     learner <- lrn("classif.earth",
       nk = to_tune(p_int(2, 100)),
       degree = to_tune(p_int(1, 3)),
@@ -59,9 +53,7 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
       pmethod = "backward",
       predict_type = "prob"
     )
-  }
-
-  if (learner == "gam") {
+  } else if (learner == "gam") {
     fm <- paste("s(", names(susc_data[-1]), ")", sep = "", collapse = " + ")
     learner <- lrn("classif.gam",
       formula = as.formula(paste("slide ~", fm)),
@@ -69,6 +61,17 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
       predict_type = "prob"
     )
   }
+
+  # Setup tuning w/ mbo
+  instance <- tune(
+    tuner = tnr("mbo"),
+    # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
+    task = task,
+    learner = learner,
+    resampling = resampling_strategy,
+    measure = msr("classif.bbrier"),
+    terminator = trm("evals", n_evals = 500)
+  )
 
   # Set optimal hyperparameter configuration to learner
   learner$param_set$values <- instance$result_learner_param_vals
@@ -79,16 +82,12 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
   return(learner)
 }
 
-nested_resampling <- function(susc_data, learner, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
+nested_resampling <- function(susc_data, learner = c("randomforest", "earth"), id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
   # Check learner argument
-  learner <- match_arg(learner)
-  learner_list <- c("randomforest", "earth")
-  if (!(learner %in% learner_list)) {
-    stop(wall("learner must be one of {learner_list}"))
-  }
+  learner <- match.arg(learner)
 
   # Define learner and search space
   if (learner == "randomforest") {
@@ -102,9 +101,7 @@ nested_resampling <- function(susc_data, learner, id = "carinthia", outer_resamp
       predict_type = "prob",
       num.threads = 32L
     )
-  }
-
-  if (learner == "earth") {
+  } else if (learner == "earth") {
     learner <- lrn("classif.earth",
       nk = to_tune(p_int(2, 100)),
       degree = to_tune(p_int(1, 3)),
