@@ -141,9 +141,17 @@ get_importance <- function(ranger_model) {
     tibble::enframe() |>
     rename(index = name, importance = value) |>
     arrange(-importance) |>
-    mutate(index = fct_reorder(index, -desc(importance)))
+    mutate(index = forcats::fct_reorder(index, -desc(importance)))
 }
 
+get_evimp <- function(earth_model) {
+  tmp <- evimp(earth_model$model)
+  tmp <- tmp[, c("nsubsets", "gcv", "rss")] |>
+    as_tibble(rownames = "index") |>
+    mutate(index = forcats::fct_reorder(index, -desc(gcv)))
+  return(tmp)
+}
+  
 okabe_ito <- c(
   "#E69F00", "#56B4E9", "#009E73", "#F0E442",
   "#0072B2", "#D55E00", "#CC79A7", "#000000"

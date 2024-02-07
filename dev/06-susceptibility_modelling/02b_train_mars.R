@@ -43,7 +43,7 @@ saveRDS(dat_rr, "dat/interim/mars/earth_nested_resampling.rds")
 
 # get metrics
 wall("{Sys.time()} -- obtaining metrics")
-met <- lapply(dat_rr, get_score) |>
+met <- lapply(dat_rr, get_evimp) |>
   bind_rows(.id = "key")
 
 # summarize across all single folds
