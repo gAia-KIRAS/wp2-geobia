@@ -30,7 +30,7 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
-  # check learner argument
+  # Check learner argument
   learner <- match_arg(learner)
   learner_list <- c("randomforest", "earth", "gam")
   if (!(learner %in% learner_list)) {
@@ -52,7 +52,6 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
   }
 
   if (learner == "earth") {
-    # Define learner and search space
     learner <- lrn("classif.earth",
       nk = to_tune(p_int(2, 100)),
       degree = to_tune(p_int(1, 3)),
@@ -63,25 +62,11 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
   }
 
   if (learner == "gam") {
-    # Define learner and search space
     fm <- paste("s(", names(susc_data[-1]), ")", sep = "", collapse = " + ")
     learner <- lrn("classif.gam",
       formula = as.formula(paste("slide ~", fm)),
       select = TRUE,
       predict_type = "prob"
-    )
-  }
-
-  if (learner %in% c()) {
-    # Setup tuning w/ mbo
-    instance <- tune(
-      tuner = tnr("mbo"),
-      # https://mlr3mbo.mlr-org.com/reference/mbo_defaults.html
-      task = task,
-      learner = learner,
-      resampling = resampling_strategy,
-      measure = msr("classif.bbrier"),
-      terminator = trm("evals", n_evals = 500)
     )
   }
 
