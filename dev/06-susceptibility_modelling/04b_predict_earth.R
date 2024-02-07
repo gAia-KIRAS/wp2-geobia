@@ -17,7 +17,8 @@ suppressPackageStartupMessages({
 read_dat <- function(x) {
   read_ipc_file(x) |>
     tidyr::drop_na() |>
-    mutate(across(x:y, as.integer))
+    mutate(across(x:y, as.integer)) |>
+    mutate(esa = 0L)
 }
 
 predict_earth <- function(model, newdata) {
@@ -46,8 +47,7 @@ for (f in chk_lst) {
   print(glue::glue("{Sys.time()} .... processing {partition}"))
   outfile <- glue("dat/processed/prediction/earth/chunk_{partition}.qs")
   if (!file.exists(outfile)) {
-    tmp <- read_dat(f) |>
-      mutate(esa = 0L)
+    tmp <- read_dat(f)
     predict_ensemble(earth_mods, tmp) |>
       qsave(outfile, nthreads = 16L)
   }
