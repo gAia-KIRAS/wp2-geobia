@@ -3,7 +3,7 @@ library(colorspace)
 library(showtext)
 library(glue)
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
 showtext_auto()
 
 source("dev/utils.R")
@@ -47,4 +47,4 @@ p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
     legend.position = "right"
   )
 
-ggsave("plt/importance.png", p, width = 180, height = 120, units = "mm")
+ggsave("plt/importance_rf.png", p, width = 180, height = 120, units = "mm")
