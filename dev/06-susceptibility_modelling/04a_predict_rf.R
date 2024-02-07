@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# tune and train random forest
+# predict random forest model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 print(glue::glue("{Sys.time()} -- loading packages"))
@@ -54,10 +54,9 @@ chk_lst <- list.files("dat/processed/chunks/all", recursive = TRUE, full.names =
 for (f in chk_lst) {
   partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]+"))
   print(glue::glue("{Sys.time()} .... processing {partition}"))
-  outfile <- glue("dat/processed/prediction/chunk_{partition}.qs")
+  outfile <- glue("dat/processed/prediction/random_forest/chunk_{partition}.qs")
   if (!file.exists(outfile)) {
-    tmp <- read_dat(f) |>
-      mutate(esa = 0L)
+    tmp <- read_dat(f)
     predict_ensemble(rf_mods, tmp) |>
       qsave(outfile, nthreads = 16L)
   }
