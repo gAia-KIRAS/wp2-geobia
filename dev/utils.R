@@ -79,21 +79,40 @@ learn <- function(susc_data, learner, id = "carinthia", resampling_strategy = rs
   return(learner)
 }
 
-nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
+nested_resampling <- function(susc_data, learner, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
+  # Check learner argument
+  learner <- match_arg(learner)
+  learner_list <- c("randomforest", "earth")
+  if (!(learner %in% learner_list)) {
+    stop(wall("learner must be one of {learner_list}"))
+  }
+
   # Define learner and search space
-  learner <- lrn("classif.ranger",
-    num.trees = 1000,
-    mtry = to_tune(1, length(task$feature_names)),
-    min.node.size = to_tune(p_int(1, 10)),
-    sample.fraction = to_tune(0.2, 0.9),
-    respect.unordered.factors = "order",
-    importance = "permutation",
-    predict_type = "prob",
-    num.threads = 32L
-  )
+  if (learner == "randomforest") {
+    learner <- lrn("classif.ranger",
+      num.trees = 1000,
+      mtry = to_tune(1, length(task$feature_names)),
+      min.node.size = to_tune(p_int(1, 10)),
+      sample.fraction = to_tune(0.2, 0.9),
+      respect.unordered.factors = "order",
+      importance = "permutation",
+      predict_type = "prob",
+      num.threads = 32L
+    )
+  }
+
+  if (learner == "earth") {
+    learner <- lrn("classif.earth",
+      nk = to_tune(p_int(2, 100)),
+      degree = to_tune(p_int(1, 3)),
+      nprune = to_tune(p_int(5, 100)),
+      pmethod = "backward",
+      predict_type = "prob"
+    )
+  }
 
   # Setup tuning w/ mbo
   at <- auto_tuner(
@@ -136,7 +155,7 @@ get_evimp <- function(earth_model) {
     mutate(index = forcats::fct_reorder(index, -desc(gcv)))
   return(tmp)
 }
-  
+
 okabe_ito <- c(
   "#E69F00", "#56B4E9", "#009E73", "#F0E442",
   "#0072B2", "#D55E00", "#CC79A7", "#000000"

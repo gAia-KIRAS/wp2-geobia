@@ -37,7 +37,7 @@ saveRDS(dat_rf, "dat/interim/random_forest/ranger_mbo.rds")
 
 # estimate performance with nested resampling
 wall("{Sys.time()} -- estimating performance via nested resampling")
-dat_rr <- lapply(dat, nested_resampling)
+dat_rr <- lapply(dat, nested_resampling, learner = "randomforest")
 names(dat_rr) <- ids
 saveRDS(dat_rr, "dat/interim/random_forest/ranger_nested_resampling.rds")
 
