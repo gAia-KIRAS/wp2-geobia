@@ -11,6 +11,7 @@ print(glue::glue("{Sys.time()} -- reading data"))
 res <- read_ipc_file("dat/processed/carinthia_10m.arrow") |>
   select(-flow_path_length, -flow_width, -sca, -esa, -x, -y) |>
   select(where(is.numeric)) |>
+  drop_na() |>
   slice_sample(prop = 0.5) |>
   as.matrix()
 
