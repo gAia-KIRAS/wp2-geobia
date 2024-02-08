@@ -32,11 +32,13 @@ res |>
   select(mean_susceptibility = mean_susc, geometry) |>
   st_rasterize() |>
   write_stars(glue("dat/reporting/susceptibility_mean_{mod_type}.tif"), type = "Float32", NA_value = -1)
-# gdalwarp -cutline dat/raw/aoi/gaia_projektgebiet_ktn.gpkg -crop_to_cutline dat/reporting/susceptibility_mean.tif dat/reporting/susceptibility_mean_cut.tif
+cmd1 <- glue("gdalwarp -cutline dat/raw/aoi/gaia_aoi_ktn_3416.gpkg -crop_to_cutline -overwrite dat/reporting/susceptibility_mean_{mod_type}.tif dat/reporting/susceptibility_mean_{mod_type}_cut.tif")
+system(command = cmd1)
 
 print(glue::glue("{Sys.time()} -- rasterizing sd"))
 res |>
   select(sd_susceptibility = sd_susc, geometry) |>
   st_rasterize() |>
   write_stars(glue("dat/reporting/susceptibility_sd_{mod_type}.tif"), type = "Float32", NA_value = -1)
-# gdalwarp -cutline dat/raw/aoi/gaia_projektgebiet_ktn.gpkg -crop_to_cutline dat/reporting/susceptibility_sd.tif dat/reporting/susceptibility_sd_cut.tif
+cmd2 <- glue("gdalwarp -cutline dat/raw/aoi/gaia_aoi_ktn_3416.gpkg -crop_to_cutline -overwrite dat/reporting/susceptibility_sd_{mod_type}.tif dat/reporting/susceptibility_sd_{mod_type}_cut.tif")
+system(command = cmd2)
