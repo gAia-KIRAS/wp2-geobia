@@ -5,6 +5,8 @@ suppressPackageStartupMessages({
   library("dplyr")
   library("tidyr")
   library("purrr")
+  library("glue")
+  library("qs")
 })
 
 print(glue::glue("{Sys.time()} -- reading data"))
@@ -13,14 +15,15 @@ res <- read_ipc_file("dat/processed/carinthia_10m.arrow") |>
   select(where(is.numeric)) |>
   slice_sample(prop = 0.5) |>
   as.matrix()
-
-nrow(res)
-res <- na.omit(res)
-nrow(res)
-
 gc()
 
-saveRDS(res, "dat/interim/sample_for_corr_comput.rds")
+glue("nrow before NA removal: {nrow(res)}")
+res <- res[!rowSums(!is.finite(res)), ]
+gc()
+glue("nrow after NA removal: {nrow(res)}")
+
+qsave(res, "dat/interim/sample_for_corr_comput.qs", nthreads = 16L)
+# res <- qread("dat/interim/sample_for_corr_comput.qs", nthreads = 16L)
 
 # compute corr
 fastcor <- function(x) {
