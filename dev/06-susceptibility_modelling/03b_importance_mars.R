@@ -1,4 +1,5 @@
 library(tidyverse)
+library(earth)
 library(colorspace)
 library(showtext)
 library(glue)
@@ -20,6 +21,7 @@ imp <- imp_lst |>
   bind_rows(.id = "id") |>
   mutate(id = gsub("iteration-", "", id)) |>
   pivot_longer(cols = nsubsets:rss, names_to = "metric") |>
+  mutate(index = gsub("tree_height-unused", "tree_height", index)) |>
   mutate(index = gsub("land_cover93", "land_cover", index)) |>
   mutate(index = gsub("lithologySchwemmkegel und Schwemmfaecher", "lithology", index)) |>
   group_by(index, metric) |>
