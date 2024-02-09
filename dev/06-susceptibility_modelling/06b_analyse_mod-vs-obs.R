@@ -11,13 +11,17 @@ suppressPackageStartupMessages({
   library("lvplot")
   library("glue")
   library("qs")
+  library("showtext")
 })
 
 print(glue::glue("{Sys.time()} -- loading data"))
 
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+showtext_auto()
+
 ncores <- 16L
 
-mod_type <- "random_forest"
+# mod_type <- "random_forest"
 # mod_type <- "earth"
 # mod_type <- "earth_esa"
 
@@ -53,11 +57,11 @@ p <- ggplot(pos, aes(x = nrank, y = mean_susc)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
+      size = 40
     )
   )
 
-ggsave(glue("plt/drop_{mod_type}.png"), p, width = 200, height = 200, units = "mm")
+ggsave(glue("plt/drop_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
 
 print(glue::glue("{Sys.time()} -- plotting susc distribution per observed class"))
 p <- ggplot(res, aes(x = slide, y = mean_susc, fill = slide)) +
@@ -71,9 +75,9 @@ p <- ggplot(res, aes(x = slide, y = mean_susc, fill = slide)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
+      size = 40
     ),
     legend.position = "bottom"
   )
 
-ggsave(glue("plt/mod-vs-obs_{mod_type}.png"), p, width = 200, height = 200, units = "mm")
+ggsave(glue("plt/mod-vs-obs_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
