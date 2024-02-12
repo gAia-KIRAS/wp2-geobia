@@ -8,7 +8,7 @@ library("tictoc")
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
 # AOI
-ktn <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg")
+noe <- read_sf("dat/raw/aoi/gaia_projektgebiet_noe/NOE_gaiaArea.shp")
 
 # GIP
 st_layers("dat/raw/gip/gip_network_ogd.gpkg")
@@ -17,29 +17,16 @@ st_layers("dat/raw/gip/gip_network_ogd.gpkg")
 gip <- read_sf("dat/raw/gip/gip_network_ogd.gpkg", layer = "EDGE_OGD") %>%
   select(ACTION_ID, BAUSTATUS, SUBNETID:FRC, SHAPELENGTH:EDGECAT, MAINNAMETEXT, OWNER_ID, FEATURENAME, geom)
 
-# Gesamtgewaessernetz
-ggn <- read_sf("dat/raw/ggn/Routen.shp") %>%
-  st_zm()
-
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 # Clip data
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ #
 
-# water bodies
-ggn %>%
-  filter(grepl("Kärnten", BUNDESL)) %>%
-  st_transform(crs = st_crs(ktn)) %>%
-  st_intersection(ktn) %>%
-  select(-RICHTL, -AUSL_ANT, -area) %>%
-  rename(AOI = name) %>%
-  st_write(dsn = "dat/interim/ggn/kaernten.gpkg")
-
 # infrastructure
 tic()
 res <- gip %>%
-  st_transform(crs = st_crs(ktn)) %>%
-  st_intersection(ktn)
+  st_transform(crs = st_crs(noe)) %>%
+  st_intersection(noe)
 toc()
-# 939.647 sec elapsed
+# 51.305 sec elapsed
 
-st_write(res, dsn = "dat/interim/gip/kaernten.gpkg")
+st_write(res, dsn = "dat/interim/gip/noe.gpkg")
