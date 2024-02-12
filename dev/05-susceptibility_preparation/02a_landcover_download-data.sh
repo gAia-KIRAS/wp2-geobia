@@ -21,5 +21,5 @@ rm CLC_2018_AT_clip.zip
 # https://landmonitoring.earth/portal/
 
 gdalwarp -tr 10 -10 -tap -t_srs EPSG:3416 \
-  -te 348655 300975 532535 359205 \
-  dat/raw/cadasterENV/FP_P1_HR_LandCoverMap2016_L2.tif dat/interim/misc_aoi/cadasterenv_ktn.tif
+  -te 513895 448355 624045 500945 \
+  dat/raw/cadasterENV/FP_P1_HR_LandCoverMap2016_L2.tif dat/interim/misc_aoi/cadasterenv_noe.tif
