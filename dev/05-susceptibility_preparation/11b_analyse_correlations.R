@@ -6,6 +6,7 @@ suppressPackageStartupMessages({
   library("qs")
   library("colorspace")
   library("showtext")
+  library("GGally")
 })
 
 font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
@@ -32,3 +33,11 @@ p <- ggplot(corrs, aes(x = cn...1, y = cn...2)) +
 
 ggsave("plt/correlation.png", p, width = 130, height = 120, units = "mm")
 print(glue::glue("{Sys.time()} -- done"))
+
+dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
+
+tmp <- dat |>
+  select(starts_with("sw_"))
+
+ggpairs(tmp) +
+  theme_linedraw()
