@@ -24,7 +24,16 @@ ids <- glue("iteration-{sprintf('%02d', 1:10)}")
 
 wall("{Sys.time()} -- reading data")
 dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
-  select(-elevation, -flow_path_length, -flow_width, -sca, -esa) |>
+  select(
+    -elevation, -maximum_height, -wei,
+    -roughness, -tri, -svf,
+    -flow_path_length, -flow_width, -sca,
+    -api_k30, -rx5day,
+    -forest_cover,
+    -road_dist,
+    -sw_hazard_cat, -sw_max_depth, -sw_max_speed,
+    -esa
+  ) |>
   mutate(slide = as.factor(slide)) |>
   group_by(iter) |>
   group_split(.keep = FALSE)
