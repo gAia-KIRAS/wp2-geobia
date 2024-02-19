@@ -43,6 +43,7 @@ learn <- function(susc_data, learner = c("randomforest", "earth", "gam"), id = "
       respect.unordered.factors = "order",
       importance = "permutation",
       predict_type = "prob",
+      verbose = FALSE,
       num.threads = 32L
     )
   } else if (learner == "earth") {
@@ -99,6 +100,7 @@ nested_resampling <- function(susc_data, learner = c("randomforest", "earth"), i
       respect.unordered.factors = "order",
       importance = "permutation",
       predict_type = "prob",
+      verbose = FALSE,
       num.threads = 32L
     )
   } else if (learner == "earth") {
