@@ -15,7 +15,10 @@ suppressPackageStartupMessages({
   library("arrow")
   library("glue")
   library("parallel")
+  library("showtext")
 })
+
+source("dev/utils.R")
 
 font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
 showtext_auto()
@@ -40,10 +43,15 @@ rf_mods <- readRDS("dat/interim/random_forest/ranger_mbo.rds")
 
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
-features <- c(
-  "wei", "maximum_height", "road_dist", "land_cover", "tree_height",
-  "pci", "spei30", "dah", "prcptot", "vrm", "lithology"
-)
+features <- lapply(rf_mods, get_importance) |>
+  bind_rows(.id = "id") |>
+  mutate(id = gsub("iteration-", "", id)) |>
+  group_by(index) |>
+  mutate(index = as.character(index)) |>
+  summarize(imp = mean(importance)) |>
+  arrange(-imp) |>
+  pull(index) |>
+  head(10)
 
 compute_effect <- function(featurename, predictor = predictor) {
   FeatureEffect$new(predictor, feature = featurename, method = "pdp+ice")$results
