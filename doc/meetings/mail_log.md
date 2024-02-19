@@ -1,3 +1,23 @@
+> Von: Schlögl Matthias  
+> Gesendet: Montag, 19. Februar 2024 09:36  
+> An: Rudolf Mayer; Lampert Jasmin; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart  
+> Betreff: Re: [gAia] Update landslide susceptibility model
+
+Dear all,
+
+I have now uploaded an updated version of the partial dependence and ICE plots for the v2.0 RF model.
+
+I now do plot factor variables as boxplots, which makes much more sense than lineplots.
+
+As expected, some features show seemingly unintuitive effects. For instance, the landslide probability is indirect proportional to the amount of rainfall.
+These effects can be explained more or less easily depending on the feature, but since I am no expert on landslide mechanics I can only make guesses about some effects to some limited extent.
+
+I have uploaded the new plots to the owncloud share in case you want to have a brief look: https://edrop.zamg.ac.at/owncloud/index.php/s/n8qYBMc2gM2RfBY
+Please keep in mind that no decision has been made in terms of the final model, so the feature importance and single feature effects might still change depending on the model formulation.
+
+Best,  
+Matthias
 
 ---
 
