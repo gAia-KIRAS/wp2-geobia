@@ -20,7 +20,7 @@ res_wk <- st_extract(x = wk, at = grd, bilinear = FALSE) |>
 stopifnot(nrow(grd) == nrow(res_wk))
 qsave(res_wk, "dat/interim/misc_aoi/forest_cover.qs", nthreads = ncores)
 
-# Corine Land Cover
+# Corine Land Cover #not needed
 clc <- read_sf("dat/raw/clc/CLC18_AT_clip.shp") |>
   st_transform(3416) |>
   mutate(CODE_18 = as.integer(CODE_18)) |>

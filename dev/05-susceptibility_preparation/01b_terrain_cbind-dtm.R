@@ -2,7 +2,7 @@ library(tidyverse)
 library(sf)
 library(glue)
 library(qs)
-library(tictoc)
+library(tictoc) #cannot find this library
 
 fl <- list.files("dat/interim/dtm_aoi/tmp_qs", pattern = "*.qs", full.names = TRUE)
 

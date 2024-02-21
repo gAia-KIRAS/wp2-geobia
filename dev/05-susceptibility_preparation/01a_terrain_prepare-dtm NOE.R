@@ -3,13 +3,15 @@ library(sf)
 library(stars)
 library(glue)
 library(qs)
+library(qdap)
+library(glue)
 
 source("dev/utils.R")
 
-aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |> # shp information of the region 
+aoi <- read_sf("wp2-geobia/dat/interim/aoi/NOE_gaiaArea.shp")  %>% # shp information of the region 
   st_transform(3416)
 
-dtm_list_full <- list.files("dat/interim/dtm_derivates/austria/dtm_orig", full.names = TRUE) #location for the /output/austria
+dtm_list_full <- list.files("wp2-geobia/dat/output/austria", full.names = TRUE) #location for the /output/austria
 drops <- c(
   "aspect.tif", "aspect-rad", "aspect-cos", "aspect-sin",
   "catchment-area", "channel-network", "sinks-filled",
@@ -18,9 +20,11 @@ drops <- c(
 
 dtm_list <- exclude(dtm_list_full, drops)
 
+#test_raster <- read_stars("wp2-geobia/dat/output/austria/dhm_at_lamb_10m_2018_PTO.tif")
+
 create_subset <- function(raster, crop = aoi) {
   index_name <- basename(raster)
-  index_name <- gsub("^(dtm_austria_)(.*)(.tif)", "\\2", index_name)
+  index_name <- gsub("^(dhm_at_lamb_10m_2018_)(.*)(.tif)", "\\2", index_name)
   outfile <- glue("dat/interim/dtm_aoi/tmp_qs/{index_name}.qs")
   if (file.exists(outfile)) {
     print(glue("{Sys.time()} -- Skipping {index_name} (file exists)"))
@@ -35,4 +39,4 @@ create_subset <- function(raster, crop = aoi) {
   }
 }
 
-lapply(dtm_list, create_subset)
+lapply(dtm_list_full, create_subset)
