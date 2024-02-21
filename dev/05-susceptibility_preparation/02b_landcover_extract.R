@@ -1,4 +1,5 @@
 library(dplyr)
+library(tidyr)
 library(sf)
 library(stars)
 library(qs)
@@ -20,7 +21,17 @@ res_wk <- st_extract(x = wk, at = grd, bilinear = FALSE) |>
 stopifnot(nrow(grd) == nrow(res_wk))
 qsave(res_wk, "dat/interim/misc_aoi/forest_cover.qs", nthreads = ncores)
 
-# Corine Land Cover #not needed
+# Tree height
+ndsm <- read_stars("dat/interim/dtm_derivates/als_nDSM_10m.tif")
+res_ndsm <- st_extract(x = ndsm, at = grd, bilinear = FALSE) |>
+  rename(tree_height = als_nDSM_10m.tif) |>
+  mutate(tree_height = if_else(tree_height < 0, 0, tree_height)) |>
+  mutate(tree_height = if_else(tree_height > 70, 70, tree_height)) |>
+  mutate(tree_height = replace_na(tree_height, 0))
+stopifnot(nrow(grd) == nrow(res_ndsm))
+qsave(res_ndsm, "dat/interim/misc_aoi/tree_height.qs", nthreads = ncores)
+
+# Corine Land Cover
 clc <- read_sf("dat/raw/clc/CLC18_AT_clip.shp") |>
   st_transform(3416) |>
   mutate(CODE_18 = as.integer(CODE_18)) |>
@@ -41,6 +52,7 @@ stopifnot(identical(res_lc$geometry, res_wk$geometry))
 
 res <- res_lc |>
   mutate(forest_cover = as.integer(res_wk$forest_cover)) |>
+  mutate(tree_height = res_ndsm$tree_height) |>
   mutate(land_cover = as.factor(land_cover)) |>
-  select(land_cover, forest_cover, geometry)
+  select(land_cover, forest_cover, tree_height, geometry)
 qsave(res, "dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores)

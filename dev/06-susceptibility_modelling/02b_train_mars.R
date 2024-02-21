@@ -6,17 +6,17 @@ print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
   library("mlr3")
-  library("mlr3learners")
+  library("mlr3extralearners")
   library("mlr3tuning")
   library("mlr3mbo")
   library("mlr3spatiotempcv")
-  library("ranger")
+  library("earth")
   library("dplyr")
   library("qs")
   library("glue")
 })
 
-ncores <- 32L
+ncores <- 16L
 
 source("dev/utils.R")
 
@@ -24,21 +24,22 @@ ids <- glue("iteration-{sprintf('%02d', 1:10)}")
 
 wall("{Sys.time()} -- reading data")
 dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
+  select(-elevation, -flow_path_length, -flow_width, -sca, -esa) |>
   mutate(slide = as.factor(slide)) |>
   group_by(iter) |>
   group_split(.keep = FALSE)
 
-# tune random forest w/ mlr3mbo
-wall("{Sys.time()} -- tuning rf")
-dat_rf <- lapply(dat, random_forest)
-names(dat_rf) <- ids
-saveRDS(dat_rf, "dat/interim/random_forest/ranger_mbo.rds")
+# tune mars w/ mlr3mbo
+wall("{Sys.time()} -- tuning mars")
+dat_earth <- lapply(dat, learn, learner = "earth")
+names(dat_earth) <- ids
+saveRDS(dat_earth, "dat/interim/mars/earth_mbo.rds")
 
 # estimate performance with nested resampling
 wall("{Sys.time()} -- estimating performance via nested resampling")
-dat_rr <- lapply(dat, nested_resampling)
+dat_rr <- lapply(dat, nested_resampling, learner = "earth")
 names(dat_rr) <- ids
-saveRDS(dat_rr, "dat/interim/random_forest/ranger_nested_resampling.rds")
+saveRDS(dat_rr, "dat/interim/mars/earth_nested_resampling.rds")
 
 # get metrics
 wall("{Sys.time()} -- obtaining metrics")

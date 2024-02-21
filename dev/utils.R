@@ -26,21 +26,42 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
 
 wall <- function(x) print(glue(x))
 
-random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
+learn <- function(susc_data, learner = c("randomforest", "earth", "gam"), id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
+  # Check learner argument
+  learner <- match.arg(learner)
+
   # Define learner and search space
-  learner <- lrn("classif.ranger",
-    num.trees = 1000,
-    mtry = to_tune(1, length(task$feature_names)),
-    min.node.size = to_tune(p_int(1, 10)),
-    sample.fraction = to_tune(0.2, 0.9),
-    respect.unordered.factors = "order",
-    importance = "permutation",
-    predict_type = "prob",
-    num.threads = 32L
-  )
+  if (learner == "randomforest") {
+    learner <- lrn("classif.ranger",
+      num.trees = 1000,
+      mtry = to_tune(1, length(task$feature_names)),
+      min.node.size = to_tune(p_int(1, 10)),
+      sample.fraction = to_tune(0.2, 0.9),
+      respect.unordered.factors = "order",
+      importance = "permutation",
+      predict_type = "prob",
+      verbose = FALSE,
+      num.threads = 32L
+    )
+  } else if (learner == "earth") {
+    learner <- lrn("classif.earth",
+      nk = to_tune(p_int(2, 100)),
+      degree = to_tune(p_int(1, 3)),
+      nprune = to_tune(p_int(5, 100)),
+      pmethod = "backward",
+      predict_type = "prob"
+    )
+  } else if (learner == "gam") {
+    fm <- paste("s(", names(susc_data[-1]), ")", sep = "", collapse = " + ")
+    learner <- lrn("classif.gam",
+      formula = as.formula(paste("slide ~", fm)),
+      select = TRUE,
+      predict_type = "prob"
+    )
+  }
 
   # Setup tuning w/ mbo
   instance <- tune(
@@ -62,21 +83,35 @@ random_forest <- function(susc_data, id = "carinthia", resampling_strategy = rsm
   return(learner)
 }
 
-nested_resampling <- function(susc_data, id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
+nested_resampling <- function(susc_data, learner = c("randomforest", "earth"), id = "carinthia", outer_resampling = rsmp("spcv_coords", folds = 5), inner_resampling = rsmp("spcv_coords", folds = 4)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")
 
+  # Check learner argument
+  learner <- match.arg(learner)
+
   # Define learner and search space
-  learner <- lrn("classif.ranger",
-    num.trees = 1000,
-    mtry = to_tune(1, length(task$feature_names)),
-    min.node.size = to_tune(p_int(1, 10)),
-    sample.fraction = to_tune(0.2, 0.9),
-    respect.unordered.factors = "order",
-    importance = "permutation",
-    predict_type = "prob",
-    num.threads = 32L
-  )
+  if (learner == "randomforest") {
+    learner <- lrn("classif.ranger",
+      num.trees = 1000,
+      mtry = to_tune(1, length(task$feature_names)),
+      min.node.size = to_tune(p_int(1, 10)),
+      sample.fraction = to_tune(0.2, 0.9),
+      respect.unordered.factors = "order",
+      importance = "permutation",
+      predict_type = "prob",
+      verbose = FALSE,
+      num.threads = 32L
+    )
+  } else if (learner == "earth") {
+    learner <- lrn("classif.earth",
+      nk = to_tune(p_int(2, 100)),
+      degree = to_tune(p_int(1, 3)),
+      nprune = to_tune(p_int(5, 100)),
+      pmethod = "backward",
+      predict_type = "prob"
+    )
+  }
 
   # Setup tuning w/ mbo
   at <- auto_tuner(
@@ -109,7 +144,15 @@ get_importance <- function(ranger_model) {
     tibble::enframe() |>
     rename(index = name, importance = value) |>
     arrange(-importance) |>
-    mutate(index = fct_reorder(index, -desc(importance)))
+    mutate(index = forcats::fct_reorder(index, -desc(importance)))
+}
+
+get_evimp <- function(earth_model) {
+  tmp <- evimp(earth_model$model)
+  tmp <- tmp[, c("nsubsets", "gcv", "rss")] |>
+    as_tibble(rownames = "index") |>
+    mutate(index = forcats::fct_reorder(index, -desc(gcv)))
+  return(tmp)
 }
 
 okabe_ito <- c(
@@ -126,3 +169,17 @@ names(okabe_ito) <- c(
   "pink",
   "black"
 )
+
+# handle duplicates
+identify_dups <- function(inv, cn) {
+  inv |>
+    drop_na({{ cn }}) |>
+    filter(duplicated({{ cn }})) |>
+    pull({{ cn }})
+}
+
+list_dups <- function(inv, cn) {
+  dups <- identify_dups(inv, {{ cn }})
+  inv |>
+    filter({{ cn }} %in% dups)
+}

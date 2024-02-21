@@ -1,66 +1,49 @@
-#!/usr/bin/env python
-#
-############################################################################
-#
-# MODULE:    r.survey
-# AUTHOR(S): Ivan Marchesini
-# PURPOSE:   Define visible area from survey sites
-#
-# COPYRIGHT: (C) 2014 by Ivan Marchesini
-#
-#   This program is free software under the GNU General Public
-#   License (>=v2). Read the file COPYING that comes with GRASS
-#   for details.
-#
-#############################################################################
+import shutil
+import os
+from pathlib import Path
 
-#%Module
-#% description: map visible areas during field survey
-#% keywords: visibility
-#% keywords: survey
-#%end
-#%option G_OPT_V_POINTS
-#% key: points
-#% description: Name of the input points layer (representing the field survey path)
-#% required: yes
-#%end
-#%option G_OPT_R_DEM
-#% key: dem
-#% description: Name of the input DEM layer
-#% required: yes
-#%end
-#%option G_OPT_R_OUTPUT
-#% key: output
-#% description: Prefix for the output visibility layers
-#% required: yes
-#%end
-#%option
-#% key: maxdist
-#% type: double
-#% description: max distance from the input points
-#% required: yes
-#% answer: 1000
-#%end
+from osgeo import gdal
 
-import sys
-
-from grass_session import Session # isort:skip
-import grass.script as grass # isort:skip
+from grass_session import Session  # isort:skip
+import grass.script as grass  # isort:skip
 from grass.script import core as grasscore # isort:skip
 
+region = "carinthia"
+elev = f"dat/interim/dtm_aoi/dtm_austria_{region}.tif"
+dem = "dem"
+pnt = "ls_inventory"
+output = "res"
+maxdist = 1000
 
-def main():
-    pnt = options["points"]
-    dem = options["dem"]
-    output = options["output"]
-    maxdist = float(options["maxdist"])
+# get raster extent: upper left and lower right
+src = gdal.Open(elev)
+ulx, xres, xskew, uly, yskew, yres = src.GetGeoTransform()
+lrx = ulx + (src.RasterXSize * xres)
+lry = uly + (src.RasterYSize * yres)
 
-    # save the current working region
-    grass.run_command("g.region", save="saved_region", overwrite=True)
-    # to do: a control for creating, only inside the study area, the aspect and the slope layers, could be added
+# set up grass
+grass_db = Path("dat/grassdata/grass_db/")
+# check if grass gis directory exists, create mapset if not
+grass_perm = grass_db / region / "PERMANENT"
+if not grass_perm.exists():
+    os.system(f"grass -c {elev} -e 'dat/grassdata/grass_db/{region}'")
+grassdata = grass_db / region / "esa"
+if grassdata.exists():
+    # remove old grass raster
+    shutil.rmtree(str(grassdata))
+# in grass session w/ new mapset
+with Session(
+    gisdb=str(grass_db),
+    location=region,
+    mapset="esa",
+    create_opts="",
+):
+    # set region
+    grass.run_command("g.region", save="full_aoi_region", n=uly, s=lry, e=lrx, w=ulx)
+    # compute aspect and slope
     grass.run_command(
         "r.slope.aspect",
-        elevation=dem,
+        elevation="dem",
         slope="slope",
         aspect="aspect",
         overwrite=True,
@@ -99,9 +82,8 @@ def main():
     for i in ctg:
         k = k + 1
         message = """
-        --------------------------------------
-        ----------- running point %s (cat = %s) of %s points --
-        --------------------------------------
+        ----------------------------------------------------------------
+        » working on point %s (cat = %s) of %s points
         """
         grass.message(message % (k, i, npnt))
         # extracting a point
@@ -150,7 +132,7 @@ def main():
             quiet=True,
         )
         # coming back to the original working region
-        grass.run_command("g.region", region="saved_region")
+        grass.run_command("g.region", region="full_aoi_region")
         # Since r.viewshed set the cell of the output visibility layer to 180 under the point, this cell is set to 0.01
         grass.mapcalc("view = if(view==180,0.01,view)", overwrite=True, quiet=True)
         # estimating the layer of the horizontal angle between point and each visible cell (angle of the horizontal line of sight)
@@ -264,8 +246,3 @@ def main():
     grass.run_command("g.remove", type="raster", name="c_view", quiet=True, flags="f")
     grass.run_command("g.remove", type="raster", name="b_view", quiet=True, flags="f")
     grass.run_command("g.remove", type="raster", name="a_view", quiet=True, flags="f")
-
-
-if __name__ == "__main__":
-    options, flags = grass.parser()
-    sys.exit(main())

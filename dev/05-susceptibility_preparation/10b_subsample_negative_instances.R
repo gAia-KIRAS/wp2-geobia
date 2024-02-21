@@ -44,3 +44,19 @@ lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) |>
   mutate(iter = as.integer(iter)) |>
   qsave("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
 wall("{Sys.time()} -- DONE")
+
+library(sf)
+library(ggplot2)
+
+tmp <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
+  as_tibble() |>
+  select(iter, slide, x, y) |>
+  st_as_sf(coords = c("x", "y"), crs = 3416)
+
+p <- ggplot(tmp) +
+  geom_sf(aes(color = slide), size = 0.4, alpha = 0.5) +
+  facet_wrap(~iter, ncol = 2) +
+  theme_linedraw() +
+  scale_color_manual(values = unname(c(okabe_ito["darkorange"], okabe_ito["darkblue"]))) +
+  theme(legend.position = "bottom")
+ggsave(p, filename = "plt/balanced_subsets.png", width = 300, height = 300, units = "mm")

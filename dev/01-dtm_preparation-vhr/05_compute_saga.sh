@@ -165,6 +165,12 @@ echo "\n`date "+%Y-%m-%d %H:%M:%S"`: Compute Diurnal Anisotropic Heat"
 saga_cmd ta_morphometry 12 -DEM $dtm_elev \
     -DAH "${outpath_base}_DAH.sdat"
 
+# Wind Exposition Index
+# https://saga-gis.sourceforge.io/saga_tool_doc/7.1.1/ta_morphometry_27.html
+echo "\n`date "+%Y-%m-%d %H:%M:%S"`: Compute Wind Exposition Index"
+saga_cmd ta_morphometry 27 -DEM $dtm_elev \
+    -EXPOSITION "${outpath_elevbase}_WEI.sdat"
+
 # Hypsometry (Hypsometric Curve)
 # https://saga-gis.sourceforge.io/saga_tool_doc/8.0.0/ta_morphometry_5.html
 echo "\n`date "+%Y-%m-%d %H:%M:%S"`: Compute Hypsometric Curve"

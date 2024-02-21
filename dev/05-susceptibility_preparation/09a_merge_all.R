@@ -11,16 +11,18 @@ suppressPackageStartupMessages({
 
 source("dev/utils.R")
 
-ncores <- 64L
+ncores <- 16L
 
 # expected number of pixels: 57,842,689
+# grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
+# nrow(grd)
 
 # terrain features
 print(glue("{Sys.time()} -- reading terrain features"))
 dtm <- qread("dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) |>
   mutate(geomorphons = as.factor(geomorphons))
 
-# land cover, forest cover
+# land cover, forest cover, tree height
 print(glue("{Sys.time()} -- reading land cover features"))
 lc <- qread("dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores)
 stopifnot(identical(st_coordinates(dtm), st_coordinates(lc)))
@@ -58,6 +60,13 @@ li <- qread("dat/interim/misc_aoi/lithology_full.qs", nthreads = ncores) |>
   select(lithology)
 stopifnot(nrow(li) == nrow(dtm))
 
+# effectively surveyed area
+print(glue("{Sys.time()} -- reading esa"))
+esa <- qread("dat/interim/misc_aoi/esa.qs", nthreads = ncores) |>
+  st_drop_geometry() |>
+  select(esa)
+stopifnot(nrow(esa) == nrow(dtm))
+
 # inventory
 print(glue("{Sys.time()} -- reading inventory"))
 inv <- qread("dat/interim/misc_aoi/inventory.qs", nthreads = ncores) |>
@@ -72,6 +81,7 @@ out <- dtm |>
   bind_cols(sw) |>
   bind_cols(rd) |>
   bind_cols(li) |>
+  bind_cols(esa) |>
   bind_cols(inv) |>
   rename_with(.fn = \(x) gsub("-", "_", x), .cols = everything()) |>
   rename_with(.fn = tolower, .cols = everything()) |>

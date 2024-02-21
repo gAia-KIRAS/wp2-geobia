@@ -1,12 +1,12 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# tune and train random forest
+# predict MARS model
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
   library("mlr3")
-  library("ranger")
+  library("earth")
   library("arrow")
   library("dplyr")
   library("glue")
@@ -18,9 +18,10 @@ read_dat <- function(x) {
   read_ipc_file(x) |>
     tidyr::drop_na() |>
     mutate(across(x:y, as.integer))
+  # mutate(esa = 0L)
 }
 
-predict_rf <- function(model, newdata) {
+predict_earth <- function(model, newdata) {
   model$predict_newdata(newdata) |>
     as.data.table() |>
     select(truth, response, prob = prob.TRUE) |>
@@ -28,7 +29,7 @@ predict_rf <- function(model, newdata) {
 }
 
 predict_ensemble <- function(ensemble, data) {
-  lapply(ensemble, predict_rf, newdata = data) |>
+  lapply(ensemble, predict_earth, newdata = data) |>
     bind_rows(.id = "iteration") |>
     group_by(x, y) |>
     summarize(mean_susc = mean(prob), sd_susc = sd(prob), .groups = "drop") |>
@@ -37,24 +38,17 @@ predict_ensemble <- function(ensemble, data) {
 }
 
 print(glue::glue("{Sys.time()} -- reading models"))
-rf_mods <- readRDS("dat/interim/random_forest/ranger_mbo.rds")
+earth_mods <- readRDS("dat/interim/mars/earth_mbo.rds")
 
-print(glue::glue("{Sys.time()} -- reading positive chunk"))
-pos_dat <- read_dat("dat/processed/chunks/pos/carinthia_slides.arrow")
-
-print(glue::glue("{Sys.time()} -- predicting positive chunk"))
-predict_ensemble(rf_mods, pos_dat) |>
-  qsave("dat/processed/prediction/pos.qs", nthreads = 32L)
-
-print(glue::glue("{Sys.time()} -- working on negative chunks"))
-neg_lst <- list.files("dat/processed/chunks/neg", recursive = TRUE, full.names = TRUE)
-for (f in neg_lst) {
-  partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]"))
+print(glue::glue("{Sys.time()} -- working on chunks"))
+chk_lst <- list.files("dat/processed/chunks/all", recursive = TRUE, full.names = TRUE)
+for (f in chk_lst) {
+  partition <- gsub("=", "", stringr::str_extract(f, "partition=[0-9]+"))
   print(glue::glue("{Sys.time()} .... processing {partition}"))
-  outfile <- glue("dat/processed/prediction/neg_{partition}.qs")
+  outfile <- glue("dat/processed/prediction/earth/chunk_{partition}.qs")
   if (!file.exists(outfile)) {
-    neg_tmp <- read_dat(f)
-    predict_ensemble(rf_mods, neg_tmp) |>
-      qsave(outfile, nthreads = 32L)
+    tmp <- read_dat(f)
+    predict_ensemble(earth_mods, tmp) |>
+      qsave(outfile, nthreads = 16L)
   }
 }

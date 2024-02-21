@@ -8,6 +8,11 @@
 
 - [Daten + Beschreibung](https://www.data.gv.at/katalog/dataset/land-ktn_digitales-gelandemodell-dgm-osterreich)
 
+## Höhenmodell Kärnten
+
+> Digitales Oberflächen- und Geländemodell aus Airborne Laserscan Daten (Auflösung 5 m).
+
+- [Daten und Beschreibung](https://www.data.gv.at/katalog/de/dataset/digitales-gelandemodell-5m-karnten)
 
 ## Klimaindikatoren
 

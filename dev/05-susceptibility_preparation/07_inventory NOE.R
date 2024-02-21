@@ -40,18 +40,18 @@ wall("{Sys.time()} -- reading inventories")
 #   st_intersection(aoi)
 
 # 2704 events
-inv_valid <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
-  st_geometry() |>
-  st_transform(3416) |>
-  st_as_sf() |>
-  rename(geom = x) |>
-  mutate(slide = 1L)
+#inv_valid <- read_sf("dat/interim/inventory/LS_scars_merge.gpkg") |>
+#  st_geometry() |>
+#  st_transform(3416) |>
+#  st_as_sf() |>
+#  rename(geom = x) |>
+#  mutate(slide = 1L)
 
-inv_valid <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegungskartierung_MONOE.shp") |>
-  st_geometry() |>
-  st_transform(3416) |>
-  st_as_sf() |>
-  rename(geom = x) |>
+inv_valid <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegungskartierung_MONOE.shp") %>%
+  st_geometry() %>%
+  st_transform(3416) %>%
+  st_as_sf() %>%
+  rename(geom = x) %>%
   mutate(slide = 1L)
 
 
@@ -62,9 +62,9 @@ inv_valid <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegun
 #  summarize(geom = st_union(geom))
 
 # buffer only validated inventory
-inv <- inv_valid |>
-  st_buffer(dist = units::as_units(5, "m")) |>
-  group_by(slide) |>
+inv <- inv_valid %>%
+  st_buffer(dist = units::as_units(5, "m")) %>%
+  group_by(slide) %>%
   summarize(geom = st_union(geom))
 
 wall("{Sys.time()} -- reading target grid")
