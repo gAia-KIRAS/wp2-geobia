@@ -1,11 +1,11 @@
 print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(tidyr)
-  library(qs)
-  library(arrow)
-  library(glue)
+  library("dplyr")
+  library("tidyr")
+  library("qs")
+  library("arrow")
+  library("glue")
 })
 
 source("dev/utils.R")
@@ -27,10 +27,16 @@ pos_all <- full |>
   filter(slide == TRUE) |>
   select(-neg_sample)
 
+# elevation threshold
+qu <- 0.99
+thresh <- round(quantile(pos_all$elevation, qu) / 100) * 100
+thresh
+
 wall("{Sys.time()} -- subsetting negative instances")
 neg_all <- full |>
   filter(neg_sample == TRUE) |>
-  select(-neg_sample)
+  select(-neg_sample) |>
+  filter(elevation <= thresh)
 
 create_balanced_subset <- function(seed, df_neg, df_pos) {
   set.seed(seed)
