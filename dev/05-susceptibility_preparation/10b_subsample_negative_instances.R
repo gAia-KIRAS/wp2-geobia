@@ -36,11 +36,12 @@ wall("{Sys.time()} -- subsetting negative instances")
 neg_all <- full |>
   filter(neg_sample == TRUE) |>
   select(-neg_sample) |>
-  filter(elevation <= thresh)
+  filter(elevation <= thresh) |>
+  mutate(pps = 1 / cos(slope * pi / 180))
 
 create_balanced_subset <- function(seed, df_neg, df_pos) {
   set.seed(seed)
-  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = slope, replace = FALSE)
+  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = pps, replace = FALSE)
   out <- bind_rows(tmp, df_pos)
   return(out)
 }
