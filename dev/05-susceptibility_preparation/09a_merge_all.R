@@ -1,12 +1,13 @@
 print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(sf)
-  library(qs)
-  library(arrow)
-  library(sfarrow)
-  library(glue)
+  library("dplyr")
+  library("forcats")
+  library("sf")
+  library("qs")
+  library("arrow")
+  library("sfarrow")
+  library("glue")
 })
 
 source("dev/utils.R")
@@ -24,7 +25,8 @@ dtm <- qread("dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) |>
 
 # land cover, forest cover, tree height
 print(glue("{Sys.time()} -- reading land cover features"))
-lc <- qread("dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores)
+lc <- qread("dat/interim/misc_aoi/land_forest_cover.qs", nthreads = ncores) |>
+  mutate(land_cover = fct_recode(land_cover, "124" = "125", "124" = "126"))
 stopifnot(identical(st_coordinates(dtm), st_coordinates(lc)))
 lc <- st_drop_geometry(lc)
 

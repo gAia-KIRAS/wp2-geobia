@@ -36,6 +36,7 @@ lut_lc <- tribble(
     93, "Trees - coniferous",
     100, "Bushes and shrubs",
     122, "Herbaceous periodically",
+    124, "Herbaceous permanent",
     125, "Herbaceous permanent -\nlow productivity",
     126, "Herbaceous permanent -\nhigh productivity",
     130, "Reeds"
