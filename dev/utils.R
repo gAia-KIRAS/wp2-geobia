@@ -1,6 +1,6 @@
 include <- function(str_list, regex_match) {
-  matches <- paste(regex_match, collapse = "|") |>
-    grep(str_list, value = TRUE) |>
+  matches <- paste(regex_match, collapse = "|") %>%
+    grep(str_list, value = TRUE) %>%
     unique()
   return(matches)
 }
@@ -129,28 +129,28 @@ nested_resampling <- function(susc_data, learner = c("randomforest", "earth"), i
 }
 
 get_score <- function(x) {
-  x$score() |>
+  x$score() %>%
     select(iteration:classif.ce)
 }
 
 get_inner_tuning <- function(x) {
-  x |>
-    extract_inner_tuning_results() |>
+  x %>%
+    extract_inner_tuning_results() %>%
     select(iteration:classif.bbrier)
 }
 
 get_importance <- function(ranger_model) {
-  ranger_model$importance() |>
-    tibble::enframe() |>
-    rename(index = name, importance = value) |>
-    arrange(-importance) |>
+  ranger_model$importance() %>%
+    tibble::enframe() %>%
+    rename(index = name, importance = value) %>%
+    arrange(-importance) %>%
     mutate(index = forcats::fct_reorder(index, -desc(importance)))
 }
 
 get_evimp <- function(earth_model) {
   tmp <- evimp(earth_model$model)
-  tmp <- tmp[, c("nsubsets", "gcv", "rss")] |>
-    as_tibble(rownames = "index") |>
+  tmp <- tmp[, c("nsubsets", "gcv", "rss")] %>%
+    as_tibble(rownames = "index") %>%
     mutate(index = forcats::fct_reorder(index, -desc(gcv)))
   return(tmp)
 }
@@ -172,14 +172,14 @@ names(okabe_ito) <- c(
 
 # handle duplicates
 identify_dups <- function(inv, cn) {
-  inv |>
-    drop_na({{ cn }}) |>
-    filter(duplicated({{ cn }})) |>
+  inv %>%
+    drop_na({{ cn }}) %>%
+    filter(duplicated({{ cn }})) %>%
     pull({{ cn }})
 }
 
 list_dups <- function(inv, cn) {
   dups <- identify_dups(inv, {{ cn }})
-  inv |>
+  inv %>%
     filter({{ cn }} %in% dups)
 }

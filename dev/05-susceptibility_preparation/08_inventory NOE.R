@@ -7,9 +7,9 @@ suppressPackageStartupMessages({
   library(tictoc)
 })
 
-source("dev/utils.R")
+source("wp2-geobia/dev/utils.R")
 
-ncores <- 32L
+ncores <- 64L
 
 # process_types <- tribble(
 #   ~ID, ~PROCESS,
@@ -47,14 +47,6 @@ wall("{Sys.time()} -- reading inventories")
 #  rename(geom = x) |>
 #  mutate(slide = 1L)
 
-inv_valid <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegungskartierung_MONOE.shp") %>%
-  st_geometry() %>%
-  st_transform(3416) %>%
-  st_as_sf() %>%
-  rename(geom = x) %>%
-  mutate(slide = 1L)
-
-
 # combine inventory locations: 4119 events
 # inv <- bind_rows(inv_valid, inv_greorios) |>
 # st_buffer(dist = units::as_units(5, "m")) |>
@@ -62,30 +54,65 @@ inv_valid <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegun
 #  summarize(geom = st_union(geom))
 
 # buffer only validated inventory
-inv <- inv_valid %>%
+#inv <- inv_valid %>%
+#  st_buffer(dist = units::as_units(5, "m")) %>%
+#  group_by(slide) %>%
+#  summarize(geom = st_union(geom))
+
+#wall("{Sys.time()} -- reading target grid")
+#grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
+
+#wall("{Sys.time()} -- performing spatial join") # 500 sec elapsed
+#tic()
+#inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) |>
+#  select(-idx) |>
+#  sfc_as_cols() |>
+#  st_drop_geometry() |>
+#  mutate(across(x:y, as.integer)) |>
+#  mutate(slide = tidyr::replace_na(slide, 0)) |>
+#  mutate(slide = as.logical(slide))
+#toc()
+
+# 0: 57840705
+# 1:     1984
+
+#stopifnot(nrow(inventory) == nrow(grd))
+
+#wall("{Sys.time()} -- saving result")
+#qsave(inventory, "dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
+#wall("{Sys.time()} -- DONE")
+
+# NOE data
+inv_pts <- read_sf("wp2-geobia/dat/interim/noe-inventory/noe/ALS_Massenbewegungskartierung_MONOE.shp") %>%
+  st_geometry() %>%
+  st_transform(3416) %>%
+  st_as_sf() %>%
+  rename(geom = x) %>%
+  mutate(slide = 1L)
+
+# buffer consolidated inventory
+inv <- inv_pts %>%
   st_buffer(dist = units::as_units(5, "m")) %>%
   group_by(slide) %>%
   summarize(geom = st_union(geom))
 
 wall("{Sys.time()} -- reading target grid")
-grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
+grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
 
 wall("{Sys.time()} -- performing spatial join") # 500 sec elapsed
 tic()
-inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) |>
-  select(-idx) |>
-  sfc_as_cols() |>
-  st_drop_geometry() |>
-  mutate(across(x:y, as.integer)) |>
-  mutate(slide = tidyr::replace_na(slide, 0)) |>
+inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) %>%
+  select(-idx) %>%
+  sfc_as_cols() %>%
+  st_drop_geometry() %>%
+  mutate(across(x:y, as.integer)) %>%
+  mutate(slide = tidyr::replace_na(slide, 0)) %>%
   mutate(slide = as.logical(slide))
 toc()
-
-# 0: 57840705
-# 1:     1984
 
 stopifnot(nrow(inventory) == nrow(grd))
 
 wall("{Sys.time()} -- saving result")
-qsave(inventory, "dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
+qsave(inventory, "wp2-geobia/dat/interim/misc_aoi/inventory.qs", nthreads = ncores)
 wall("{Sys.time()} -- DONE")
+

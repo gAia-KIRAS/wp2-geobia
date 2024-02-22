@@ -2,34 +2,31 @@ library(sf)
 library(dplyr)
 library(qs)
 
-ncores <- 12L
+ncores <- 34L
 
 # AOI
-aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
+aoi <- read_sf("wp2-geobia/dat/interim/aoi/NOE_gaiaArea.shp") %>%
   st_transform(3416)
 
 # AOI dataframe
-grd <- qread("dat/interim/aoi/gaia_ktn_grid.qs", nthreads = ncores)
-
-# wget https://gis.geologie.ac.at/inspire/download/insp_ge_gu_500k_epsg4258.gpkg
-st_layers("dat/raw/geology/insp_ge_gu_500k_epsg4258.gpkg")
-lithology <- read_sf("dat/raw/geology/insp_ge_gu_500k_epsg4258.gpkg", layer = "geologicunitview") |>
-  select(lithology = representativeLithology) |>
-  mutate(lithology = as.factor(lithology)) |>
-  st_transform(3416)
-
-res_lithology <- st_join(grd, lithology) |>
-  select(-idx)
-
-qsave(res_lithology, "dat/interim/misc_aoi/lithology_full.qs", nthreads = ncores)
-
+grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
 
 # NOE
 lithology <- read_sf("wp2-geobia/dat/raw/lithology/Lithologie_II.shp")  %>% 
   st_transform(3416)
 
-res_lithology <- st_join(grd, lithology) |>
+lithology_mod <- lithology %>%
+  select(-area, -LEGENDE, -ID, -count_sli) %>%
+  mutate(Legend_fin = as.factor(Legend_fin))
+
+#st_write(lithology_mod, "wp2-geobia/dat/raw/lithology/Lithologie_II_modified.shp")
+
+res_lithology <- st_join(grd, lithology_mod)
+#st_write(res_lithology, "wp2-geobia/dat/interim/misc_aoi/lithology_noe.gpkg", driver = "GPKG")
+
+
+colnames(res_lithology)
+res_lithology_mod <- res_lithology %>%
   select(-idx)
 
-qsave(res_lithology, "dat/interim/misc_aoi/lithology_full.qs", nthreads = ncores)
-
+qsave(res_lithology_mod, "wp2-geobia/dat/interim/misc_aoi/lithology_noe.qs", nthreads = ncores)
