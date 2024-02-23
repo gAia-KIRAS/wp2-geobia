@@ -6,6 +6,9 @@ suppressPackageStartupMessages({
   library("qs")
   library("arrow")
   library("glue")
+  library("sf")
+  library("ggplot2")
+  library("showtext")
 })
 
 source("dev/utils.R")
@@ -56,19 +59,17 @@ lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) |>
   bind_rows(.id = "iter") |>
   mutate(iter = as.integer(iter)) |>
   qsave("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
-wall("{Sys.time()} -- DONE")
+wall("{Sys.time()} -- subsampling completed")
 
-library("sf")
-library("ggplot2")
-library("showtext")
-
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
-showtext_auto()
+wall("{Sys.time()} -- plotting")
 
 tmp <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
   as_tibble() |>
   select(iter, slide, x, y) |>
   st_as_sf(coords = c("x", "y"), crs = 3416)
+
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
+showtext_auto()
 
 p <- ggplot(tmp) +
   geom_sf(aes(color = slide), size = 0.4, alpha = 0.5) +
@@ -85,3 +86,5 @@ p <- ggplot(tmp) +
     legend.position = "bottom"
   )
 ggsave(p, filename = "plt/balanced_subsets.png", width = 300, height = 280, units = "mm")
+
+wall("{Sys.time()} -- DONE")
