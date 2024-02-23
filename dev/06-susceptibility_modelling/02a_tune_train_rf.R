@@ -27,8 +27,9 @@ dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
   select(
     -elevation, -maximum_height, -wei,
     -roughness, -tri, -svf,
+    -pto, -nto, -curv_max, -curv_min, -dah,
     -flow_path_length, -flow_width, -sca,
-    -api_k30, -rx5day,
+    -api_k7, -api_k30, -rx1day, -rx5day, -sdii,
     -forest_cover,
     -road_dist,
     -sw_hazard_cat, -sw_max_depth, -sw_max_speed,
