@@ -84,7 +84,8 @@ p <- ggplot(tmp) +
       size = 50
     ),
     legend.position = "bottom"
-  )
+  ) +
+  guides(color = guide_legend(override.aes = list(size = 5, alpha = 1)))
 ggsave(p, filename = "plt/balanced_subsets.png", width = 300, height = 280, units = "mm")
 
 wall("{Sys.time()} -- DONE")
