@@ -52,8 +52,12 @@ lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) |>
   qsave("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
 wall("{Sys.time()} -- DONE")
 
-library(sf)
-library(ggplot2)
+library("sf")
+library("ggplot2")
+library("showtext")
+
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
+showtext_auto()
 
 tmp <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
   as_tibble() |>
@@ -65,5 +69,13 @@ p <- ggplot(tmp) +
   facet_wrap(~iter, ncol = 2) +
   theme_linedraw() +
   scale_color_manual(values = unname(c(okabe_ito["darkorange"], okabe_ito["darkblue"]))) +
-  theme(legend.position = "bottom")
-ggsave(p, filename = "plt/balanced_subsets.png", width = 300, height = 300, units = "mm")
+  theme_linedraw() +
+  theme(
+    text = element_text(
+      family = "Source Sans Pro",
+      colour = "black",
+      size = 50
+    ),
+    legend.position = "bottom"
+  )
+ggsave(p, filename = "plt/balanced_subsets.png", width = 300, height = 280, units = "mm")
