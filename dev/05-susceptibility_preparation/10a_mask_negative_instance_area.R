@@ -1,11 +1,12 @@
 print(glue::glue("{Sys.time()} -- loading packages"))
 
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(sf)
-  library(qs)
-  library(glue)
-  library(tictoc)
+  library("readr")
+  library("dplyr")
+  library("sf")
+  library("qs")
+  library("glue")
+  library("tictoc")
 })
 
 source("dev/utils.R")
@@ -22,7 +23,7 @@ ncores <- 32L
 # sqrt(288733 / pi) = 303
 
 wall("{Sys.time()} -- reading inventory")
-inv <- read_sf("dat/reporting/inventory_carinthia.gpkg") |>
+inv <- read_sf("dat/reporting/inventar_kaernten.gpkg") |>
   mutate(slide = TRUE) |>
   select(slide, geom) |>
   st_transform(3416) |>
@@ -34,9 +35,38 @@ wall("{Sys.time()} -- reading AOI")
 aoi <- read_sf("dat/raw/aoi/gaia_aoi_ktn_3416.gpkg") |>
   st_transform(3416)
 
+wall("{Sys.time()} -- reading lakes")
+lakes <- read_sf("dat/raw/water_bodies/OWK_SG.gpkg") |>
+  st_transform(3416) |>
+  select(See) |>
+  st_intersection(aoi)
+lakes |>
+  mutate(area = st_area(geom)) |>
+  st_drop_geometry()
+
+wall("{Sys.time()} -- reading lithology")
+litho_class <- read_tsv("doc/data_description/reclass_geology.tsv") |>
+  select(-lithologie)
+litho <- read_sf("dat/raw/geology/200k/Geologie_Kaernten_200.000.gpkg") |>
+  st_transform(3416) |>
+  select(leg_litho, geom) |>
+  left_join(litho_class, by = "leg_litho") |>
+  filter(class == 0) |>
+  select(-class)
+litho |>
+  mutate(area = st_area(geom)) |>
+  group_by(leg_litho) |>
+  summarize(area = sum(area)) |>
+  st_drop_geometry()
+read_csv("doc/data_description/lut_lithology_200k_raw.csv") |>
+  filter(leg_litho %in% c(2, 3, 15, 104, 930, 931))
+
 wall("{Sys.time()} -- cutting holes")
 absence_area <- st_difference(aoi, inv) |>
+  st_difference(st_union(litho)) |>
   mutate(neg_sample = TRUE)
+
+wall("{Sys.time()} -- saving absence area")
 if (!file.exists("dat/interim/aoi/absence_area.gpkg")) {
   st_write(absence_area, "dat/interim/aoi/absence_area.gpkg")
 }

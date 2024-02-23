@@ -1,0 +1,51 @@
+leg_litho,lithologie
+1,Quartaer i.A.
+2,Anthropogene Ablagerungen
+3,"Vernaessung, Sumpf, Moor"
+4,"Junge Talboeden, Auzonen, Wildbachschutt"
+5,Schwemmkegel und Schwemmfaecher
+6,"Rutsch- und Sackungsmassen, Gleitschollen"
+7,Lehm
+8,"Hangschutt und Hangbrekzien, Muren"
+9,Bergsturzblockwerk
+10,Konglomerate (Quartaer i.A.)
+11,"periglazialer Schuttstrom, Solifluktionsdecken, Block"
+12,Niederterrasse und spaetglaziale Terrassen
+13,"Vorstossschotter, Sander, Eisrandterrassen"
+14,"Moraenen, Moraenenstreu (Pleistozaen bis Holozaen)"
+15,"Seealblagerungen, Deltas"
+16,wuermzeitliche Ablagerungen
+17,"Hochterrasse, meist mit Loess/Staublehmdecke"
+19,Schotterterrassen fraglichen Alters (Pliozaen-Pleisto
+20,"Schotter, Blockschotter (Neogen)"
+21,Konglomerate (Neogen)
+22,"Ton, Sand und Kies (Palaeogen-Neogen)"
+23,"Ton, Sand und Kies, mit Kohle  (Palaeogen-Neogen)"
+24,"Ton, Mergel, z.T.Sand und Kiese (Neogen)"
+25,Rotlehm (Neogen)
+26,"Kalksteine (Neogen), Kalktuffe (Quartaer i.A.)"
+100,"Sandstein, Siltstein, Tonstein, Gips"
+101,"Brekzie, Konglomerat"
+102,"Kalksandstein, Kalktuff, Rauhwacke"
+103,Kalkstein
+104, 
+105,Dolomit
+106,"Kalk, Schiefer, Sandstein"
+107,"Kalkphyllit, Kalkschiefer"
+108,Quarzit
+109,"Phyllit, Schiefer, Phyllonit, Leukophyllit"
+110,Radiolarit
+111,"Kalkglimmerschiefer, Kalksilikatgneis"
+112,Glimmerschiefer bis Paragneis
+113,"Amphibolit, Eklogit"
+114,Ganggestein
+115,Marmor
+116,Migmatit
+117,"Diorit, Tonalit"
+118,Gabbro
+119,"Granit, Orthogneis"
+120,"Tuff, Tuffit, Vulkanit i.a."
+122,"Diabas, Gruenschiefer"
+123,Serpentinit
+930,"Seen, Gewaesser"
+931,Gletscher
