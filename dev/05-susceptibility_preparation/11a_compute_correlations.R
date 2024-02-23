@@ -13,7 +13,7 @@ source("dev/utils.R")
 
 print(glue::glue("{Sys.time()} -- reading data"))
 res <- read_ipc_file("dat/processed/carinthia_10m.arrow") |>
-  select(-flow_path_length, -flow_width, -sca, -esa, -x, -y) |>
+  select(-flow_path_length, -flow_width, -sca, -esa) |>
   select(where(is.numeric)) |>
   slice_sample(prop = 0.5) |>
   as.matrix()
@@ -31,7 +31,7 @@ print(glue::glue("{Sys.time()} -- computing correlations"))
 cn <- colnames(res)
 corrs <- crossing(cn, cn)
 corr <- map2_dbl(corrs$cn...1, corrs$cn...2, compute_corr, .progress = TRUE)
-corrs$corr <- corr
+corrs$correlation <- corr
 rm(res, cn, corr)
 gc()
 
