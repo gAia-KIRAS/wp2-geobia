@@ -17,9 +17,9 @@ ncores <- 30L # max 96 # parallel::detectCores()
 # grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
 # nrow(grd)
 
-# terrain features #!IMPORTANT don't have that output
+# terrain features 
 print(glue("{Sys.time()} -- reading terrain features"))
-dtm <- qread("wp2-geobia/dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) %>%       #!IMPORTANT don't have that output
+dtm <- qread("wp2-geobia/dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) %>%       
   mutate(geomorphons = as.factor(geomorphons))
 
 
@@ -102,6 +102,9 @@ print(glue("{Sys.time()} -- writing parquet"))
 st_write_parquet(obj = out, dsn = "wp2-geobia/dat/processed/noe_10m.parquet")
 print(glue("    object size w/ sf geom:"))
 format(object.size(out), "auto")
+
+out <- read_parquet("wp2-geobia/dat/processed/noe_10m.parquet")
+out = st_as_sf(out)
 
 # save w/o simple feature geometry (ipc / arrow)
 print(glue("{Sys.time()} -- writing ipc"))
