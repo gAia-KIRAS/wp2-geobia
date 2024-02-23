@@ -26,11 +26,16 @@ wall("{Sys.time()} -- subsetting positive instances")
 pos_all <- full |>
   filter(slide == TRUE) |>
   select(-neg_sample)
+print(nrow(pos_all))
 
 # elevation threshold
 qu <- 0.99
 thresh <- round(quantile(pos_all$elevation, qu) / 100) * 100
 thresh
+
+pos_all <- pos_all |>
+  filter(elevation <= thresh)
+print(nrow(pos_all))
 
 wall("{Sys.time()} -- subsetting negative instances")
 neg_all <- full |>
@@ -41,7 +46,8 @@ neg_all <- full |>
 
 create_balanced_subset <- function(seed, df_neg, df_pos) {
   set.seed(seed)
-  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = pps, replace = FALSE)
+  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = pps, replace = FALSE) |>
+    select(-pps)
   out <- bind_rows(tmp, df_pos)
   return(out)
 }
