@@ -9,13 +9,24 @@ suppressPackageStartupMessages({
   library("GGally")
 })
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
-corrs <- read_rds("dat/interim/correlations.rds") |>
-  rename(correlation = corr)
+fullnames <- read_csv("doc/data_description/lut_vars.csv") |>
+  select(-progenitor) |>
+  mutate(feature_name = gsub(
+    pattern = "30-day standardized precipitation evapotranspiration index",
+    replacement = "30-day SPEI",
+    x = feature_name
+  ))
 
-p <- ggplot(corrs, aes(x = cn...1, y = cn...2)) +
+corrs <- read_rds("dat/interim/correlations.rds") |>
+  left_join(fullnames, by = join_by("cn...1" == "feature_shortname")) |>
+  rename(feature_1 = feature_name) |>
+  left_join(fullnames, by = join_by("cn...2" == "feature_shortname")) |>
+  rename(feature_2 = feature_name)
+
+p <- ggplot(corrs, aes(x = feature_1, y = feature_2)) +
   geom_raster(aes(fill = correlation)) +
   xlab("") +
   ylab("") +
