@@ -32,7 +32,8 @@ The following table provides an overview of features landslide susceptibility mo
 | `twi`               | topographic wetness index                                  |
 | `vrm`               | vector ruggedness measure                                  |
 | `wei`               | wind exposition index                                      |
-| `clc`               | corine land cover classes                                  |
+| `land_cover`        | land cover (cadasterENV)                                   |
+| `tree_height`       | tree height (nDSM)                                         |
 | `forest_cover`      | forest cover                                               |
 | `cwd`               | cumulative wet days                                        |
 | `prcptot`           | toal annual precipitation                                  |

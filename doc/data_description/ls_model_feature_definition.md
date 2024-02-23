@@ -47,6 +47,7 @@ The following table provides an overview of independent features to be used in t
 | Topographic Position Index                          | tpi                | `gdaldem`    | morphometry  |
 | ~~Topographic Roughness Index~~                     | tri                | `gdaldem`    | morphometry  |
 | Topographic Wetness Index                           | twi                | SAGAGIS      | hydrology    |
+| Tree height                                         | tree_height        | nDSM         | vegetation   |
 | Vector Ruggedness Measure                           | vrm                | SAGAGIS      | morphometry  |
 | ~~Wind Exposition Index~~                           | wei                | SAGAGIS      | morphometry  |
 
