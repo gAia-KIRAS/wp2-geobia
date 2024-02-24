@@ -1,6 +1,4 @@
 
----
-
 > From: Schlögl Matthias  
 > Sent: Saturday, 24 February 2024 22:57  
 > To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
