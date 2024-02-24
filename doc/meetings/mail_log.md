@@ -1,4 +1,32 @@
 
+---
+
+> From: Schlögl Matthias  
+> Sent: Saturday, 24 February 2024 22:57  
+> To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Subject: Re: [gAia] Update landslide susceptibility model
+
+Good evening,
+
+I have now re-trained the RF model v3.0 as explained on Friday.
+
+I have uploaded the first diagnostic plots as usual to https://edrop.zamg.ac.at/owncloud/index.php/s/n8qYBMc2gM2RfBY.
+For a quick first look, I have attached the importance plot, and also added the full correlation matrix and the subset for the actually used features to aid interpretation.
+
+Results tend to look more reasonable now, and some of the PDP plots (e.g.: slope) are eventually plausible imho.
+The geological map still does carry very little explanatory power, I suspect that this will lead to discussions.
+Even though the classes were summarized, there is very little variation between the different classes (see pdp plots).
+
+Now I still need to implement the relevant masks for predictive purposes as well, run the predictions, and create an updated GeoTiff.
+If I have enough time tomorrow I can provide the results by Monday morning.
+However, I won't modify the climate precursor data. SPARTACUS / WINFORE pixels might still overlay the image (with SPEI being rather important).
+We could smooth the borders between the pixels of the weather data purely for cosmetic purposes during prediction, but that will have to wait until after the workshop.
+
+Best,
+Matthias
+
+---
 
 > Von: Schlögl Matthias  
 > Gesendet: Freitag, 23. Februar 2024 13:55  
