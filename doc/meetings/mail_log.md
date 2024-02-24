@@ -1,4 +1,3 @@
-
 > From: Schlögl Matthias  
 > Sent: Saturday, 24 February 2024 22:57  
 > To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
@@ -21,7 +20,7 @@ If I have enough time tomorrow I can provide the results by Monday morning.
 However, I won't modify the climate precursor data. SPARTACUS / WINFORE pixels might still overlay the image (with SPEI being rather important).
 We could smooth the borders between the pixels of the weather data purely for cosmetic purposes during prediction, but that will have to wait until after the workshop.
 
-Best,
+Best,  
 Matthias
 
 ---
