@@ -50,8 +50,7 @@ features <- lapply(rf_mods, get_importance) |>
   mutate(index = as.character(index)) |>
   summarize(imp = mean(importance)) |>
   arrange(-imp) |>
-  pull(index) |>
-  head(10)
+  pull(index)
 
 compute_effect <- function(featurename, predictor = predictor) {
   FeatureEffect$new(predictor, feature = featurename, method = "pdp+ice")$results
