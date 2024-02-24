@@ -89,4 +89,4 @@ export_plot <- function(feature, data = dat) {
 
 glue("{Sys.time()} -- plotting")
 mclapply(features, export_plot, mc.cores = ncores)
-glue("{Sys.time()} -- DONE \o/")
+glue("{Sys.time()} -- DONE \\o/")
