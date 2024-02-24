@@ -20,7 +20,7 @@ suppressPackageStartupMessages({
 
 source("dev/utils.R")
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
 ncores <- 16L

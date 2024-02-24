@@ -16,7 +16,7 @@ suppressPackageStartupMessages({
 
 print(glue::glue("{Sys.time()} -- loading data"))
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
 ncores <- 16L
