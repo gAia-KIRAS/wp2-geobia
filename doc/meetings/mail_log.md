@@ -1,3 +1,38 @@
+# Documentation e-mail log of MS to consortium
+
+- Progress updates on susceptibility modelling 
+- Provision of methodological explanations and considerations
+- Requests for feedback and input
+
+---
+
+> From: Schlögl Matthias 
+> Sent: Sunday, 25 February 2024 19:00 
+> To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Subject: Re: [gAia] Update landslide susceptibility model
+
+Hi,
+
+the new maps of the random forest v3.0 are now available at  
+`kronos:~/newstorage2/gaia/wp5/susceptibility_modelling/carinthia/ls_output/maps_geotiff/random_forest`
+
+I also added the drop and obs-vs-mod plots to edrop.
+Threshold values from the drop-plot according to Spiekermann et al. (2023):
+
+q80: 
+- mean: 0.453
+- sd: 0.035
+
+q95:
+- mean: 0.611 
+- sd: 0.042
+
+Best,  
+Matthias
+
+---
+
 > From: Schlögl Matthias  
 > Sent: Saturday, 24 February 2024 22:57  
 > To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
