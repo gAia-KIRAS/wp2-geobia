@@ -6,8 +6,8 @@
 
 ---
 
-> From: Schlögl Matthias 
-> Sent: Sunday, 25 February 2024 19:00 
+> From: Schlögl Matthias  
+> Sent: Sunday, 25 February 2024 19:00  
 > To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
 > Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
 > Subject: Re: [gAia] Update landslide susceptibility model
