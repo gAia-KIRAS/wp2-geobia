@@ -61,6 +61,7 @@ export_plot <- function(feature, data = dat) {
   if (feature == "lithology") {
     res <- res |>
       mutate(lithology = as.integer(as.character(lithology))) |>
+      filter(lithology != 0) |>
       left_join(lut_geology, by = join_by(lithology == id)) |>
       select(iteration, lithology = name, .class, .value, .type)
   }
