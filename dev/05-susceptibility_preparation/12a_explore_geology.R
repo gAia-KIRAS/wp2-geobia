@@ -5,7 +5,7 @@ library("showtext")
 font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
-lut <- read_csv("doc/data_description/lut_lithology_200k_reclass.csv")
+lut <- read_csv("doc/lut/lut_lithology_200k_reclass_de.csv")
 pos <- read_ipc_file("dat/processed/chunks/pos/carinthia_slides.arrow") |>
   mutate(lithology = as.integer(as.character(lithology))) |>
   left_join(lut, by = join_by(lithology == id)) |>
