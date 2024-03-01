@@ -98,7 +98,11 @@ grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
 
 wall("{Sys.time()} -- performing spatial join") # 550 sec
 tic()
-absence_grid <- st_join(grd, absence_area_mod, join = st_intersects, left = TRUE) %>%
+absence_grid <- st_join(grd, absence_area_mod, join = st_intersects, left = TRUE) 
+
+#absence_grid_bcp <- absence_grid
+
+absence_grid <- absence_grid %>%
   select(-idx) %>%
   sfc_as_cols() %>%
   st_drop_geometry() %>%
@@ -111,6 +115,8 @@ stopifnot(nrow(absence_grid) == nrow(grd))
 wall("{Sys.time()} -- saving result")
 qsave(absence_grid, "wp2-geobia/dat/interim/aoi/gaia_neo_absence_grid.qs", nthreads = ncores)
 wall("{Sys.time()} -- DONE")
+
+#st_write("wp2-geobia/dat/interim/aoi/gaia_neo_absence_grid.gpkg")
 
 #check
 # tmp <- absence_grid %>%
