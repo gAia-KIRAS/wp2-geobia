@@ -1,9 +1,9 @@
-library(tidyverse)
-library(colorspace)
-library(showtext)
-library(glue)
+library("tidyverse")
+library("colorspace")
+library("showtext")
+library("glue")
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
 source("dev/utils.R")

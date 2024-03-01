@@ -14,13 +14,14 @@ suppressPackageStartupMessages({
 
 print(glue::glue("{Sys.time()} -- loading data"))
 
-# mod_type <- "random_forest"
+mod_type <- "random_forest"
 # mod_type <- "earth"
 # mod_type <- "earth_esa"
 
 fl_preds <- list.files(glue("dat/processed/prediction/{mod_type}"), full.names = TRUE)
 res <- lapply(fl_preds, qread, nthreads = 16L) |>
   bind_rows()
+print(glue::glue("{Sys.time()} -- saving full prediction dataframe"))
 qsave(res, glue("dat/processed/prediction/{mod_type}_prediction_mean_sd_sf.qs"), nthreads = 16L)
 
 # res <- qread(glue("dat/processed/prediction/{mod_type}_prediction_mean_sd_sf.qs"), nthreads = 16L)

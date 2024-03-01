@@ -1,9 +1,17 @@
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(arrow)
+  library("dplyr")
+  library("arrow")
+  library("glue")
 })
 
+elev_thresh <- 1900
+
 dat <- read_ipc_file("dat/processed/carinthia_10m.arrow")
+
+n_full <- 57842689
+n_selection <- 47038092
+print(glue("Dropped {n_full - n_selection} instances above {elev_thresh} m"))
+print(glue("Reduced data set size: {n_full} instances ({round(n_selection/n_full * 100, 2)} %)"))
 
 # save RAM
 # dat |>

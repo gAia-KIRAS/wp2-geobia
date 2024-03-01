@@ -22,7 +22,7 @@ stopifnot(nrow(grd) == nrow(res_wk))
 qsave(res_wk, "dat/interim/misc_aoi/forest_cover.qs", nthreads = ncores)
 
 # Tree height
-ndsm <- read_stars("dat/interim/dtm_derivates/als_nDSM_10m.tif")
+ndsm <- read_stars("dat/interim/dtm_derivates/ktn/als_nDSM_10m.tif")
 res_ndsm <- st_extract(x = ndsm, at = grd, bilinear = FALSE) |>
   rename(tree_height = als_nDSM_10m.tif) |>
   mutate(tree_height = if_else(tree_height < 0, 0, tree_height)) |>

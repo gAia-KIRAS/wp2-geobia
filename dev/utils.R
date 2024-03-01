@@ -26,6 +26,19 @@ sfc_as_cols <- function(x, geometry, names = c("x", "y")) {
 
 wall <- function(x) print(glue(x))
 
+fastcor <- function(x) {
+  1 / (NROW(x) - 1) * crossprod(scale(x, TRUE, TRUE))
+}
+
+compute_corr <- function(cn1, cn2, dat = res) {
+  if (cn1 == cn2) {
+    out <- 1
+  } else {
+    out <- cor(dat[, cn1], dat[, cn2])
+  }
+  return(out)
+}
+
 learn <- function(susc_data, learner = c("randomforest", "earth", "gam"), id = "carinthia", resampling_strategy = rsmp("spcv_coords", folds = 5)) {
   # Setup classification task
   task <- as_task_classif_st(susc_data, target = "slide", id = id, positive = "TRUE", coordinate_names = c("x", "y"), crs = "epsg:3416")

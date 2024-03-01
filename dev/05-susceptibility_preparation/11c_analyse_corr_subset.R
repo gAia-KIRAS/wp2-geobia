@@ -9,6 +9,14 @@ suppressPackageStartupMessages({
   library("GGally")
 })
 
+ncores <- 16L
+
+# specify plot type: full (all features) vs reduced (selected features)
+# type <- "full"
+type <- "reduced"
+
+source("dev/utils.R")
+
 font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
@@ -20,11 +28,44 @@ fullnames <- read_csv("doc/data_description/lut_vars.csv") |>
     x = feature_name
   ))
 
-corrs <- read_rds("dat/interim/correlations.rds") |>
+dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores) |>
+  mutate(across(everything(), as.numeric))
+
+if (type == "reduced") {
+  dat <- dat |>
+    select(
+      -elevation, -maximum_height, -wei,
+      -roughness, -tri, -svf,
+      -pto, -nto, -curv_max, -curv_min, -dah,
+      -flow_path_length, -flow_width, -sca,
+      -api_k7, -api_k30, -rx1day, -rx5day, -sdii,
+      -forest_cover,
+      -road_dist,
+      -sw_hazard_cat, -sw_max_depth, -sw_max_speed,
+      -esa, -x, -y
+    )
+}
+
+res <- dat |>
+  filter(iter == 1 & slide == 1) |>
+  bind_rows(filter(dat, slide == 0)) |>
+  select(-iter)
+
+cn <- colnames(res)
+corrs <- crossing(cn, cn)
+corr <- map2_dbl(corrs$cn...1, corrs$cn...2, compute_corr, .progress = TRUE)
+
+corrs <- corrs |>
+  mutate(correlation = corr) |>
   left_join(fullnames, by = join_by("cn...1" == "feature_shortname")) |>
   rename(feature_1 = feature_name) |>
   left_join(fullnames, by = join_by("cn...2" == "feature_shortname")) |>
   rename(feature_2 = feature_name)
+
+corrs |>
+  filter(correlation < 1) |>
+  mutate(corr_abs = abs(correlation)) |>
+  arrange(-corr_abs)
 
 p <- ggplot(corrs, aes(x = feature_1, y = feature_2)) +
   geom_raster(aes(fill = correlation)) +
@@ -42,13 +83,5 @@ p <- ggplot(corrs, aes(x = feature_1, y = feature_2)) +
     legend.position = "right"
   )
 
-ggsave("plt/correlation.png", p, width = 130, height = 120, units = "mm")
+ggsave(glue("plt/correlation_tuning_{type}.png"), p, width = 130, height = 120, units = "mm")
 print(glue::glue("{Sys.time()} -- done"))
-
-dat <- qread("dat/processed/gaia_ktn_balanced_iters.qs", nthreads = ncores)
-
-tmp <- dat |>
-  select(starts_with("sw_"))
-
-ggpairs(tmp) +
-  theme_linedraw()

@@ -1,3 +1,117 @@
+# Documentation e-mail log of MS to consortium
+
+- Progress updates on susceptibility modelling 
+- Provision of methodological explanations and considerations
+- Requests for feedback and input
+
+---
+
+> From: Schlögl Matthias  
+> Sent: Sunday, 25 February 2024 19:00  
+> To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Subject: Re: [gAia] Update landslide susceptibility model
+
+Hi,
+
+the new maps of the random forest v3.0 are now available at  
+`kronos:~/newstorage2/gaia/wp5/susceptibility_modelling/carinthia/ls_output/maps_geotiff/random_forest`
+
+I also added the drop and obs-vs-mod plots to edrop.
+Threshold values from the drop-plot according to Spiekermann et al. (2023):
+
+q80: 
+- mean: 0.453
+- sd: 0.035
+
+q95:
+- mean: 0.611 
+- sd: 0.042
+
+Best,  
+Matthias
+
+---
+
+> From: Schlögl Matthias  
+> Sent: Saturday, 24 February 2024 22:57  
+> To: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Subject: Re: [gAia] Update landslide susceptibility model
+
+Good evening,
+
+I have now re-trained the RF model v3.0 as explained on Friday.
+
+I have uploaded the first diagnostic plots as usual to https://edrop.zamg.ac.at/owncloud/index.php/s/n8qYBMc2gM2RfBY.
+For a quick first look, I have attached the importance plot, and also added the full correlation matrix and the subset for the actually used features to aid interpretation.
+
+Results tend to look more reasonable now, and some of the PDP plots (e.g.: slope) are eventually plausible imho.
+The geological map still does carry very little explanatory power, I suspect that this will lead to discussions.
+Even though the classes were summarized, there is very little variation between the different classes (see pdp plots).
+
+Now I still need to implement the relevant masks for predictive purposes as well, run the predictions, and create an updated GeoTiff.
+If I have enough time tomorrow I can provide the results by Monday morning.
+However, I won't modify the climate precursor data. SPARTACUS / WINFORE pixels might still overlay the image (with SPEI being rather important).
+We could smooth the borders between the pixels of the weather data purely for cosmetic purposes during prediction, but that will have to wait until after the workshop.
+
+Best,  
+Matthias
+
+---
+
+> Von: Schlögl Matthias  
+> Gesendet: Freitag, 23. Februar 2024 13:55  
+> An: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Betreff: Re: [gAia] Update landslide susceptibility model
+
+And I did dig up some explanation on the importance of aspect – citing from <https://doi.org/10.1016/j.geomorph.2006.10.032>:
+
+> Slope aspect is frequently used as a predisposing factor in landslide susceptibility assessments (e.g., Salter et al., 1983; van Westen et al., 2008; Galli et al., 2008; Ruff and Czurda, 2008). It has been suggested that contrasting microclimate between slopes of different aspect can produce asymmetric valley morphology through control of slope weathering and erosional and depositional processes (Burnett et al., 2008). The direction of incoming weather events may also create a ‘shadow effect’, impacting some slopes more than others (Liu and Shih, 2013). Crozier et al. (1980) undertook statistical analyses of the distribution of landslides triggered in the winter of 1977 in the Wairarapa and found a strong preference for northerly aspects (61.6% of slips on N, NW, and NE octants). Similarly, another Wairarapa-based study (Gao and Maro, 2010) reports a preference for northerly aspects, which they suggest is a product of deeper weathering from increased solar radiation and wetting and drying cycles experienced by north-facing (southern hemisphere) slopes. Wetting and drying cycles also initiate cracking, resulting in reduced soil cohesion (He et al., 2020) and allowing water to penetrate down to the less permeable bedrock which acts as the surface of rupture (Brooks et al., 2002). The effect of aspect can also be related to structural geology (e.g., dip direction and dip angle of bedding planes; Ruff and Czurda, 2008). Crozier et al. (1980) suggested that preference of landsliding on a particular slope aspect can be temporally dynamic. They found weakest conditions at the bedrock/regolith interface on southerly slopes, and north to west-facing slopes were less disturbed. They therefore postulate that following removal of the original forest cover for pastoral farming, mass movement processes may have initially favoured southern slopes, providing a more extensive, weaker, and undisturbed regolith on north-facing slopes – which was more severely affected in recent times.
+
+The formulation of aspect I used (actan2, based on cosine and sine of the original aspect to account for the circular nature of the variable) is highly correlated with diurnal anisotropic heat (which quantifies the combined characteristics of temperature and topographic solar radiation).
+
+Best,  
+Matthias
+
+---
+
+> Von: Schlögl Matthias  
+> Gesendet: Freitag, 23. Februar 2024 13:36  
+> An: Lampert Jasmin; Rudolf Mayer; Ostermann, Marc; Avian Michael; Jung Martin  
+> Cc: Andrea Siposova; Kozlowska Anna; Christina Rechberger; Waltersdorfer, Laura; Susanna Wernhart; Naghibzadeh-Jalali Anahid  
+> Betreff: Re: [gAia] Update landslide susceptibility model
+
+Dear all,
+
+I have just pushed another update of the modelling setup to GitHub (tagged as “v3.0”):
+
+In essence, it is (1) a sparser model that employs (2) more intelligent subsampling of negative instances.
+
+Changelog:
+-	summarized geological classes in 1:200k map
+-	summarized herbaceous permanent land cover classes
+-	improved masking by removing the following areas for sampling:
+    - anthropogenic deposits
+    - swamps/marshes
+    - lakes
+    - deltas
+    - glaciers
+    - areas above the 0.99 elevation quantile of observed slides (1900 m a.s.l.)
+-	implemented PPS sampling according to <https://doi.org/10.1016/j.scitotenv.2021.145935>
+-	removed highly correlated features (mainly related to geomorphometry and precipitation)
+
+This should improve inference without having an overly detrimental effect on model performance.
+Also, not sampling outside the convex hull of the feature space of the true instances should be beneficial.
+
+I will submit the job later today, if all goes well I can provide an updated map on Monday.
+
+Best,  
+Matthias
+
+---
+
 > Von: Schlögl Matthias  
 > Gesendet: Montag, 19. Februar 2024 09:36  
 > An: Rudolf Mayer; Lampert Jasmin; Ostermann, Marc; Avian Michael; Jung Martin  

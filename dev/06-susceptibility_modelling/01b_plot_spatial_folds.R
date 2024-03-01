@@ -3,17 +3,21 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 suppressPackageStartupMessages({
-  library(dplyr)
-  library(sf)
-  library(ggplot2)
-  library(ggspatial)
-  library(qs)
-  library(glue)
+  library("dplyr")
+  library("sf")
+  library("ggplot2")
+  library("ggspatial")
+  library("qs")
+  library("glue")
+  library("showtext")
 })
 
 source("dev/utils.R")
 
 ncores <- 32L
+
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
+showtext_auto()
 
 aoi <- read_sf("dat/raw/aoi/gaia_projektgebiet_ktn.gpkg") |>
   st_transform(3416) |>
@@ -32,16 +36,20 @@ p <- ggplot() +
     alpha = 0.5,
     shape = 23
   ) +
+  # scale_color_manual(values = unname(okabe_ito[c("darkorange", "darkblue", "green", "yellow", "pink")])) +
   annotation_north_arrow(
     location = "tr", which_north = "true",
-    style = north_arrow_fancy_orienteering
+    style = north_arrow_fancy_orienteering(
+      text_size = 40, text_family = "Source Sans Pro"
+    )
   ) +
-  annotation_scale(location = "bl", width_hint = 0.4) +
+  annotation_scale(location = "bl", width_hint = 0.4, text_cex = 3, text_family = "Source Sans Pro") +
   xlab("Longitude") +
   ylab("Latitude") +
   ggtitle("Landslide Susceptibility Analysis, Carinthia",
     subtitle = "Spatial Cross-Validation: Folds"
   ) +
+  theme_linedraw() +
   theme(
     panel.grid.major = element_line(
       color = gray(0.5),
@@ -49,8 +57,14 @@ p <- ggplot() +
       linewidth = 0.5
     ),
     panel.background = element_rect(fill = "white"),
-    legend.position = "bottom"
+    legend.position = "bottom",
+    text = element_text(
+      family = "Source Sans Pro",
+      colour = "black",
+      size = 40
+    )
   ) +
+  guides(color = guide_legend(override.aes = list(size = 5))) +
   facet_wrap(~iter, ncol = 2)
 
 ggsave(filename = "plt/spcv.png", plot = p, width = 400, height = 380, units = "mm")

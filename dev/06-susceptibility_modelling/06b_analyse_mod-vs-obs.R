@@ -16,12 +16,12 @@ suppressPackageStartupMessages({
 
 print(glue::glue("{Sys.time()} -- loading data"))
 
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.ttf")
+font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
 showtext_auto()
 
 ncores <- 16L
 
-# mod_type <- "random_forest"
+mod_type <- "random_forest"
 # mod_type <- "earth"
 # mod_type <- "earth_esa"
 
