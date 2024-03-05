@@ -65,10 +65,10 @@ ggsave(glue("plt/drop_{mod_type}.png"), p, width = 120, height = 120, units = "m
 
 print(glue::glue("{Sys.time()} -- plotting susc distribution per observed class"))
 p <- ggplot(res, aes(x = slide, y = mean_susc, fill = slide)) +
-  geom_lv(color = "black") +
-  xlab("") +
+  geom_lv(color = "black", show.legend = FALSE) +
+  xlab("observed event occurrence") +
   ylab("landslide susceptibility") +
-  guides(fill = guide_legend(title = "event occurrence")) +
+  # guides(fill = guide_legend(title = "event occurrence")) +
   scale_fill_manual(values = c("#56B4E9", "#E69F00")) +
   theme_linedraw() +
   theme(
