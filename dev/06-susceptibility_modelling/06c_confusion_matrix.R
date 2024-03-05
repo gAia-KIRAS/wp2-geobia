@@ -1,5 +1,5 @@
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
-# mod vs obs
+# confusion matrix full
 # ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~#
 
 print(glue::glue("{Sys.time()} -- loading packages"))
@@ -11,13 +11,9 @@ suppressPackageStartupMessages({
   library("glue")
   library("qs")
   library("yardstick")
-  library("showtext")
 })
 
 print(glue::glue("{Sys.time()} -- loading data"))
-
-font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
-showtext_auto()
 
 ncores <- 16L
 
@@ -25,9 +21,9 @@ mod_type <- "random_forest"
 # mod_type <- "earth"
 # mod_type <- "earth_esa"
 
-res <- qread(glue("dat/processed/prediction/mod-vs-obs/{mod_type}.qs"), nthreads = ncores) |> 
-  select(obs = slide, susc = mean_susc) |> 
-  mutate(mod = if_else(susc >= 0.5, TRUE, FALSE)) |> 
+res <- qread(glue("dat/processed/prediction/mod-vs-obs/{mod_type}.qs"), nthreads = ncores) |>
+  select(obs = slide, susc = mean_susc) |>
+  mutate(mod = if_else(susc >= 0.5, TRUE, FALSE)) |>
   mutate(across(where(is.logical), as.factor))
 
 bal_accuracy(res, truth = obs, mod)
@@ -40,7 +36,7 @@ roc_auc(res, truth = obs, susc)
 
 cm <- conf_mat(res, truth = obs, estimate = mod)
 
-TP = cm$table[2,2]
-TN = cm$table[1,1]
-FP = cm$table[2,1]
-FN = cm$table[1,2]
+TP <- cm$table[2, 2]
+TN <- cm$table[1, 1]
+FP <- cm$table[2, 1]
+FN <- cm$table[1, 2]
