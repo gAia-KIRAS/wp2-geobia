@@ -102,6 +102,12 @@ export_plot <- function(feature, data = dat) {
   if (feature %in% factors) {
     p <- p + theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1, lineheight = 0.5))
   }
+  if (feature == "vrm") {
+    p <- p + scale_x_log10()
+  }
+  if (feature == "tpi") {
+    p <- p + coord_cartesian(xlim = c(-2.5, 2.5))
+  }
   ggsave(glue("plt/pdp_ice_{feature}.png"), p, width = 240, height = 120, units = "mm")
 }
 
