@@ -93,7 +93,7 @@ export_plot <- function(feature, data = dat) {
       text = element_text(
         family = "Source Sans Pro",
         colour = "black",
-        size = 20
+        size = 40
       ),
       legend.position = "right"
     ) +
