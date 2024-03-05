@@ -36,7 +36,8 @@ p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
   xlab("") +
   ylab("permutation feature importance") +
   guides(color = guide_legend(title = "type")) +
-  scale_color_discrete_qualitative("Dark3") +
+  scale_color_manual(values = unname(okabe_ito[c(2, 1, 5, 6, 3)])) +
+  # scale_color_discrete_qualitative("Dark3") +
   scale_alpha(range = c(0.4, 1), guide = "none") +
   theme_linedraw() +
   theme(
