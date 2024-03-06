@@ -42,7 +42,8 @@ lapply(rr, \(x) x$score()) |>
   bind_rows(do_summary(bal_accuracy(tmp, truth = truth, response))) |>
   bind_rows(do_summary(f_meas(tmp, truth = truth, response))) |>
   bind_rows(do_summary(kap(tmp, truth = truth, response))) |>
-  bind_rows(do_summary(j_index(tmp, truth, response))) |>
+  bind_rows(do_summary(j_index(tmp, truth = truth, response))) |>
+  bind_rows(do_summary(mcc(tmp, truth = truth, response))) |> 
   bind_rows(do_summary(brier_class(tmp, truth = truth, prob.TRUE))) |>
   bind_rows(do_summary(pr_auc(tmp, truth = truth, prob.TRUE))) |>
   bind_rows(do_summary(roc_auc(tmp, truth = truth, prob.TRUE)))
