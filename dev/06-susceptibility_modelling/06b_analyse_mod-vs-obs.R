@@ -34,16 +34,30 @@ pos <- res |>
   arrange(-mean_susc) |>
   mutate(nrank = 1:n() / n())
 
-print(glue::glue("    Q95:"))
-
-pos |>
+q95 <- pos |>
   filter(nrank >= quantile(nrank, 0.95)) |>
-  slice(1)
+  slice(1) |> 
+  pull(mean_susc)
+print(glue::glue("    Q95: {round(q95,4)}"))
 
-print(glue::glue("    Q80:"))
-pos |>
+q80 <- pos |>
   filter(nrank >= quantile(nrank, 0.8)) |>
-  slice(1)
+  slice(1)|> 
+  pull(mean_susc)
+print(glue::glue("    Q80: {round(q80,4)}"))
+
+nrow(res)
+high <- sum(res$mean_susc>=q80)
+medium <- sum(res$mean_susc>=q95) - high
+low <- nrow(res) - high - medium
+
+print(glue::glue("    high: n = {high} | rel: {round(high/nrow(res),4)*100}%"))
+print(glue::glue("    medium: n = {medium} | rel: {round(medium/nrow(res),4)*100}%"))
+print(glue::glue("    low: n = {low} | rel: {round(low/nrow(res),4)*100}%"))
+
+susc_class <- res |> 
+  select(slide, susc_num = mean_susc) |> 
+  mutate(susc_class = if_else(susc_num < q95, 3, if_else(susc_num < q80, 2, 1)))
 
 print(glue::glue("{Sys.time()} -- decreasing rank order plot"))
 p <- ggplot(pos, aes(x = nrank, y = mean_susc)) +
