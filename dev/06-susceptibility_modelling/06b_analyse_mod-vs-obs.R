@@ -8,6 +8,7 @@ suppressPackageStartupMessages({
   library("dplyr")
   library("tidyr")
   library("ggplot2")
+  library("scattermore")
   library("lvplot")
   library("glue")
   library("qs")
@@ -28,7 +29,7 @@ mod_type <- "random_forest"
 res <- qread(glue("dat/processed/prediction/mod-vs-obs/{mod_type}.qs"), nthreads = ncores)
 
 p <- ggplot(res, aes(x = mean_susc, y = sd_susc)) +
-  geom_point(alpha = 0.25) +
+  geom_scattermore(alpha = 0.1) +
   xlab("mean") +
   ylab("standard deviation") +
   theme_linedraw() +
@@ -36,10 +37,25 @@ p <- ggplot(res, aes(x = mean_susc, y = sd_susc)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 40
+      size = 20
     )
   )
-ggsave(glue("plt/mean-vs-sd_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
+ggsave(glue("plt/mean-vs-sd_{mod_type}_scatter.png"), p, width = 120, height = 120, units = "mm")
+
+
+p <- ggplot(res, aes(x = mean_susc, y = sd_susc)) +
+  geom_hex() +
+  xlab("mean") +
+  ylab("standard deviation") +
+  theme_linedraw() +
+  theme(
+    text = element_text(
+      family = "Source Sans Pro",
+      colour = "black",
+      size = 20
+    )
+  )
+ggsave(glue("plt/mean-vs-sd_{mod_type}_hex.png"), p, width = 140, height = 120, units = "mm")
 
 print(glue::glue("{Sys.time()} -- analysis of positive instances"))
 pos <- res |>
