@@ -11,7 +11,7 @@ suppressPackageStartupMessages({
 
 source("wp2-geobia/dev/utils.R")
 
-ncores <- 30L # max 96 # parallel::detectCores()
+ncores <- 20L # max 96 # parallel::detectCores()
 
 # expected number of pixels: 57,842,689
 # grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
@@ -66,7 +66,7 @@ stopifnot(nrow(rd) == nrow(dtm))
 print(glue("{Sys.time()} -- reading lithology"))
 li <- qread("wp2-geobia/dat/interim/misc_aoi/lithology_noe.qs", nthreads = ncores) %>%
   st_drop_geometry() %>%
-  select(Legend_fin)
+  select(lithology)
 stopifnot(nrow(li) == nrow(dtm))
 
 # IGNORED
@@ -82,8 +82,9 @@ print(glue("{Sys.time()} -- reading inventory"))
 inv <- qread("wp2-geobia/dat/interim/misc_aoi/inventory.qs", nthreads = ncores) %>%
   select(slide)
 stopifnot(nrow(inv) == nrow(dtm))
+#inv = inventory
 
-# merge all data sets        #!IMPORTANT don't have that output
+# merge all data sets
 print(glue("{Sys.time()} -- combining data sets"))
 out <- dtm %>%       
   bind_cols(lc) %>%

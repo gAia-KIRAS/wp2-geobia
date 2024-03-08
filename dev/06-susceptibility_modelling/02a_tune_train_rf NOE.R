@@ -32,11 +32,12 @@ dat %>%
     # -roughness, 
     # -tri, 
     -svf,
+    -pto, -nto, -curv_max, -curv_min, -dah,
     -flow_path_length, -flow_width, -sca,
-    -api_k30, -rx5day,
+    -api_k7, -api_k30, -rx1day, -rx5day, -sdii,
     # -forest_cover,
     -road_dist,
-    # -sw_hazard_cat, -sw_max_depth, -sw_max_speed,
+    #  -sw_hazard_cat, -sw_max_depth, -sw_max_speed,
     # -esa
   ) #%>%
   # mutate(slide = as.factor(slide)) %>%
@@ -44,7 +45,7 @@ dat %>%
   # drop_na() %>%
   # group_split(.keep = FALSE)
 
-dat = dat %>%
+dat <- dat %>%
   mutate(slide = as.factor(slide)) %>%
   group_by(iter) %>%
   drop_na() %>%
@@ -58,7 +59,7 @@ dat <- qread("wp2-geobia/dat/processed/gaia_noe_balanced_iters_forML.qs", nthrea
 wall("{Sys.time()} -- tuning rf")
 dat_rf <- lapply(dat, learn, learner = "randomforest")
 names(dat_rf) <- ids
-saveRDS(dat_rf, "wp2-geobia/dat/interim/random_forest/ranger_mbo_2.rds")
+saveRDS(dat_rf, "wp2-geobia/dat/interim/random_forest/ranger_mbo.rds")
 
 # SKIPPING for now
 # estimate performance with nested resampling

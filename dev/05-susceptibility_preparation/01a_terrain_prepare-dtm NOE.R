@@ -10,12 +10,12 @@ source("wp2-geobia/dev/utils.R")
 aoi <- read_sf("wp2-geobia/dat/interim/aoi/NOE_gaiaArea.shp")  %>% # shp information of the region 
   st_transform(3416)
 
-dtm_list_full <- list.files("wp2-geobia/dat/output/austria", full.names = TRUE) #location for the /output/austria
+dtm_list_full <- list.files("wp2-geobia/dat/output/austria", full.names = TRUE)
 drops <- c(
   "aspect.tif", "aspect-rad", "aspect-cos", "aspect-sin",
   "catchment-area", "channel-network", "sinks-filled",
   "slope-rad"
-)
+) 
 
 dtm_list <- exclude(dtm_list_full, drops)
 
@@ -38,7 +38,16 @@ create_subset <- function(raster, crop = aoi) {
 
 lapply(dtm_list, create_subset)
 
-# aspect dtm
+
+## to do:
+## add slope and tpi
+## crop to NOE
+
+dtm_list_full <- list.files("wp2-geobia/dat/output/austria", full.names = TRUE)
+files_to_keep <- dtm_list_full[!str_starts(dtm_list_full, "wp2-geobia/dat/output/austria/dhm_at_")]
+drops <- c("aspect-arctan2", "slope-rad")
+dtm_list <- exclude(files_to_keep, drops)
+
 create_subset_aspect <- function(raster, crop = aoi) {
   index_name <- basename(raster)
   index_name <- gsub("^(dtm_austria_)(.*)(.tif)", "\\2", index_name)
@@ -55,5 +64,5 @@ create_subset_aspect <- function(raster, crop = aoi) {
     qsave(res, outfile, nthreads = 60L)
   }
 }
-raster <- "wp2-geobia/dat/output/austria/dtm_austria_aspect-arctan2.tif"
-lapply(raster, create_subset_aspect)
+# raster <- "wp2-geobia/dat/output/austria/dtm_austria_aspect-arctan2.tif"
+lapply(dtm_list, create_subset_aspect)

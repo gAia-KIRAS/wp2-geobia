@@ -4,7 +4,7 @@ library(glue)
 library(qs)
 library(tictoc)
 
-ncores <- 28L
+ncores <- 30L
 
 fl <- list.files("wp2-geobia/dat/interim/dtm_aoi/tmp_qs", pattern = "*.qs", full.names = TRUE)
 
@@ -30,4 +30,4 @@ for (f in fl[2:length(fl)]) {
 rm(f, tmp)
 gc()
 #colnames(res)[9] <- "elevation"
-qsave(res, "wp2-geobia/dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores) #IMPORTANT: do not have that output
+qsave(res, "wp2-geobia/dat/interim/dtm_aoi/dtm_full.qs", nthreads = ncores)

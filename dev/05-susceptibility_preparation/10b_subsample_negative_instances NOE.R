@@ -13,24 +13,27 @@ suppressPackageStartupMessages({
 
 source("wp2-geobia/dev/utils.R")
 
-ncores <- 27L
+ncores <- 28L
 
 wall("{Sys.time()} -- loading data sets")
-# absence_grd <- absence_grid
-absence_grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_absence_grid.qs", nthreads = ncores) %>%
-  select(neg_sample)
+absence_grd <- absence_grid %>% select(neg_sample)
+# absence_grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_absence_grid.qs", nthreads = ncores) %>%
+#   select(neg_sample)
 
-full <- read_ipc_file("wp2-geobia/dat/processed/noe_10m.arrow") %>%
-  bind_cols(absence_grd) %>%
-  drop_na()
-rm(absence_grd)
-gc()
+# full <- read_ipc_file("wp2-geobia/dat/processed/noe_10m.arrow") %>%
+#   bind_cols(absence_grd) %>%
+#   drop_na()
+# rm(absence_grd)
+# gc()
 
 # full_bcp <- full
 # full <- full %>%
 #   bind_cols(absence_grd) %>%
 #   drop_na()
 
+full = res
+
+full <- bind_cols(full, absence_grd)
 
 
 wall("{Sys.time()} -- subsetting positive instances")
@@ -38,6 +41,7 @@ pos_all <- full %>%
   filter(slide == TRUE) %>%
   select(-neg_sample)
 print(nrow(pos_all))
+# [1] 4159
 
 # # for later when elevation and slope is provided:
 # # elevation threshold
@@ -52,26 +56,26 @@ print(nrow(pos_all))
 wall("{Sys.time()} -- subsetting negative instances")
 neg_all <- full %>%
   filter(neg_sample == TRUE) %>%
-  select(-neg_sample) # %>%
+  select(-neg_sample) %>%
   # filter(elevation <= thresh) %>% # don't have elevation right now # to do: compute
-  # mutate(pps = 1 / cos(slope * pi / 180)) # don't have slope # to do: compute
+  mutate(pps = 1 / cos(slope * pi / 180)) 
 
-# create_balanced_subset <- function(seed, df_neg, df_pos) {
-#   set.seed(seed)
-#   tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = pps, replace = FALSE) %>%
-#     select(-pps)
-#   out <- bind_rows(tmp, df_pos)
-#   return(out)
-# }
-
-# for now:
 create_balanced_subset <- function(seed, df_neg, df_pos) {
   set.seed(seed)
-  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = nto, replace = FALSE) %>%
-    select(-nto)
+  tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = pps, replace = FALSE) %>%
+    select(-pps)
   out <- bind_rows(tmp, df_pos)
   return(out)
 }
+
+# # for now:
+# create_balanced_subset <- function(seed, df_neg, df_pos) {
+#   set.seed(seed)
+#   tmp <- slice_sample(df_neg, n = nrow(df_pos), weight_by = nto, replace = FALSE) %>%
+#     select(-nto)
+#   out <- bind_rows(tmp, df_pos)
+#   return(out)
+# }
 
 lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) %>%
   bind_rows(.id = "iter") %>%
@@ -80,7 +84,6 @@ lapply(1:10, create_balanced_subset, df_neg = neg_all, df_pos = pos_all) %>%
 wall("{Sys.time()} -- subsampling completed")
 
 wall("{Sys.time()} -- plotting")
-
 tmp <- qread("wp2-geobia/dat/processed/gaia_noe_balanced_iters.qs", nthreads = ncores) %>%
   as_tibble() %>%
   select(iter, slide, x, y) %>%

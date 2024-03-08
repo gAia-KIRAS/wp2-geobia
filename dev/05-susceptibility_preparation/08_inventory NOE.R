@@ -9,7 +9,7 @@ suppressPackageStartupMessages({
 
 source("wp2-geobia/dev/utils.R")
 
-ncores <- 64L
+ncores <- 30L
 
 # process_types <- tribble(
 #   ~ID, ~PROCESS,
@@ -101,7 +101,10 @@ grd <- qread("wp2-geobia/dat/interim/aoi/gaia_neo_grid.qs", nthreads = ncores)
 
 wall("{Sys.time()} -- performing spatial join") # 500 sec elapsed
 tic()
-inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) %>%
+inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) 
+# inventory_bcp <- inventory
+
+inventory <- inventory %>%
   select(-idx) %>%
   sfc_as_cols() %>%
   st_drop_geometry() %>%
@@ -109,6 +112,10 @@ inventory <- st_join(grd, inv, join = st_intersects, left = TRUE) %>%
   mutate(slide = tidyr::replace_na(slide, 0)) %>%
   mutate(slide = as.logical(slide))
 toc()
+
+# table(inventory$slide)
+#    FALSE     TRUE 
+#   29696831   4159 
 
 stopifnot(nrow(inventory) == nrow(grd))
 
