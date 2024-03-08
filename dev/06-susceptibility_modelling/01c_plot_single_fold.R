@@ -49,15 +49,16 @@ p <- ggplot() +
     which_north = "true",
     style = north_arrow_fancy_orienteering(
       text_family = "Source Sans Pro",
-      text_size = 25
+      text_size = 30
     )
   ) +
   annotation_scale(
-    location = "bl", width_hint = 0.4,
+    location = "bl", width_hint = 0.4, pad_y = unit(0.45, "cm"),
     text_family = "Source Sans Pro", text_cex = 3
   ) +
   xlab("Longitude") +
   ylab("Latitude") +
+  theme_linedraw() +
   theme(
     panel.grid.major = element_line(
       color = gray(0.5),
@@ -69,7 +70,7 @@ p <- ggplot() +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 30
+      size = 40
     )
   )
 
@@ -91,7 +92,7 @@ p <- ggplot() +
   geom_sf(
     data = dat |> filter(slide == "TRUE"),
     alpha = 0.5,
-    shape = 23
+    shape = 21
   ) +
   scale_color_discrete_qualitative(palette = "dynamic") +
   annotation_north_arrow(
@@ -99,15 +100,16 @@ p <- ggplot() +
     which_north = "true",
     style = north_arrow_fancy_orienteering(
       text_family = "Source Sans Pro",
-      text_size = 25
+      text_size = 30
     )
   ) +
   annotation_scale(
-    location = "bl", width_hint = 0.4,
+    location = "bl", width_hint = 0.4, pad_y = unit(0.45, "cm"),
     text_family = "Source Sans Pro", text_cex = 3
   ) +
   xlab("Longitude") +
   ylab("Latitude") +
+  theme_linedraw() +
   theme(
     panel.grid.major = element_line(
       color = gray(0.5),
@@ -119,7 +121,7 @@ p <- ggplot() +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 30
+      size = 40
     )
   )
 
@@ -151,15 +153,16 @@ p <- ggplot() +
     which_north = "true",
     style = north_arrow_fancy_orienteering(
       text_family = "Source Sans Pro",
-      text_size = 25
+      text_size = 30
     )
   ) +
   annotation_scale(
-    location = "bl", width_hint = 0.4,
+    location = "bl", width_hint = 0.4, pad_y = unit(0.45, "cm"),
     text_family = "Source Sans Pro", text_cex = 3
   ) +
   xlab("Longitude") +
   ylab("Latitude") +
+  theme_linedraw() +
   theme(
     panel.grid.major = element_line(
       color = gray(0.5),
@@ -171,7 +174,7 @@ p <- ggplot() +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 30
+      size = 40
     )
   )
 
@@ -194,15 +197,16 @@ p <- ggplot() +
     which_north = "true",
     style = north_arrow_fancy_orienteering(
       text_family = "Source Sans Pro",
-      text_size = 25
+      text_size = 30
     )
   ) +
   annotation_scale(
-    location = "bl", width_hint = 0.4,
+    location = "bl", width_hint = 0.4, pad_y = unit(0.45, "cm"),
     text_family = "Source Sans Pro", text_cex = 3
   ) +
   xlab("Longitude") +
   ylab("Latitude") +
+  theme_linedraw() +
   theme(
     panel.grid.major = element_line(
       color = gray(0.5),
@@ -214,7 +218,7 @@ p <- ggplot() +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 30
+      size = 40
     )
   )
 
