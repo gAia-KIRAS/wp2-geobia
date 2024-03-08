@@ -15,6 +15,8 @@ suppressPackageStartupMessages({
   library("showtext")
 })
 
+source("dev/utils.R")
+
 print(glue::glue("{Sys.time()} -- loading data"))
 
 font_add("Source Sans Pro", "~/.fonts/source-sans-pro/SourceSansPro-Regular.otf")
@@ -91,6 +93,18 @@ susc_class <- res |>
 
 print(glue::glue("{Sys.time()} -- decreasing rank order plot"))
 p <- ggplot(pos, aes(x = nrank, y = mean_susc)) +
+  annotate("rect",
+    xmin = 0, xmax = 1, ymin = q80, ymax = 1,
+    fill = okabe_ito["darkorange"], alpha = 0.8,
+  ) +
+  annotate("rect",
+    xmin = 0, xmax = 1, ymin = q95, ymax = q80,
+    fill = okabe_ito["yellow"], alpha = 0.8,
+  ) +
+  annotate("rect",
+    xmin = 0, xmax = 1, ymin = 0, ymax = q95,
+    fill = okabe_ito["darkblue"], alpha = 0.8,
+  ) +
   geom_vline(xintercept = 0.95, linetype = "dashed") +
   geom_vline(xintercept = 0.80, linetype = "dashed") +
   geom_line() +
@@ -101,10 +115,9 @@ p <- ggplot(pos, aes(x = nrank, y = mean_susc)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 40
+      size = 20
     )
   )
-
 ggsave(glue("plt/drop_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
 
 print(glue::glue("{Sys.time()} -- plotting susc distribution per observed class"))
