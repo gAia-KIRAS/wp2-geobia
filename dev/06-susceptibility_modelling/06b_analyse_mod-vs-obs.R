@@ -27,6 +27,20 @@ mod_type <- "random_forest"
 
 res <- qread(glue("dat/processed/prediction/mod-vs-obs/{mod_type}.qs"), nthreads = ncores)
 
+p <- ggplot(res, aes(x = mean_susc, y = sd_susc)) +
+  geom_point(alpha = 0.25) +
+  xlab("mean") +
+  ylab("standard deviation") +
+  theme_linedraw() +
+  theme(
+    text = element_text(
+      family = "Source Sans Pro",
+      colour = "black",
+      size = 40
+    )
+  )
+ggsave(glue("plt/mean-vs-sd_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
+
 print(glue::glue("{Sys.time()} -- analysis of positive instances"))
 pos <- res |>
   filter(slide == TRUE) |>
@@ -36,27 +50,27 @@ pos <- res |>
 
 q95 <- pos |>
   filter(nrank >= quantile(nrank, 0.95)) |>
-  slice(1) |> 
+  slice(1) |>
   pull(mean_susc)
 print(glue::glue("    Q95: {round(q95,4)}"))
 
 q80 <- pos |>
   filter(nrank >= quantile(nrank, 0.8)) |>
-  slice(1)|> 
+  slice(1) |>
   pull(mean_susc)
 print(glue::glue("    Q80: {round(q80,4)}"))
 
 nrow(res)
-high <- sum(res$mean_susc>=q80)
-medium <- sum(res$mean_susc>=q95) - high
+high <- sum(res$mean_susc >= q80)
+medium <- sum(res$mean_susc >= q95) - high
 low <- nrow(res) - high - medium
 
 print(glue::glue("    high: n = {high} | rel: {round(high/nrow(res),4)*100}%"))
 print(glue::glue("    medium: n = {medium} | rel: {round(medium/nrow(res),4)*100}%"))
 print(glue::glue("    low: n = {low} | rel: {round(low/nrow(res),4)*100}%"))
 
-susc_class <- res |> 
-  select(slide, susc_num = mean_susc) |> 
+susc_class <- res |>
+  select(slide, susc_num = mean_susc) |>
   mutate(susc_class = if_else(susc_num < q95, 3, if_else(susc_num < q80, 2, 1)))
 
 print(glue::glue("{Sys.time()} -- decreasing rank order plot"))
