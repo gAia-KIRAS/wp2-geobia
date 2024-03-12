@@ -11,7 +11,7 @@ source("wp2-geobia/dev/utils.R")
 ids <- glue("iteration-{sprintf('%02d', 1:10)}")
 
 wall("{Sys.time()} -- reading data")
-lut_names <- read_csv("wp2-geobia/doc/data_description/lut_vars.csv")
+# lut_names <- read_csv("wp2-geobia/doc/data_description/lut_vars.csv")
 rf_mods <- readRDS("wp2-geobia/dat/interim/random_forest/ranger_mbo.rds")
 imp_lst <- lapply(rf_mods, get_importance)
 
@@ -25,11 +25,16 @@ imp <- imp_lst %>%
     mean_imp = mean(importance),
     max_imp = max(importance)
   ) %>%
-  left_join(lut_names, by = join_by("index" == "feature_shortname")) %>%
-  arrange(-mean_imp) %>%
-  mutate(feature_name = fct_reorder(feature_name, -desc(mean_imp)))
+  # left_join(lut_names, by = join_by("index" == "feature_shortname")) %>%
+  arrange(-mean_imp)
+  # %>%
+  # mutate(feature_name = fct_reorder(feature_name, -desc(mean_imp)))
 
-p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
+p <- ggplot(imp, aes(#x = feature_name, 
+x = index,
+y = mean_imp 
+#, color = progenitor
+)) +
   geom_pointrange(aes(ymin = min_imp, ymax = max_imp)) +
   coord_flip() +
   xlab("feature") +
@@ -42,9 +47,9 @@ p <- ggplot(imp, aes(x = feature_name, y = mean_imp, color = progenitor)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
+      size = 7
     ),
     legend.position = "right"
   )
 
-ggsave("plt/importance_rf.png", p, width = 180, height = 120, units = "mm")
+ggsave("wp2-geobia/plt/importance_rf.png", p, width = 180, height = 120, units = "mm")

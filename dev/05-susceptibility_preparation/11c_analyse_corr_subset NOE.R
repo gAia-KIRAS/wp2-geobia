@@ -56,11 +56,11 @@ corrs <- crossing(cn, cn)
 corr <- map2_dbl(corrs$cn...1, corrs$cn...2, compute_corr, .progress = TRUE)
 
 corrs <- corrs %>%
-  mutate(correlation = corr) %>%
-  left_join(fullnames, by = join_by("cn...1" == "feature_shortname")) %>%
-  rename(feature_1 = feature_name) %>%
-  left_join(fullnames, by = join_by("cn...2" == "feature_shortname")) %>%
-  rename(feature_2 = feature_name)
+  mutate(correlation = corr) #%>%
+  #left_join(fullnames, by = join_by("cn...1" == "feature_shortname")) %>%
+  # rename(feature_1 = feature_name) %>%
+  #left_join(fullnames, by = join_by("cn...2" == "feature_shortname")) %>%
+  # rename(feature_2 = feature_name)
 
 corrs %>%
   filter(correlation < 1) %>%
@@ -77,8 +77,9 @@ p <- ggplot(corrs, aes(x = cn...1, y = cn...2)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
-    ),
+      size = 7
+    )
+    ,
     axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1),
     legend.position = "right"
   )

@@ -9,6 +9,8 @@ library(qs)
 aoi <- read_sf("wp2-geobia/dat/interim/aoi/NOE_gaiaArea.shp")  %>% # shp information of the region 
   st_transform(3416)
 
+# st_write(aoi, "wp2-geobia/dat/interim/aoi/NOE_gaiaArea_3416.shp")
+
 # make a new part for it
 # nrow: 57,842,689
 grd <- read_stars("wp2-geobia/dat/interim/dtm/dtm_austria.tif", proxy = FALSE) %>%

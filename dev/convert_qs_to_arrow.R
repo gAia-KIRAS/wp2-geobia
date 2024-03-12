@@ -22,9 +22,9 @@ for (infile in args) {
   print(glue("{format(Sys.time())} » Processing input file {infile}"))
   tmp <- qread(infile, nthreads = ncores)
   if ("geometry" %in% colnames(tmp)) {
-    tmp <- tmp |>
-      sfc_as_cols() |>
-      st_drop_geometry() |>
+    tmp <- tmp %>%
+      sfc_as_cols() %>%
+      st_drop_geometry() %>%
       mutate(x = as.integer(x), y = as.integer(y))
   }
   write_ipc_file(tmp, sink = outfile, compression = "lz4")
