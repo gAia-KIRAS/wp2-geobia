@@ -5,22 +5,22 @@ library("ggplot2")
 library("patchwork")
 library("biscale")
 
-# xmin <- 432500
-# xmax <- 435500
-# ymin <- 318500
-# ymax <- 322500
+xmin <- 432500
+xmax <- 435500
+ymin <- 318500
+ymax <- 322500
 
 # height <- 100
 # width <- ceiling(height * (xmax - xmin) / (ymax - ymin))
 
-# aoi <- st_sfc(st_polygon(list(cbind(c(xmin, xmax, xmax, xmin, xmin), c(ymin, ymin, ymax, ymax, ymin)))), crs = 3416)
+aoi <- st_sfc(st_polygon(list(cbind(c(xmin, xmax, xmax, xmin, xmin), c(ymin, ymin, ymax, ymax, ymin)))), crs = 3416)
 # res <- qs::qread("dat/processed/prediction/random_forest_prediction_mean_sd_sf.qs", nthreads = 16L) |>
 #   st_intersection(aoi)
 # saveRDS(res, "dat/processed/prediction/biscale_test_aoi.rds")
 
 # pals = c("Bluegill", "BlueGold", "BlueOr", "BlueYl", "Brown", "DkBlue", "DkCyan", "DkViolet", "GrPink", "PinkGrn", "PurpleGrn", "PurpleOr")
 pals <- c("Brown", "PurpleOr", "GrPink", "DkViolet")
-pal <- pals[2]
+pal <- pals[4]
 dims <- 3
 p_pals <- lapply(pals, bi_pal, dim = dims)
 wrap_plots(p_pals)
