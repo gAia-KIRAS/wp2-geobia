@@ -54,10 +54,10 @@ p <- ggplot(res, aes(x = mean_susc, y = sd_susc)) +
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
+      size = 12
     )
   )
-ggsave(glue("plt/mean-vs-sd_{mod_type}_hex.png"), p, width = 140, height = 120, units = "mm")
+ggsave(glue("plt/mean-vs-sd_{mod_type}_hex.png"), p, width = 180, height = 120, units = "mm")
 
 print(glue::glue("{Sys.time()} -- analysis of positive instances"))
 pos <- res |>
@@ -95,27 +95,27 @@ print(glue::glue("{Sys.time()} -- decreasing rank order plot"))
 p <- ggplot(pos, aes(x = nrank, y = mean_susc)) +
   annotate("rect",
     xmin = 0, xmax = 1, ymin = q80, ymax = 1,
-    fill = okabe_ito["darkorange"], alpha = 0.8,
+    fill = okabe_ito["darkorange"], alpha = 0.7,
   ) +
   annotate("rect",
     xmin = 0, xmax = 1, ymin = q95, ymax = q80,
-    fill = okabe_ito["yellow"], alpha = 0.8,
+    fill = okabe_ito["yellow"], alpha = 0.7,
   ) +
   annotate("rect",
     xmin = 0, xmax = 1, ymin = 0, ymax = q95,
-    fill = okabe_ito["darkblue"], alpha = 0.8,
+    fill = okabe_ito["darkblue"], alpha = 0.7,
   ) +
   geom_vline(xintercept = 0.95, linetype = "dashed") +
   geom_vline(xintercept = 0.80, linetype = "dashed") +
   geom_line() +
   scale_x_continuous(name = "landslide scars", labels = scales::percent) +
-  scale_y_continuous(name = "landslide susceptibility", labels = scales::percent, limits = c(0, 1)) +
+  scale_y_continuous(name = "landslide susceptibility", limits = c(0, 1)) +
   theme_linedraw() +
   theme(
     text = element_text(
       family = "Source Sans Pro",
       colour = "black",
-      size = 20
+      size = 16
     )
   )
 ggsave(glue("plt/drop_{mod_type}.png"), p, width = 120, height = 120, units = "mm")
