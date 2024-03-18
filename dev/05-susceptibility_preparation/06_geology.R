@@ -16,7 +16,8 @@ litho_reclass <- readr::read_tsv("doc/data_description/reclass_geology.tsv") |>
     lithology = as.integer(class),
     leg_litho = as.integer(leg_litho)
   ) |>
-  select(leg_litho, lithology)
+  select(leg_litho, lithology) |>
+  arrange(leg_litho)
 
 # wget https://gis.geologie.ac.at/inspire/download/insp_ge_gu_500k_epsg4258.gpkg
 st_layers("dat/raw/geology/200k/Geologie_Kaernten_200.000.gpkg")
@@ -25,6 +26,10 @@ lithology <- read_sf("dat/raw/geology/200k/Geologie_Kaernten_200.000.gpkg", laye
   select(leg_litho, geom) |>
   left_join(litho_reclass, by = "leg_litho") |>
   select(lithology, geom)
+
+# lithology |>
+#   st_drop_geometry() |>
+#   filter(is.na(lithology))
 
 res_lithology <- st_join(grd, lithology) |>
   select(-idx) |>
