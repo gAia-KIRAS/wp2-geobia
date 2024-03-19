@@ -36,9 +36,12 @@ print(glue::glue("{Sys.time()} -- rasterizing mean"))
 res %>%
   dplyr::select(mean_susceptibility = mean_susc, geometry) %>%
   st_rasterize() %>%
-  write_stars(glue("wp2-geobia/dat/reporting/susceptibility_mean_{mod_type}.tif"), type = "Float32", NA_value = -1)
+  write_stars(glue("wp2-geobia/dat/reporting/susceptibility_mean_{mod_type}_res50.tif"), type = "Float32", NA_value = -1)
 # cmd1 <- glue("gdalwarp -cutline wp2-geobia/dat/interim/aoi/NOE_gaiaArea_3416.shp -crop_to_cutline -overwrite wp2-geobia/dat/reporting/susceptibility_mean_{mod_type}.tif wp2-geobia/dat/reporting/susceptibility_mean_{mod_type}_cut.tif")
 # system(command = cmd1)
+
+
+
 
 ## TO DO: check if it's cut or it needs to be cut to the area
 
